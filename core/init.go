@@ -12,10 +12,10 @@ import (
 	lockedamountrelease "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_release"
 	ministatement "github.com/hugokessem/coreio/lib/core/mini_statement"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
-	standingordercancel "github.com/hugokessem/coreio/lib/core/schedule_payment/standing_order_cancel"
-	standingordercreate "github.com/hugokessem/coreio/lib/core/schedule_payment/standing_order_create"
-	standingorderlist "github.com/hugokessem/coreio/lib/core/schedule_payment/standing_order_list"
-	standingorderupdate "github.com/hugokessem/coreio/lib/core/schedule_payment/standing_order_update"
+	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
+	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
+	standingorderlist "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list"
+	standingorderupdate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_update"
 	"github.com/hugokessem/coreio/utils"
 )
 

@@ -21,7 +21,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config) (*http.Response,
 	var err error
 
 	client := &http.Client{
-		Timeout: config.Timeout * time.Second,
+		// Timeout: config.Timeout * time.Second,
 		Transport: &http.Transport{
 			TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
 			DisableKeepAlives: true,
