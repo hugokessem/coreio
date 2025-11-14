@@ -14,7 +14,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000000006924",
+		DebitAccountNumber:  "3000000006924",
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
@@ -26,7 +26,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	}
 
 	xmlRequest := NewFundTransfer(params)
-	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPPV2/services?target=http://10.1.15.195:8080&wsdl=null"
+	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPPV2/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
@@ -49,6 +49,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParseFundTransferSOAP(string(responseData))
+	t.Log(result.Messages)
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 

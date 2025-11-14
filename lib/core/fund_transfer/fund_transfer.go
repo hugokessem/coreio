@@ -100,13 +100,15 @@ type FundTransferDetail struct {
 }
 
 type FundTransferResponse struct {
-	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
-		TransactionID    string `xml:"transactionId"`
-		Application      string `xml:"application"`
-		MessageId        string `xml:"messageId"`
-	} `xml:"Status"`
+	Status           FundTransferStatus  `xml:"Status"`
 	FundTransferType *FundTransferDetail `xml:"FUNDSTRANSFERType"`
+}
+
+type FundTransferStatus *struct {
+	SuccessIndicator string   `xml:"successIndicator"`
+	TransactionID    string   `xml:"transactionId"`
+	Application      string   `xml:"application"`
+	Messages         []string `xml:"messages"`
 }
 
 type FundTransferResult struct {
@@ -133,7 +135,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &FundTransferResult{
 				Success:  false,
-				Messages: []string{"API returned failure"},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 

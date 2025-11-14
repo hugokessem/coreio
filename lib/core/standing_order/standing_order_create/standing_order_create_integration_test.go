@@ -24,7 +24,7 @@ func TestIntegrationCreateStandingOrder(t *testing.T) {
 	}
 
 	xmlRequest := NewCreateStandingOrder(params)
-	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPPV2/services?target=http://10.1.15.195:8080&wsdl=null"
+	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPPV2/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
