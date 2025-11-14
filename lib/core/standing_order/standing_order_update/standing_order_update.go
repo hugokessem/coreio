@@ -31,7 +31,7 @@ type UpdateStandingOrderParam struct {
 }
 
 func NewUpdateStandingOrder(param Params) string {
-	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPPV2" xmlns:stan="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP">
+	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:stan="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP">
     <soapenv:Header/>
     <soapenv:Body>
         <cbes:CreateUpdateStandingOrder>

@@ -36,7 +36,7 @@ type FundTransferParam struct {
 
 func NewFundTransfer(param Params) string {
 	return fmt.Sprintf(
-		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPPV2" xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
+		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
     <soapenv:Header/>
     <soapenv:Body>
         <cbes:AccountTransfer>

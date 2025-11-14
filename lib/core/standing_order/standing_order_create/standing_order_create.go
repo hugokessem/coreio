@@ -29,7 +29,7 @@ type CreateStandingOrderParams struct {
 
 func NewCreateStandingOrder(param Params) string {
 	return fmt.Sprintf(
-		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPPV2" xmlns:stan="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP">
+		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:stan="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP">
     <soapenv:Header/>
     <soapenv:Body>
         <cbes:CreateUpdateStandingOrder>
@@ -72,6 +72,8 @@ type StandingOrderDetail struct {
 	CurrentDate         string `xml:"CURRENTENDDATE"`
 	CreditAccountNumber string `xml:"CPTYACCTNO"`
 	NextPayment         string `xml:"CURRFREQDATE"`
+	DebitAccountNumber  string
+	OrderId             string
 }
 
 type StandingOrderResponse struct {
@@ -119,10 +121,19 @@ func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) 
 			}, nil
 		}
 
+		debicAccountNumber, orderId, found := strings.Cut(resp.Status.TransactionId, ".")
+		if !found {
+			return &StandingOrderResult{
+				Success: false,
+				Message: []string{"Failed to find Order ID!"},
+			}, nil
+		}
 		return &StandingOrderResult{
 			Success: true,
 			Detail: &StandingOrderDetail{
 				Type:                resp.StandingOrderType.Type,
+				OrderId:             orderId,
+				DebitAccountNumber:  debicAccountNumber,
 				Amount:              resp.StandingOrderType.Amount,
 				Currency:            resp.StandingOrderType.Currency,
 				Frequency:           resp.StandingOrderType.Frequency,

@@ -17,7 +17,7 @@ type RevertFundTransferParams struct {
 
 func NewRevertFundTransfer(param Params) string {
 	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPPV2">
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
     <soapenv:Header/>
     <soapenv:Body>
         <cbes:AccountTransferReversal>
