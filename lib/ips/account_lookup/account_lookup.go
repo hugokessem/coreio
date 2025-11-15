@@ -8,7 +8,7 @@ import (
 
 type Params struct {
 	DebitBankBIC         string
-	CreaditBankBIC       string
+	CreditBankBIC        string
 	CreditAccountNumber  string
 	BizMessageIdentifier string
 	MessageIdentifier    string
@@ -90,7 +90,7 @@ func NewAccountLookup(param Params) string {
          </input1>
       </mb:AccountVerfication>
    </soapenv:Body>
-</soapenv:Envelope>`, param.DebitBankBIC, param.CreaditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreaditBankBIC, param.MessageIdentifier, param.CreditAccountNumber)
+</soapenv:Envelope>`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.MessageIdentifier, param.CreditAccountNumber)
 }
 
 type Envelope struct {
@@ -198,16 +198,16 @@ type Document struct {
 }
 
 type AccountVerficationDetail struct {
-	CreaditBankBIC          string
+	CreditBankBIC           string
 	OriginalIdentifier      string
 	CreditAccountNumber     string
 	CreditAccountHolderName string
 }
 
 type AccountVerficationResult struct {
-	Success bool
-	Deatil  *AccountVerficationDetail
-	Message []string
+	Success  bool
+	Deatil   *AccountVerficationDetail
+	Messages []string
 }
 
 func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
@@ -220,8 +220,8 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
 		resp := env.Body.AccountVerficationResponse.Output
 		if strings.ToLower(resp.Document.IdVrfctnRpt.Rpt.Verfification) != "true" {
 			return &AccountVerficationResult{
-				Success: false,
-				Message: []string{"Account Not Found!"},
+				Success:  false,
+				Messages: []string{"Account Not Found!"},
 			}, nil
 		}
 
@@ -229,7 +229,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
 			Success: true,
 			Deatil: &AccountVerficationDetail{
 				OriginalIdentifier:      resp.Document.IdVrfctnRpt.Rpt.OriginalIdentifier,
-				CreaditBankBIC:          resp.AppHeader.From.FIID.FinInstnId.Other.Identifier,
+				CreditBankBIC:           resp.AppHeader.From.FIID.FinInstnId.Other.Identifier,
 				CreditAccountHolderName: resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm,
 				CreditAccountNumber:     resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id.Othr.Id,
 			},
@@ -237,8 +237,8 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
 	}
 
 	return &AccountVerficationResult{
-		Success: false,
-		Message: []string{"Invalid Response!"},
+		Success:  false,
+		Messages: []string{"Invalid Response!"},
 	}, nil
 
 }

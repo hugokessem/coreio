@@ -17,7 +17,7 @@ func TestAccountLookupGeneratedXML(t *testing.T) {
 			param: Params{
 				CreditAccountNumber:  "1234567890",
 				DebitBankBIC:         "CBETETAA",
-				CreaditBankBIC:       "ETSETAA",
+				CreditBankBIC:        "ETSETAA",
 				BizMessageIdentifier: "CBETETAA553572981",
 				MessageIdentifier:    "CBETETAA847772981",
 				CreditDateTime:       "2023-06-24T00:00:00.000+03:00",
