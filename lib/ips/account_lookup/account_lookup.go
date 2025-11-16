@@ -204,13 +204,13 @@ type AccountVerficationDetail struct {
 	CreditAccountHolderName string
 }
 
-type AccountVerficationResult struct {
+type AccountLookupResult struct {
 	Success  bool
 	Deatil   *AccountVerficationDetail
 	Messages []string
 }
 
-func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
+func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 	var env Envelope
 	if err := xml.Unmarshal([]byte(xmlData), &env); err != nil {
 		return nil, err
@@ -219,13 +219,13 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
 	if env.Body.AccountVerficationResponse.Output.AppHeader != nil && env.Body.AccountVerficationResponse.Output.Document != nil {
 		resp := env.Body.AccountVerficationResponse.Output
 		if strings.ToLower(resp.Document.IdVrfctnRpt.Rpt.Verfification) != "true" {
-			return &AccountVerficationResult{
+			return &AccountLookupResult{
 				Success:  false,
 				Messages: []string{"Account Not Found!"},
 			}, nil
 		}
 
-		return &AccountVerficationResult{
+		return &AccountLookupResult{
 			Success: true,
 			Deatil: &AccountVerficationDetail{
 				OriginalIdentifier:      resp.Document.IdVrfctnRpt.Rpt.OriginalIdentifier,
@@ -236,7 +236,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountVerficationResult, error) {
 		}, nil
 	}
 
-	return &AccountVerficationResult{
+	return &AccountLookupResult{
 		Success:  false,
 		Messages: []string{"Invalid Response!"},
 	}, nil

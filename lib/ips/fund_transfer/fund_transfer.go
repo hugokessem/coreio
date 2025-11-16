@@ -298,13 +298,13 @@ type PaymentResponseDetail struct {
 	OriginalEndtoEndIdentifier    string
 }
 
-type PaymentResponseResult struct {
+type FundTransferResult struct {
 	Success  bool
 	Detail   *PaymentResponseDetail
 	Messages []string
 }
 
-func ParsePaymentResponseSOAP(xmlDate string) (*PaymentResponseResult, error) {
+func ParseFundTransferSOAP(xmlDate string) (*FundTransferResult, error) {
 	var env Envelop
 
 	if err := xml.Unmarshal([]byte(xmlDate), &env); err != nil {
@@ -314,13 +314,13 @@ func ParsePaymentResponseSOAP(xmlDate string) (*PaymentResponseResult, error) {
 	if env.Body.PaymentResponse != nil {
 		resp := env.Body.PaymentResponse.Output
 		if strings.ToLower(resp.Document.FIToFIPmtStsRpt.TxInfAndSts.TransactionStatus) != "acsc" {
-			return &PaymentResponseResult{
+			return &FundTransferResult{
 				Success:  false,
 				Messages: []string{"Failed to intiate transaction!"},
 			}, nil
 		}
 
-		return &PaymentResponseResult{
+		return &FundTransferResult{
 			Success: true,
 			Detail: &PaymentResponseDetail{
 				OriginalTransactionIdentifier: resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OriginalTransactionIdentifier,
@@ -330,7 +330,7 @@ func ParsePaymentResponseSOAP(xmlDate string) (*PaymentResponseResult, error) {
 
 	}
 
-	return &PaymentResponseResult{
+	return &FundTransferResult{
 		Success:  false,
 		Messages: []string{"Invalid Response!"},
 	}, nil
