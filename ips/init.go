@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/hugokessem/coreio/ips/internal"
 	accountlookup "github.com/hugokessem/coreio/lib/ips/account_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/ips/fund_transfer"
 	"github.com/hugokessem/coreio/utils"
@@ -16,24 +17,43 @@ type AccountLookupResult = accountlookup.AccountLookupResult
 type FundTransferParam = fundtransfer.Params
 type FundTransferResult = fundtransfer.FundTransferResult
 
-type CBEIspAPIInterface interface {
+type IPSCoreAPIInterface interface {
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 }
+type IPSCredentials struct {
+	Username        string
+	Password        string
+	GrantType       string
+	JwtAssertion    string
+	MBAuthorization string
+	Authorization   string
+	Url             string
+}
 
-type CBEIpsAPIHTTPHandler struct {
-	Url string
+type IPSCoreAPI struct {
+	config *internal.Config
 }
 
 // AccountLookupParam implements CBEIspAPIInterface.
-func (c *CBEIpsAPIHTTPHandler) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
+func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
 	config := utils.Config{
 		MaxRetries: 6,
 		Timeout:    30 * time.Second,
 	}
 
 	xmlRequest := accountlookup.NewAccountLookup(param)
-	resp, err := utils.DoPostWithRetry(c.Url, xmlRequest, config)
+	headers := map[string]string{
+		"Content-Type":     "text/xml; charset=utf-8",
+		"username":         c.config.Username,
+		"password":         c.config.Password,
+		"grant_type":       c.config.GrantType,
+		"Jwt_Assertion":    c.config.JwtAssertion,
+		"MB_authorization": c.config.JwtAssertion,
+		"Authorization":    c.config.Authorization,
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -53,14 +73,24 @@ func (c *CBEIpsAPIHTTPHandler) AccountLookup(param AccountLookupParam) (*Account
 }
 
 // FundTransfer implements CBEIspAPIInterface.
-func (c *CBEIpsAPIHTTPHandler) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
+func (c *IPSCoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
 	config := utils.Config{
 		MaxRetries: 6,
 		Timeout:    30 * time.Second,
 	}
 
 	xmlRequest := fundtransfer.NewFundTransfer(param)
-	resp, err := utils.DoPostWithRetry(c.Url, xmlRequest, config)
+	headers := map[string]string{
+		"Content-Type":     "text/xml; charset=utf-8",
+		"username":         c.config.Username,
+		"password":         c.config.Password,
+		"grant_type":       c.config.GrantType,
+		"Jwt_Assertion":    c.config.JwtAssertion,
+		"MB_authorization": c.config.JwtAssertion,
+		"Authorization":    c.config.Authorization,
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +109,17 @@ func (c *CBEIpsAPIHTTPHandler) FundTransfer(param FundTransferParam) (*FundTrans
 	return result, nil
 }
 
-func NewCBEIpsAPI(url string) CBEIspAPIInterface {
-	return &CBEIpsAPIHTTPHandler{
-		Url: url,
+func NewCBEIpsAPI(param IPSCredentials) IPSCoreAPIInterface {
+	config := internal.SetConfig(
+		param.Username,
+		param.Password,
+		param.GrantType,
+		param.JwtAssertion,
+		param.MBAuthorization,
+		param.Authorization,
+		param.Url,
+	)
+	return &IPSCoreAPI{
+		config: config,
 	}
 }

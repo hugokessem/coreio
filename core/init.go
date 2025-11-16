@@ -79,10 +79,13 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 	}
 
 	xmlRequest := revertfundtransfer.NewRevertFundTransfer(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -110,10 +113,13 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 	}
 
 	xmlRequest := accountlookup.NewAccountLookup(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -149,10 +155,13 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 	}
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -180,10 +189,13 @@ func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedA
 	}
 
 	xmlRequest := lockedamountlist.NewListLockedAmount(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -215,10 +227,13 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 	}
 
 	xmlRequest := lockedamountcreate.NewCreateLockedAmount(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -246,10 +261,13 @@ func (c *CBECoreAPI) ReleaseLockedAmount(param ReleaseLockedAmountParam) (*Relea
 	}
 
 	xmlRequest := lockedamountrelease.NewReleaseLockedAmount(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -278,10 +296,13 @@ func (c *CBECoreAPI) CancleStandingOrder(param CancleStandingOrderParam) (*Cance
 	}
 
 	xmlRequest := standingordercancel.NewCancleStandingOrder(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -316,10 +337,13 @@ func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*Updat
 	}
 
 	xmlRequest := standingorderupdate.NewUpdateStandingOrder(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -353,10 +377,13 @@ func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*Creat
 	}
 
 	xmlRequest := standingordercreate.NewCreateStandingOrder(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -384,10 +411,13 @@ func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStand
 	}
 
 	xmlRequest := standingorderlist.NewListStandingOrder(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err
@@ -416,10 +446,13 @@ func (c *CBECoreAPI) MiniStatement(param MiniStatementParams) (*MiniStatementRes
 	}
 
 	xmlRequest := ministatement.NewMiniStatement(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
-	})
+	}, headers)
 
 	if err != nil {
 		return nil, err

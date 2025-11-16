@@ -16,7 +16,7 @@ type Config struct {
 	Timeout    time.Duration
 }
 
-func DoPostWithRetry(url string, xmlBody string, config Config) (*http.Response, error) {
+func DoPostWithRetry(url string, xmlBody string, config Config, headers map[string]string) (*http.Response, error) {
 	var resp *http.Response
 	var err error
 
@@ -37,7 +37,10 @@ func DoPostWithRetry(url string, xmlBody string, config Config) (*http.Response,
 		if reqErr != nil {
 			return nil, fmt.Errorf("failed to create request: %w", reqErr)
 		}
-		req.Header.Set("Content-Type", "text/xml; charset=utf-8")
+
+		for key, value := range headers {
+			req.Header.Set(key, value)
+		}
 
 		resp, err = client.Do(req)
 		if err == nil && resp.StatusCode < 500 {
