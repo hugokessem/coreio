@@ -17,7 +17,7 @@ type FundTransferParam = fundtransfer.Params
 type FundTransferResult = fundtransfer.FundTransferResult
 
 type CBEIspAPIInterface interface {
-	AccountLookupParam(param AccountLookupParam) (*AccountLookupResult, error)
+	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 }
 
@@ -26,7 +26,7 @@ type CBEIpsAPIHTTPHandler struct {
 }
 
 // AccountLookupParam implements CBEIspAPIInterface.
-func (c *CBEIpsAPIHTTPHandler) AccountLookupParam(param AccountLookupParam) (*AccountLookupResult, error) {
+func (c *CBEIpsAPIHTTPHandler) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
 	config := utils.Config{
 		MaxRetries: 6,
 		Timeout:    30 * time.Second,
