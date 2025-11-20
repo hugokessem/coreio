@@ -80,7 +80,7 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 
 	xmlRequest := revertfundtransfer.NewRevertFundTransfer(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		"Content-Type": "application/xml",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -114,7 +114,7 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 
 	xmlRequest := accountlookup.NewAccountLookup(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		"Content-Type": "application/xml",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -156,7 +156,7 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		"Content-Type": "application/xml",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -190,7 +190,7 @@ func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedA
 
 	xmlRequest := lockedamountlist.NewListLockedAmount(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		"Content-Type": "application/xml",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -447,7 +447,7 @@ func (c *CBECoreAPI) MiniStatement(param MiniStatementParams) (*MiniStatementRes
 
 	xmlRequest := ministatement.NewMiniStatement(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		"Content-Type": "application/xml",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,

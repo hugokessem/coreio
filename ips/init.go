@@ -44,7 +44,7 @@ func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 
 	xmlRequest := accountlookup.NewAccountLookup(param)
 	headers := map[string]string{
-		"Content-Type":     "text/xml; charset=utf-8",
+		"Content-Type":     "application/xml",
 		"username":         c.config.Username,
 		"password":         c.config.Password,
 		"grant_type":       c.config.GrantType,
@@ -81,7 +81,7 @@ func (c *IPSCoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 
 	xmlRequest := fundtransfer.NewFundTransfer(param)
 	headers := map[string]string{
-		"Content-Type":     "text/xml; charset=utf-8",
+		"Content-Type":     "application/xml",
 		"username":         c.config.Username,
 		"password":         c.config.Password,
 		"grant_type":       c.config.GrantType,

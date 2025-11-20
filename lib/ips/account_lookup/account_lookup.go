@@ -206,7 +206,7 @@ type AccountVerficationDetail struct {
 
 type AccountLookupResult struct {
 	Success  bool
-	Deatil   *AccountVerficationDetail
+	Detail   *AccountVerficationDetail
 	Messages []string
 }
 
@@ -227,7 +227,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 
 		return &AccountLookupResult{
 			Success: true,
-			Deatil: &AccountVerficationDetail{
+			Detail: &AccountVerficationDetail{
 				OriginalIdentifier:      resp.Document.IdVrfctnRpt.Rpt.OriginalIdentifier,
 				CreditBankBIC:           resp.AppHeader.From.FIID.FinInstnId.Other.Identifier,
 				CreditAccountHolderName: resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm,
