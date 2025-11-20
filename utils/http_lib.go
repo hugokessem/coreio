@@ -25,7 +25,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: false,
-				MinVersion:         tls.VersionTLS13,
+				// MinVersion:         tls.VersionTLS13,
 			},
 			DisableKeepAlives: true,
 			IdleConnTimeout:   10 * time.Second,
