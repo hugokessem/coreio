@@ -216,6 +216,9 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 		return nil, err
 	}
 
+	fmt.Println("*******************")
+	fmt.Println(env)
+	fmt.Println("*******************")
 	if env.Body.AccountVerficationResponse.Output.AppHeader != nil && env.Body.AccountVerficationResponse.Output.Document != nil {
 		resp := env.Body.AccountVerficationResponse.Output
 		if strings.ToLower(resp.Document.IdVrfctnRpt.Rpt.Verfification) != "true" {

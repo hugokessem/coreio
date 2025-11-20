@@ -15,8 +15,8 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CreditAccountNumber:  "1234567890",
 		DebitBankBIC:         "CBETETAA",
 		CreditBankBIC:        "ETSTETAA",
-		BizMessageIdentifier: "43568790097856478",
-		MessageIdentifier:    "546780987987576",
+		BizMessageIdentifier: "4356829009456478",
+		MessageIdentifier:    "54678298747576",
 		CreditDateTime:       "2025-11-20T10:45:32",
 		CreditDate:           "2025-11-20",
 	}
