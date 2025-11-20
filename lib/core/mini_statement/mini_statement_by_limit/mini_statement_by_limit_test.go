@@ -1,4 +1,4 @@
-package ministatement
+package ministatementbylimit
 
 import (
 	"testing"

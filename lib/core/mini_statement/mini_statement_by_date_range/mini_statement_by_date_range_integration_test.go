@@ -1,4 +1,4 @@
-package ministatement
+package ministatementbydaterange
 
 import (
 	"crypto/tls"
@@ -12,13 +12,14 @@ import (
 
 func TestIntegrationMiniStatement(t *testing.T) {
 	params := Params{
-		Username:            "SUPERAPP",
-		Password:            "123456",
-		AccountNumber:       "1000030677308",
-		NumberOfTransaction: "3",
+		Username:      "SUPERAPP",
+		Password:      "123456",
+		AccountNumber: "1000184349713",
+		From:          "20200101",
+		To:            "20200105",
 	}
 
-	xmlRequest := NewMiniStatement(params)
+	xmlRequest := NewMiniStatementByDateRange(params)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -40,19 +41,20 @@ func TestIntegrationMiniStatement(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseMiniStatementSOAP(string(responseData))
+	result, err := ParseMiniStatementByDateRangeSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
-	assert.NotNil(t, result.Details)
+	assert.NotNil(t, result.Detail)
 
-	if len(result.Details) > 0 {
-		assert.Equal(t, "ABIY HAILEYESUS MENGISTU", result.Details[0].OtherPartyAccount)
-		assert.Equal(t, "FT2134349MRK", result.Details[0].TransactionReference)
-		assert.Equal(t, "ETB", result.Details[0].Currency)
-		assert.Equal(t, "-2.00", result.Details[0].Amount)
+	assert.Equal(t, "1000184349713", result.Detail.AccountNumber)
+	assert.Equal(t, "1026902114", result.Detail.CustomerNumber)
+	assert.Equal(t, "ETB", result.Detail.Currency)
+	if len(result.Detail.Group.Details) > 0 {
+		assert.Equal(t, `TT20001YXSWL\KH1`, result.Detail.Group.Details[0].TransactionReference)
+		assert.Equal(t, "-14,000.00", result.Detail.Group.Details[0].Amount)
 	} else {
 		t.Error("Expected Detail to be non-nil")
 	}
