@@ -22,7 +22,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 		Password:                        "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		OriginalConverstationIdentifier: strconv.Itoa(n),
 		ThirdPartyIdentifier:            "USSDPushCaller",
-		Timestamp:                       "20130402152345",
+		Timestamp:                       time.Now().Format("20060102150405"),
 		SecurityCredential:              "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
 		PhoneNumber:                     "251913170005",
 	}
@@ -35,7 +35,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMLanMADavHe19ILn7YTaiCDJug3yHSpJB-vMw7oY7XO3k1U9vpjVVqG1JjwQ7eWfkkn-68xAzQ0s9AT5mBblvrzetgk9H1NZyOWnGV15Pb3YD9vUhRIfLaRqyETnl5-rn_K-fKuek2fBcFxAV06xv-")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMb9vUY6ZiQ8Hm3saAUvnOnomKNeyx2LtLKIiVOlS5HCrq0MqsVXu-dkx_rCaOz06i4p_zuv-NM0z4hsJP5gJL850zWT5NMGcLHy2Sb8hUpbW17yLXtGyC7xkVuz23grZgrKeJ_GtaTTRhivQ4apigR")
 
 	client := &http.Client{
 		Transport: &http.Transport{

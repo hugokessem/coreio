@@ -15,21 +15,21 @@ import (
 
 func TestIntegrationAgentFundTransfer(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	ftNumber := strconv.FormatInt(r.Int63(), 10)
+	ftNumber := r.Intn(100078546981)
 
 	params := Params{
-		FTNumber:               ftNumber,
+		FTNumber:               strconv.Itoa(ftNumber),
 		Timestamp:              time.Now().Format("20060102150405"),
-		PrimaryParty:           "251000",
-		ReceiverParty:          "251911",
-		Amount:                 "10.00",
+		PrimaryParty:           "000099",
+		ReceiverParty:          "251000",
+		Amount:                 "124.00",
 		Currency:               "ETB",
 		Narative:               "Integration test",
 		ThirdPartyIdentifier:   "USSDPushCaller",
-		Password:               "8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u",
+		Password:               "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		SecurityCredential:     "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
-		DebitAccountNumber:     "1000000006924",
-		DebitAccountHolderName: "Integration Agent",
+		DebitAccountNumber:     "1000184084108",
+		DebitAccountHolderName: "Elnatan Michael Michael",
 	}
 
 	xmlRequest := NewAgentFundTransfer(params)
@@ -38,9 +38,9 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
 
-	req.Header.Add("Content-Type", "application/xml")
-	req.Header.Add("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Add("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMU0v4nVOKXPo-Deygtqcvx5L5NhqfsNi-8Xu9idc6hCCD_hgaJ1X3mwCboftG3UThc-7aa7Xfb2E9fr6QKCoayTCJfidHktrJh33pjlC678iTjP3VofIqlnWqNSHB5Zgv4lfP-ckHekIk1yFNbCXyo")
+	req.Header.Set("Content-Type", "application/xml")
+	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMrRWF4sCCASFEJLE1w2rkAJbx3lraVZ_xGEn4ao-5OLEQ1BhLXvDyRsJIfTMRKpDZ-yxwp7_WkT2chr1wWHu-92fgGsyE9lgyU1ep2XQ8H8Y8UK_aZaVfF5bKvKIXbhKF7_seLlgBIY2Ai8OWc6KTU")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -61,8 +61,16 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
-	assert.True(t, result.Status)
-	assert.NotEmpty(t, result.Detail.FTNumber)
-	assert.NotEmpty(t, result.Detail.ConverstationIdentifier)
-	assert.Greater(t, len(result.Detail.ReferenceDetail), 0)
+	if result == nil {
+		t.Fatal("Expected result to be non-nil")
+	}
+
+	if result.Detail != nil {
+		assert.True(t, result.Status)
+		assert.NotEmpty(t, result.Detail.FTNumber)
+		assert.NotEmpty(t, result.Detail.ConverstationIdentifier)
+		assert.Greater(t, len(result.Detail.ReferenceDetail), 0)
+	} else {
+		t.Error("Expected Detail to be non-nil")
+	}
 }

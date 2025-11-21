@@ -21,15 +21,14 @@ type AgentAccountLookupParams struct {
 }
 
 func NewAgentAccountLookup(param Params) string {
-	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
+	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
    <soapenv:Header/>
    <soapenv:Body>
       <api:Request>
          <req:Header>
             <req:Version>1.0</req:Version>
             <req:CommandID>QueryOrganizationInfo</req:CommandID>
-            <req:OriginatorConversationID>%s</req:OriginatorConversationID>
+             <req:OriginatorConversationID>%s</req:OriginatorConversationID>
             <req:Caller>
                <req:CallerType>2</req:CallerType>
                <req:ThirdPartyID>%s</req:ThirdPartyID>
@@ -55,7 +54,8 @@ func NewAgentAccountLookup(param Params) string {
          </req:Body>
       </api:Request>
    </soapenv:Body>
-</soapenv:Envelope>`, param.OriginalConverstationIdentifier, param.ThirdPartyIdentifier, param.Password, param.Timestamp, param.SecurityCredential, param.PhoneNumber)
+</soapenv:Envelope>
+`, param.OriginalConverstationIdentifier, param.ThirdPartyIdentifier, param.Password, param.Timestamp, param.SecurityCredential, param.PhoneNumber)
 }
 
 type Envelope struct {
@@ -152,5 +152,6 @@ func ParseAgentLookupSOAP(xmlData string) (*AgentAccountLookupResult, error) {
 
 	return &AgentAccountLookupResult{
 		Success: false,
+		Message: "invalid request!",
 	}, nil
 }

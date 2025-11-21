@@ -34,67 +34,68 @@ type AgentFundTransferParams struct {
 
 func NewAgentFundTransfer(param Params) string {
 	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
    <soapenv:Header/>
-    <soapenv:Body>
-        <api:Request>
-            <req:Header>
-                <req:Version>1.0</req:Version>
-                <req:CommandIDInitTrans_Business Transfer via MB</req:CommandID>
-                <req:OriginatorConversationID>%s</req:OriginatorConversationID> 
-                <req:Caller>
-                    <req:CallerType>2</req:CallerType>
-                    <req:ThirdPartyID>%s</req:ThirdPartyID>
-                    <req:Password>%s</req:Password>
-                </req:Caller>
-                <req:KeyOwner>1</req:KeyOwner>
-                <req:Timestamp>%s</req:Timestamp>
-            </req:Header>
-            <req:Body>
-                <req:Identity>
-                    <req:Initiator>
-                        <req:IdentifierType>14</req:IdentifierType>
-                        <req:Identifier>Anamail</req:Identifier>
-                        <req:SecurityCredential>%s</req:SecurityCredential>
-                    </req:Initiator>
-                    <req:PrimaryParty>
-                        <req:IdentifierType>4</req:IdentifierType>
-                        <req:Identifier>%s</req:Identifier>
-                    </req:PrimaryParty>
-                    <req:ReceiverParty>
-                        <req:IdentifierType>1</req:IdentifierType>
-                        <req:Identifier>%s</req:Identifier>
-                    </req:ReceiverParty>
-                </req:Identity>
-                <req:TransactionRequest>
-                    <req:Parameters>
-                        <req:Amount>%s</req:Amount>
-                        <req:Currency>%s</req:Currency>
-                        <req:ReasonType>%s</req:ReasonType>
-                    </req:Parameters>
-                </req:TransactionRequest>
-                <req:ReferenceData>
-                    <req:ReferenceItem>
-                        <com:Key>Debited shortcode</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>Debited Customer Name</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>Debited Acct</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>MB txnID</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                </req:ReferenceData>
-            </req:Body>
-        </api:Request>
-    </soapenv:Body>
+   <soapenv:Body>
+      <api:Request>
+         <req:Header>
+            <req:Version>1.0</req:Version>
+            <req:CommandID>InitTrans_Business Transfer via MB</req:CommandID>
+             <req:OriginatorConversationID>%s</req:OriginatorConversationID>
+            <req:Caller>
+               <req:CallerType>2</req:CallerType>
+               <req:ThirdPartyID>%s</req:ThirdPartyID>
+               <req:Password>%s</req:Password>
+            </req:Caller>
+            <req:KeyOwner>1</req:KeyOwner>
+            <req:Timestamp>%s</req:Timestamp>
+         </req:Header>
+         <req:Body>
+            <req:Identity>
+               <req:Initiator>
+                  <req:IdentifierType>14</req:IdentifierType>
+                  <req:Identifier>Anamail</req:Identifier>
+                  <req:SecurityCredential>%s</req:SecurityCredential>
+               </req:Initiator>
+               <req:PrimaryParty>
+                  <req:IdentifierType>4</req:IdentifierType>
+                  <req:Identifier>%s</req:Identifier>
+               </req:PrimaryParty>
+               <req:ReceiverParty>
+                  <req:IdentifierType>4</req:IdentifierType>
+                  <req:Identifier>%s</req:Identifier>
+               </req:ReceiverParty>
+            </req:Identity>
+            <req:TransactionRequest>
+               <req:Parameters>
+                  <req:Amount>%s</req:Amount>
+                  <req:Currency>%s</req:Currency>
+                  <req:ReasonType>%s</req:ReasonType>
+               </req:Parameters>
+            </req:TransactionRequest>
+            <req:ReferenceData>
+               <req:ReferenceItem>
+                  <com:Key>Debited shortcode</com:Key>
+                  <com:Value>%s</com:Value>
+               </req:ReferenceItem>
+               <req:ReferenceItem>
+                  <com:Key>Debited Customer Name</com:Key>
+                  <com:Value>%s</com:Value>
+               </req:ReferenceItem>
+               <req:ReferenceItem>
+                  <com:Key>Debited Acct</com:Key>
+                  <com:Value>%s</com:Value>
+               </req:ReferenceItem>
+               <req:ReferenceItem>
+                  <com:Key>MB txnID</com:Key>
+                  <com:Value>%s</com:Value>
+               </req:ReferenceItem>
+            </req:ReferenceData>
+         </req:Body>
+      </api:Request>
+   </soapenv:Body>
 </soapenv:Envelope>
+
 	`, param.FTNumber, param.ThirdPartyIdentifier, param.Password, param.Timestamp, param.SecurityCredential, param.PrimaryParty, param.ReceiverParty, param.Amount, param.Currency, param.Narative, param.PrimaryParty, param.DebitAccountHolderName, param.DebitAccountNumber, param.FTNumber)
 }
 
@@ -142,7 +143,7 @@ type FundTransferDetail struct {
 
 type AgentFundTransferResult struct {
 	Status  bool
-	Detail  FundTransferDetail
+	Detail  *FundTransferDetail
 	Message string
 }
 
@@ -171,7 +172,7 @@ func ParserAgentFundTransfer(xmlDate string) (*AgentFundTransferResult, error) {
 
 		return &AgentFundTransferResult{
 			Status: true,
-			Detail: FundTransferDetail{
+			Detail: &FundTransferDetail{
 				FTNumber:                resp.ResultBody.TransactionResult.TrasnactionId,
 				ConverstationIdentifier: resp.Header.ConversationIdentifier,
 				ReferenceDetail:         resp.ResultBody.ReferenceData.Details,

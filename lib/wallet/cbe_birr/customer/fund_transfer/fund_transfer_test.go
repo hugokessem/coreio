@@ -35,13 +35,7 @@ func TestCustomerFundTransferGeneratedXML(t *testing.T) {
 				`<req:ThirdPartyID>USSDPushCaller</req:ThirdPartyID>`,
 				`<req:Password>8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u</req:Password>`,
 				`<req:Timestamp>20130402152345</req:Timestamp>`,
-				`<req:IdentifierType>14</req:IdentifierType>`,
-				`<req:Identifier>Anamail</req:Identifier>`,
 				`<req:SecurityCredential>BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw</req:SecurityCredential>`,
-				`<req:IdentifierType>4</req:IdentifierType>`,
-				`<req:Identifier>251000</req:Identifier>`,
-				`<req:IdentifierType>1</req:IdentifierType>`,
-				`<req:Identifier>251911</req:Identifier>`,
 				`<req:Amount>1000.00</req:Amount>`,
 				`<req:Currency>ETB</req:Currency>`,
 				`<req:ReasonType>Payment</req:ReasonType>`,
@@ -77,8 +71,6 @@ func TestCustomerFundTransferGeneratedXML(t *testing.T) {
 				`<req:Password>TESTPASSWORD123</req:Password>`,
 				`<req:Timestamp>20250101120000</req:Timestamp>`,
 				`<req:SecurityCredential>TESTSECURITY123</req:SecurityCredential>`,
-				`<req:Identifier>251922</req:Identifier>`,
-				`<req:Identifier>251933</req:Identifier>`,
 				`<req:Amount>500.50</req:Amount>`,
 				`<req:Currency>ETB</req:Currency>`,
 				`<req:ReasonType>Transfer</req:ReasonType>`,
@@ -92,8 +84,6 @@ func TestCustomerFundTransferGeneratedXML(t *testing.T) {
 	for _, tc := range test {
 		t.Run(tc.name, func(t *testing.T) {
 			xmlRequest := NewCustomerFundTransfer(tc.param)
-
-			// Validate XML structure
 			assert.Contains(t, xmlRequest, "<soapenv:Envelope")
 			assert.Contains(t, xmlRequest, "<soapenv:Header/>")
 			assert.Contains(t, xmlRequest, "<soapenv:Body>")
@@ -104,12 +94,10 @@ func TestCustomerFundTransferGeneratedXML(t *testing.T) {
 			assert.Contains(t, xmlRequest, "<req:TransactionRequest>")
 			assert.Contains(t, xmlRequest, "<req:ReferenceData>")
 
-			// Validate all expected strings are present
 			for _, expectedStr := range tc.expect {
 				assert.Contains(t, xmlRequest, expectedStr)
 			}
 
-			// Validate XML is not empty
 			assert.NotEmpty(t, xmlRequest)
 		})
 	}

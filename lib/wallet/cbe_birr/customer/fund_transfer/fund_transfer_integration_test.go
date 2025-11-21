@@ -19,17 +19,17 @@ func TestIntegrationCustomerFundTransfer(t *testing.T) {
 
 	params := Params{
 		FTNumber:               ftNumber,
-		Password:               "8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u",
+		Password:               "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		Timestamp:              time.Now().Format("20060102150405"),
 		SecurityCredential:     "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
 		ThirdPartyIdentifier:   "USSDPushCaller",
-		PrimaryParty:           "251000",
-		ReceiverParty:          "251911",
+		PrimaryParty:           "000099",
+		ReceiverParty:          "251913170005",
 		Amount:                 "10.00",
 		Currency:               "ETB",
 		Narative:               "Integration test",
-		DebitAccountNumber:     "1000000006924",
-		DebitAccountHolderName: "Integration Customer",
+		DebitAccountNumber:     "1000184084108",
+		DebitAccountHolderName: "Elnatan Michael Michael",
 	}
 
 	xmlRequest := NewCustomerFundTransfer(params)
@@ -38,9 +38,9 @@ func TestIntegrationCustomerFundTransfer(t *testing.T) {
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
 
-	req.Header.Add("Content-Type", "application/xml")
-	req.Header.Add("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Add("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMU0v4nVOKXPo-Deygtqcvx5L5NhqfsNi-8Xu9idc6hCCD_hgaJ1X3mwCboftG3UThc-7aa7Xfb2E9fr6QKCoayTCJfidHktrJh33pjlC678iTjP3VofIqlnWqNSHB5Zgv4lfP-ckHekIk1yFNbCXyo")
+	req.Header.Set("Content-Type", "application/xml")
+	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMozsRWLko6gDc0LVA37NYEHWHqICbhqadFaIwBXnFvNQxFPwud6gpejA4uYMy0hkBEqfx0agfml3mJmzQjMgYrNbzhEDSeuD3DeJvDiq__STK6OhEDg8rvbNt2e9a2GDhpEJx9Q19mliPpYq0achFK")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -54,15 +54,25 @@ func TestIntegrationCustomerFundTransfer(t *testing.T) {
 	defer resp.Body.Close()
 
 	responseData, err := io.ReadAll(resp.Body)
+	t.Log("responseData", string(responseData))
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParserCustomreFundTransfer(string(responseData))
+	t.Log("result", result)
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
+	if result == nil {
+		t.Fatal("Expected result to be non-nil")
+	}
+
 	assert.True(t, result.Status)
-	assert.NotEmpty(t, result.Detail.FTNumber)
-	assert.NotEmpty(t, result.Detail.ConverstationIdentifier)
-	assert.Greater(t, len(result.Detail.ReferenceDetail), 0)
+	if result.Detail != nil {
+		assert.NotEmpty(t, result.Detail.FTNumber, "Expected FTNumber to be non-empty")
+		assert.NotEmpty(t, result.Detail.ConverstationIdentifier, "Expected ConversationIdentifier to be non-empty")
+		assert.Greater(t, len(result.Detail.ReferenceDetail), 0, "Expected ReferenceDetail to be non-empty")
+	} else {
+		t.Error("Expected Detail to be non-nil")
+	}
 }

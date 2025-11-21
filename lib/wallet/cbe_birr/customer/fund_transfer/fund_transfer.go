@@ -141,7 +141,7 @@ type CustomerFundTransferDetail struct {
 
 type CustomerFundTransferResult struct {
 	Status  bool
-	Detail  CustomerFundTransferDetail
+	Detail  *CustomerFundTransferDetail
 	Message string
 }
 
@@ -170,7 +170,7 @@ func ParserCustomreFundTransfer(xmlDate string) (*CustomerFundTransferResult, er
 
 		return &CustomerFundTransferResult{
 			Status: true,
-			Detail: CustomerFundTransferDetail{
+			Detail: &CustomerFundTransferDetail{
 				FTNumber:                resp.ResultBody.TransactionResult.TrasnactionId,
 				ConverstationIdentifier: resp.Header.ConversationIdentifier,
 				ReferenceDetail:         resp.ResultBody.ReferenceData.Details,

@@ -49,7 +49,7 @@ func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 		"password":         c.config.Password,
 		"grant_type":       c.config.GrantType,
 		"Jwt_Assertion":    c.config.JwtAssertion,
-		"MB_authorization": c.config.JwtAssertion,
+		"MB_authorization": c.config.MBAuthorization,
 		"Authorization":    c.config.Authorization,
 	}
 
@@ -86,7 +86,7 @@ func (c *IPSCoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		"password":         c.config.Password,
 		"grant_type":       c.config.GrantType,
 		"Jwt_Assertion":    c.config.JwtAssertion,
-		"MB_authorization": c.config.JwtAssertion,
+		"MB_authorization": c.config.MBAuthorization,
 		"Authorization":    c.config.Authorization,
 	}
 

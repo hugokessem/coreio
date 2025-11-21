@@ -13,6 +13,7 @@ type Params struct {
 	SecurityCredential              string
 	PhoneNumber                     string
 }
+
 type CustomerAccountLookupParams struct {
 	OriginalConverstationIdentifier string
 	Timestamp                       string

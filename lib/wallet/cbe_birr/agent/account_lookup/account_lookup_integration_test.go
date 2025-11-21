@@ -19,10 +19,10 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	n := r.Intn(100078546981)
 	params := Params{
-		Password:                        "8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u",
+		Password:                        "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		OriginalConverstationIdentifier: strconv.Itoa(n),
 		ThirdPartyIdentifier:            "USSDPushCaller",
-		Timestamp:                       "20130402152345",
+		Timestamp:                       time.Now().Format("20060102150405"),
 		SecurityCredential:              "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
 		PhoneNumber:                     "251000",
 	}
@@ -33,9 +33,9 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
 
-	req.Header.Add("Content-Type", "application/xml")
-	req.Header.Add("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Add("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMLanMADavHe19ILn7YTaiCDJug3yHSpJB-vMw7oY7XO3k1U9vpjVVqG1JjwQ7eWfkkn-68xAzQ0s9AT5mBblvrzetgk9H1NZyOWnGV15Pb3YD9vUhRIfLaRqyETnl5-rn_K-fKuek2fBcFxAV06xv-")
+	req.Header.Set("Content-Type", "application/xml")
+	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMb9vUY6ZiQ8Hm3saAUvnOnomKNeyx2LtLKIiVOlS5HCrq0MqsVXu-dkx_rCaOz06i4p_zuv-NM0z4hsJP5gJL850zWT5NMGcLHy2Sb8hUpbW17yLXtGyC7xkVuz23grZgrKeJ_GtaTTRhivQ4apigR")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -53,8 +53,14 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParseAgentLookupSOAP(string(responseData))
+	if err != nil {
+		t.Logf("Parsing error: %v", err)
+		t.Logf("Response data: %s", string(responseData))
+	}
 	assert.NoError(t, err)
-	assert.NotNil(t, result, "Expected result to be non-nil")
+	if result == nil {
+		t.Fatal("Expected result to be non-nil")
+	}
 
 	// Check that the lookup succeeded
 	t.Logf("result: %v", result)
@@ -62,7 +68,7 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, strconv.Itoa(n), result.Detail.ConversationIdentifier)
+		assert.Equal(t, strconv.Itoa(n), result.Detail.OriginalConverstationIdentifier)
 		assert.Equal(t, "1.0", result.Detail.Version)
 	} else {
 		t.Error("Expected Detail to be non-nil")
