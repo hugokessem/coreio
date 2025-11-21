@@ -33,7 +33,6 @@ func (c *CoreAPI) FT(ctx context.Context, ft core.FundTransferParam) (*core.Fund
 }
 
 func main() {
-
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
