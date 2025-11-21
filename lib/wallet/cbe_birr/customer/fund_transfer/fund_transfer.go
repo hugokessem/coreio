@@ -19,6 +19,17 @@ type Params struct {
 	DebitAccountNumber     string
 	DebitAccountHolderName string
 }
+type CustomerFundTransferParams struct {
+	FTNumber               string
+	Timestamp              string
+	PrimaryParty           string
+	ReceiverParty          string
+	Amount                 string
+	Currency               string
+	Narative               string
+	DebitAccountNumber     string
+	DebitAccountHolderName string
+}
 
 func NewCustomerFundTransfer(param Params) string {
 	return fmt.Sprintf(`
@@ -122,19 +133,19 @@ type ReferenceDetail struct {
 	Value string `xml:"Value"`
 }
 
-type FundTransferDetail struct {
+type CustomerFundTransferDetail struct {
 	FTNumber                string
 	ConverstationIdentifier string
 	ReferenceDetail         []ReferenceDetail
 }
 
-type FundTransferResult struct {
+type CustomerFundTransferResult struct {
 	Status  bool
-	Detail  FundTransferDetail
+	Detail  CustomerFundTransferDetail
 	Message string
 }
 
-func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
+func ParserCustomreFundTransfer(xmlDate string) (*CustomerFundTransferResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlDate), &env)
 	if err != nil {
@@ -144,22 +155,22 @@ func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
 	if env.Body.Result.Header != nil && env.Body.Result.ResultBody != nil {
 		resp := env.Body.Result
 		if resp.ResultBody.ResultCode != "0" {
-			return &FundTransferResult{
+			return &CustomerFundTransferResult{
 				Status:  false,
 				Message: resp.ResultBody.ResultDescription,
 			}, nil
 		}
 
 		if resp.ResultBody.TransactionResult == nil || resp.ResultBody.ReferenceData == nil {
-			return &FundTransferResult{
+			return &CustomerFundTransferResult{
 				Status:  false,
 				Message: "API returned failure!",
 			}, nil
 		}
 
-		return &FundTransferResult{
+		return &CustomerFundTransferResult{
 			Status: true,
-			Detail: FundTransferDetail{
+			Detail: CustomerFundTransferDetail{
 				FTNumber:                resp.ResultBody.TransactionResult.TrasnactionId,
 				ConverstationIdentifier: resp.Header.ConversationIdentifier,
 				ReferenceDetail:         resp.ResultBody.ReferenceData.Details,
@@ -167,7 +178,7 @@ func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
 		}, nil
 	}
 
-	return &FundTransferResult{
+	return &CustomerFundTransferResult{
 		Status:  false,
 		Message: "invalid request",
 	}, nil

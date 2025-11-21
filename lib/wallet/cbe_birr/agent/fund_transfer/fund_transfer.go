@@ -7,10 +7,22 @@ import (
 
 type Params struct {
 	FTNumber               string
-	Password               string
 	Timestamp              string
-	SecurityCredential     string
+	PrimaryParty           string
+	ReceiverParty          string
+	Amount                 string
+	Currency               string
+	Narative               string
 	ThirdPartyIdentifier   string
+	Password               string
+	SecurityCredential     string
+	DebitAccountNumber     string
+	DebitAccountHolderName string
+}
+
+type AgentFundTransferParams struct {
+	FTNumber               string
+	Timestamp              string
 	PrimaryParty           string
 	ReceiverParty          string
 	Amount                 string
@@ -20,7 +32,7 @@ type Params struct {
 	DebitAccountHolderName string
 }
 
-func NewCustomerFundTransfer(param Params) string {
+func NewAgentFundTransfer(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
    <soapenv:Header/>
@@ -128,13 +140,13 @@ type FundTransferDetail struct {
 	ReferenceDetail         []ReferenceDetail
 }
 
-type FundTransferResult struct {
+type AgentFundTransferResult struct {
 	Status  bool
 	Detail  FundTransferDetail
 	Message string
 }
 
-func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
+func ParserAgentFundTransfer(xmlDate string) (*AgentFundTransferResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlDate), &env)
 	if err != nil {
@@ -144,20 +156,20 @@ func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
 	if env.Body.Result.Header != nil && env.Body.Result.ResultBody != nil {
 		resp := env.Body.Result
 		if resp.ResultBody.ResultCode != "0" {
-			return &FundTransferResult{
+			return &AgentFundTransferResult{
 				Status:  false,
 				Message: resp.ResultBody.ResultDescription,
 			}, nil
 		}
 
 		if resp.ResultBody.TransactionResult == nil || resp.ResultBody.ReferenceData == nil {
-			return &FundTransferResult{
+			return &AgentFundTransferResult{
 				Status:  false,
 				Message: "API returned failure!",
 			}, nil
 		}
 
-		return &FundTransferResult{
+		return &AgentFundTransferResult{
 			Status: true,
 			Detail: FundTransferDetail{
 				FTNumber:                resp.ResultBody.TransactionResult.TrasnactionId,
@@ -167,7 +179,7 @@ func ParserCustomreFundTransfer(xmlDate string) (*FundTransferResult, error) {
 		}, nil
 	}
 
-	return &FundTransferResult{
+	return &AgentFundTransferResult{
 		Status:  false,
 		Message: "invalid request",
 	}, nil

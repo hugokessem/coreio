@@ -13,6 +13,11 @@ type Params struct {
 	From          string
 	To            string
 }
+type MiniStatementByDateRangeParam struct {
+	AccountNumber string
+	From          string
+	To            string
+}
 
 func NewMiniStatementByDateRange(param Params) string {
 	return fmt.Sprintf(`

@@ -29,7 +29,7 @@ func TestMiniStatementGeneratedXML(t *testing.T) {
 
 	for _, tc := range test {
 		t.Run(tc.name, func(t *testing.T) {
-			xmlRequest := NewMiniStatement(tc.param)
+			xmlRequest := NewMiniStatementByLimit(tc.param)
 			for _, expectedStr := range tc.expect {
 				assert.Contains(t, xmlRequest, expectedStr)
 			}

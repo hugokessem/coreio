@@ -14,6 +14,12 @@ type Params struct {
 	PhoneNumber                     string
 }
 
+type AgentAccountLookupParams struct {
+	OriginalConverstationIdentifier string
+	Timestamp                       string
+	PhoneNumber                     string
+}
+
 func NewAgentAccountLookup(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
@@ -96,19 +102,19 @@ type OrganizationBasicData struct {
 	} `xml:"OrganizationBasicData"`
 }
 
-type CustomerLookupResponse struct {
+type AccountLookupResponse struct {
 	Version                         string
 	OriginalConverstationIdentifier string
 	ConversationIdentifier          string
 	OrganizationBasicData           OrganizationBasicData
 }
-type CustomerLookupResult struct {
+type AgentAccountLookupResult struct {
 	Success bool
-	Detail  *CustomerLookupResponse
+	Detail  *AccountLookupResponse
 	Message string
 }
 
-func ParseAgentLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
+func ParseAgentLookupSOAP(xmlData string) (*AgentAccountLookupResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
@@ -120,22 +126,22 @@ func ParseAgentLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
 		if resp.ResultBody.ResultCode != "0" {
 			// 1001 - Credential Error
 			// 1003 - Duplicate Converstation ID
-			return &CustomerLookupResult{
+			return &AgentAccountLookupResult{
 				Success: false,
 				Message: resp.ResultBody.ResultDescription,
 			}, nil
 		}
 
 		if resp.ResultBody.QueryOrganizationInfo == nil {
-			return &CustomerLookupResult{
+			return &AgentAccountLookupResult{
 				Success: false,
 				Message: "Invalid Request!",
 			}, nil
 		}
 
-		return &CustomerLookupResult{
+		return &AgentAccountLookupResult{
 			Success: true,
-			Detail: &CustomerLookupResponse{
+			Detail: &AccountLookupResponse{
 				Version:                         resp.Header.Version,
 				OriginalConverstationIdentifier: resp.Header.OriginalConverstationIdentifier,
 				ConversationIdentifier:          resp.Header.ConversationIdentifier,
@@ -144,7 +150,7 @@ func ParseAgentLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
 		}, nil
 	}
 
-	return &CustomerLookupResult{
+	return &AgentAccountLookupResult{
 		Success: false,
 	}, nil
 }

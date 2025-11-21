@@ -18,7 +18,7 @@ func TestIntegrationMiniStatement(t *testing.T) {
 		NumberOfTransaction: "3",
 	}
 
-	xmlRequest := NewMiniStatement(params)
+	xmlRequest := NewMiniStatementByLimit(params)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -40,7 +40,7 @@ func TestIntegrationMiniStatement(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseMiniStatementSOAP(string(responseData))
+	result, err := ParseMiniStatementByLimitSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 

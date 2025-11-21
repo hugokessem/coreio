@@ -13,12 +13,12 @@ type Params struct {
 	NumberOfTransaction string
 }
 
-type MiniStatementParams struct {
+type MiniStatementByLimitParams struct {
 	AccountNumber       string
 	NumberOfTransaction string
 }
 
-func NewMiniStatement(param Params) string {
+func NewMiniStatementByLimit(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
     <soapenv:Header/>
@@ -77,13 +77,13 @@ type MiniStatementDetail struct {
 	DateTime             string `xml:"DateTime"`
 }
 
-type MiniStatementResult struct {
+type MiniStatementByLimitResult struct {
 	Success bool
 	Details []MiniStatementDetail
 	Message []string
 }
 
-func ParseMiniStatementSOAP(xmlData string) (*MiniStatementResult, error) {
+func ParseMiniStatementByLimitSOAP(xmlData string) (*MiniStatementByLimitResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
@@ -93,33 +93,33 @@ func ParseMiniStatementSOAP(xmlData string) (*MiniStatementResult, error) {
 	if env.Body.MiniStatementResponse != nil {
 		resp := env.Body.MiniStatementResponse
 		if resp.Status == nil {
-			return &MiniStatementResult{
+			return &MiniStatementByLimitResult{
 				Success: false,
 				Message: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
-			return &MiniStatementResult{
+			return &MiniStatementByLimitResult{
 				Success: false,
 				Message: []string{"API returned failure"},
 			}, nil
 		}
 
 		if resp.MiniStatementType == nil {
-			return &MiniStatementResult{
+			return &MiniStatementByLimitResult{
 				Success: false,
 				Message: []string{},
 			}, nil
 		}
 
-		return &MiniStatementResult{
+		return &MiniStatementByLimitResult{
 			Success: true,
 			Details: resp.MiniStatementType.Group.Details,
 		}, nil
 	}
 
-	return &MiniStatementResult{
+	return &MiniStatementByLimitResult{
 		Success: false,
 		Message: []string{"Invalid response type"},
 	}, nil

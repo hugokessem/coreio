@@ -13,6 +13,11 @@ type Params struct {
 	SecurityCredential              string
 	PhoneNumber                     string
 }
+type CustomerAccountLookupParams struct {
+	OriginalConverstationIdentifier string
+	Timestamp                       string
+	PhoneNumber                     string
+}
 
 func NewCustomerAccountLookup(param Params) string {
 	return fmt.Sprintf(`
@@ -94,19 +99,19 @@ type KycField struct {
 	KYCValue string `xml:"KYCValue"`
 }
 
-type CustomerLookupResponse struct {
+type CustomerAccountLookupResponse struct {
 	Version                         string
 	OriginalConverstationIdentifier string
 	ConversationIdentifier          string
 	CustomerKYCData                 CustomerKYCData
 }
-type CustomerLookupResult struct {
+type CustomerAccountLookupResult struct {
 	Success bool
-	Detail  *CustomerLookupResponse
+	Detail  *CustomerAccountLookupResponse
 	Message string
 }
 
-func ParseCustomerLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
+func ParseCustomerLookupSOAP(xmlData string) (*CustomerAccountLookupResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
@@ -118,22 +123,22 @@ func ParseCustomerLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
 		if resp.ResultBody.ResultCode != "0" {
 			// 1001 - Credential Error
 			// 1003 - Duplicate Converstation ID
-			return &CustomerLookupResult{
+			return &CustomerAccountLookupResult{
 				Success: false,
 				Message: resp.ResultBody.ResultDescription,
 			}, nil
 		}
 
 		if resp.ResultBody.QueryCustomerKYCDate == nil {
-			return &CustomerLookupResult{
+			return &CustomerAccountLookupResult{
 				Success: false,
 				Message: "API returned failure!",
 			}, nil
 		}
 
-		return &CustomerLookupResult{
+		return &CustomerAccountLookupResult{
 			Success: true,
-			Detail: &CustomerLookupResponse{
+			Detail: &CustomerAccountLookupResponse{
 				Version:                         resp.Header.Version,
 				OriginalConverstationIdentifier: resp.Header.OriginalConverstationIdentifier,
 				ConversationIdentifier:          resp.Header.ConversationIdentifier,
@@ -142,7 +147,7 @@ func ParseCustomerLookupSOAP(xmlData string) (*CustomerLookupResult, error) {
 		}, nil
 	}
 
-	return &CustomerLookupResult{
+	return &CustomerAccountLookupResult{
 		Success: false,
 		Message: "invalid request!",
 	}, nil

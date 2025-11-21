@@ -10,7 +10,8 @@ import (
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
 	lockedamountrelease "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_release"
-	ministatement "github.com/hugokessem/coreio/lib/core/mini_statement"
+	ministatementbydaterange "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_date_range"
+	ministatementbylimit "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_limit"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
 	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
@@ -42,8 +43,10 @@ type UpdateStandingOrderResult = standingorderupdate.UpdateStandingOrderResult
 type CancleStandingOrderParam = standingordercancel.CancelStandingOrderParams
 type CancelStandingOrderResult = standingordercancel.CancelStandingOrderResult
 
-type MiniStatementParams = ministatement.MiniStatementParams
-type MiniStatementResult = ministatement.MiniStatementResult
+type MiniStatementByLimitParams = ministatementbylimit.MiniStatementByLimitParams
+type MiniStatementByLimitResult = ministatementbylimit.MiniStatementByLimitResult
+type MiniStatementByDateRangeParam = ministatementbydaterange.MiniStatementByDateRangeParam
+type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDateRangeResult
 
 type CBECoreAPIInterface interface {
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
@@ -58,7 +61,8 @@ type CBECoreAPIInterface interface {
 	UpdateStandingOrder(param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error)
 	CreateStandingOrder(param CreateStandingOrderParam) (*CreateStandingOrderResult, error)
 	CancleStandingOrder(param CancleStandingOrderParam) (*CancelStandingOrderResult, error)
-	MiniStatement(param MiniStatementParams) (*MiniStatementResult, error)
+	MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
+	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
 }
 
 type CBECoreCredential struct {
@@ -437,15 +441,15 @@ func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStand
 	return result, nil
 }
 
-func (c *CBECoreAPI) MiniStatement(param MiniStatementParams) (*MiniStatementResult, error) {
-	params := ministatement.Params{
+func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error) {
+	params := ministatementbylimit.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
 		AccountNumber:       param.AccountNumber,
 		NumberOfTransaction: param.NumberOfTransaction,
 	}
 
-	xmlRequest := ministatement.NewMiniStatement(params)
+	xmlRequest := ministatementbylimit.NewMiniStatementByLimit(params)
 	headers := map[string]string{
 		"Content-Type": "application/xml",
 	}
@@ -464,7 +468,42 @@ func (c *CBECoreAPI) MiniStatement(param MiniStatementParams) (*MiniStatementRes
 		return nil, err
 	}
 
-	result, err := ministatement.ParseMiniStatementSOAP(string(responseData))
+	result, err := ministatementbylimit.ParseMiniStatementByLimitSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error) {
+	params := ministatementbydaterange.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumber: param.AccountNumber,
+		From:          param.From,
+		To:            param.To,
+	}
+
+	xmlRequest := ministatementbydaterange.NewMiniStatementByDateRange(params)
+	headers := map[string]string{
+		"Content-Type": "application/xml",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := ministatementbydaterange.ParseMiniStatementByDateRangeSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
