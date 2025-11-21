@@ -35,7 +35,7 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 
 	req.Header.Add("Content-Type", "application/xml")
 	req.Header.Add("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Add("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMaQvqzWLR6zYzc_iiGBC48Xgc-QyXTT-nqxxSTjtzKg6YUbQq6FVzRw2QLPWQC2qRgV4AFJCnQMrB1wUxZ-7oGc_yUf1P6Ul1DEq-pXQYAXx0D_gOgg9rBXlAjeqPyPQCFi_t8tOQ1O7lxPLBYx0Hj")
+	req.Header.Add("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMU0v4nVOKXPo-Deygtqcvx5L5NhqfsNi-8Xu9idc6hCCD_hgaJ1X3mwCboftG3UThc-7aa7Xfb2E9fr6QKCoayTCJfidHktrJh33pjlC678iTjP3VofIqlnWqNSHB5Zgv4lfP-ckHekIk1yFNbCXyo")
 
 	client := &http.Client{
 		Transport: &http.Transport{

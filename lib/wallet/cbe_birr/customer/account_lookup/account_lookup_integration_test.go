@@ -19,7 +19,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	n := r.Intn(100078546981)
 	params := Params{
-		Password:                        "8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u",
+		Password:                        "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		OriginalConverstationIdentifier: strconv.Itoa(n),
 		ThirdPartyIdentifier:            "USSDPushCaller",
 		Timestamp:                       "20130402152345",
@@ -35,7 +35,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMaQvqzWLR6zYzc_iiGBC48Xgc-QyXTT-nqxxSTjtzKg6YUbQq6FVzRw2QLPWQC2qRgV4AFJCnQMrB1wUxZ-7oGc_yUf1P6Ul1DEq-pXQYAXx0D_gOgg9rBXlAjeqPyPQCFi_t8tOQ1O7lxPLBYx0Hj")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMU0v4nVOKXPo-Deygtqcvx5L5NhqfsNi-8Xu9idc6hCCD_hgaJ1X3mwCboftG3UThc-7aa7Xfb2E9fr6QKCoayTCJfidHktrJh33pjlC678iTjP3VofIqlnWqNSHB5Zgv4lfP-ckHekIk1yFNbCXyo")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -62,7 +62,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, strconv.Itoa(n), result.Detail.ConversationIdentifier)
+		assert.Equal(t, strconv.Itoa(n), result.Detail.OriginalConverstationIdentifier)
 		assert.Equal(t, "1.0", result.Detail.Version)
 	} else {
 		t.Error("Expected Detail to be non-nil")
