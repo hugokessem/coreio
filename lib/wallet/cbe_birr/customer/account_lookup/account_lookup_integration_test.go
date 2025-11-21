@@ -35,7 +35,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMU0v4nVOKXPo-Deygtqcvx5L5NhqfsNi-8Xu9idc6hCCD_hgaJ1X3mwCboftG3UThc-7aa7Xfb2E9fr6QKCoayTCJfidHktrJh33pjlC678iTjP3VofIqlnWqNSHB5Zgv4lfP-ckHekIk1yFNbCXyo")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMLanMADavHe19ILn7YTaiCDJug3yHSpJB-vMw7oY7XO3k1U9vpjVVqG1JjwQ7eWfkkn-68xAzQ0s9AT5mBblvrzetgk9H1NZyOWnGV15Pb3YD9vUhRIfLaRqyETnl5-rn_K-fKuek2fBcFxAV06xv-")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -53,15 +53,21 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParseCustomerLookupSOAP(string(responseData))
+	if err != nil {
+		t.Logf("Parsing error: %v", err)
+		t.Logf("Response data: %s", string(responseData))
+	}
 	assert.NoError(t, err)
-	assert.NotNil(t, result, "Expected result to be non-nil")
+	if result == nil {
+		t.Fatal("Expected result to be non-nil")
+	}
 
 	// Check that the lookup succeeded
-	t.Logf("result: %v", result)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
+		t.Logf("result: %v", result.Detail.CustomerKYCData)
 		assert.Equal(t, strconv.Itoa(n), result.Detail.OriginalConverstationIdentifier)
 		assert.Equal(t, "1.0", result.Detail.Version)
 	} else {

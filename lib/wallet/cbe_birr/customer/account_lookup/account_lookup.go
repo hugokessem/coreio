@@ -78,13 +78,15 @@ type ResultBody struct {
 	ResultType           string           `xml:"ResultType"`
 	ResultCode           string           `xml:"ResultCode"`
 	ResultDescription    string           `xml:"ResultDesc"`
-	QueryCustomerKYCDate *CustomerKYCData `xml:"QueryCustomerKYCResult"`
+	QueryCustomerKYCData *CustomerKYCData `xml:"QueryCustomerKYCResult"`
 }
 
 type CustomerKYCData struct {
-	BOCompletedTime string     `xml:"BOCompletedTime"`
-	SimpleKYCData   []KycField `xml:"SimpleKYCData"`
-	IDDetailsData   *struct {
+	BOCompletedTime string `xml:"BOCompletedTime"`
+	SimpleKYCData   *struct {
+		KycField []KycField `xml:"KycField"`
+	} `xml:"SimpleKYCData"`
+	IDDetailsData *struct {
 		IDRecord *struct {
 			IDTypeValue  string `xml:"IDTypeValue"`
 			IDNumber     string `xml:"IDNumber"`
@@ -129,7 +131,7 @@ func ParseCustomerLookupSOAP(xmlData string) (*CustomerAccountLookupResult, erro
 			}, nil
 		}
 
-		if resp.ResultBody.QueryCustomerKYCDate == nil {
+		if resp.ResultBody.QueryCustomerKYCData == nil {
 			return &CustomerAccountLookupResult{
 				Success: false,
 				Message: "API returned failure!",
@@ -142,7 +144,7 @@ func ParseCustomerLookupSOAP(xmlData string) (*CustomerAccountLookupResult, erro
 				Version:                         resp.Header.Version,
 				OriginalConverstationIdentifier: resp.Header.OriginalConverstationIdentifier,
 				ConversationIdentifier:          resp.Header.ConversationIdentifier,
-				CustomerKYCData:                 *resp.ResultBody.QueryCustomerKYCDate,
+				CustomerKYCData:                 *resp.ResultBody.QueryCustomerKYCData,
 			},
 		}, nil
 	}

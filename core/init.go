@@ -534,6 +534,7 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	headers := map[string]string{
 		"Content-Type": "application/xml",
 	}
+
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
