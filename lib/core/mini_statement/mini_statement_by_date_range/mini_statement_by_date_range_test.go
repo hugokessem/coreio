@@ -1,4 +1,4 @@
-package ministatementbylimit
+package ministatementbydaterange
 
 import (
 	"testing"
@@ -6,56 +6,58 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMiniStatementGeneratedXML(t *testing.T) {
+func TestMiniStatementByDateRangeGeneratedXML(t *testing.T) {
 	test := []struct {
 		name   string
 		param  Params
 		expect []string
 	}{
 		{
-			name: "Validate Mini Statement by Limit",
+			name: "Validate Mini Statement by Date Range",
 			param: Params{
-				Username:            "SUPERAPP",
-				Password:            "123456",
-				AccountNumber:       "1000030677308",
-				NumberOfTransaction: "4",
+				Username:      "SUPERAPP",
+				Password:      "123456",
+				AccountNumber: "1000030677308",
+				From:          "20250101",
+				To:            "20250131",
 			},
 			expect: []string{
 				`<password>123456</password>`,
 				`<userName>SUPERAPP</userName>`,
 				`<columnName>ACCOUNT</columnName>`,
 				`<criteriaValue>1000030677308</criteriaValue>`,
-				`<columnName>NO.OF.TXNS</columnName>`,
-				`<criteriaValue>4</criteriaValue>`,
+				`<columnName>BOOKING.DATE</columnName>`,
+				`<criteriaValue>20250101 20250131</criteriaValue>`,
 				`<operand>EQ</operand>`,
 			},
 		},
 		{
-			name: "Validate Mini Statement with different values",
+			name: "Validate Mini Statement by Date Range with different values",
 			param: Params{
-				Username:            "TESTUSER",
-				Password:            "PASSWORD123",
-				AccountNumber:       "2000000000001",
-				NumberOfTransaction: "10",
+				Username:      "TESTUSER",
+				Password:      "PASSWORD123",
+				AccountNumber: "2000000000001",
+				From:          "20241201",
+				To:            "20241231",
 			},
 			expect: []string{
 				`<password>PASSWORD123</password>`,
 				`<userName>TESTUSER</userName>`,
 				`<criteriaValue>2000000000001</criteriaValue>`,
-				`<criteriaValue>10</criteriaValue>`,
+				`<criteriaValue>20241201 20241231</criteriaValue>`,
 			},
 		},
 	}
 
 	for _, tc := range test {
 		t.Run(tc.name, func(t *testing.T) {
-			xmlRequest := NewMiniStatementByLimit(tc.param)
+			xmlRequest := NewMiniStatementByDateRange(tc.param)
 
 			// Validate XML structure
 			assert.Contains(t, xmlRequest, "<soapenv:Envelope")
 			assert.Contains(t, xmlRequest, "<soapenv:Body>")
-			assert.Contains(t, xmlRequest, "<cbes:AccountMiniStatement>")
-			assert.Contains(t, xmlRequest, "<CBEMINISTMTENQType>")
+			assert.Contains(t, xmlRequest, "<cbes:AccountStatementByRange>")
+			assert.Contains(t, xmlRequest, "<ACCTSTMTRGSUPERAPPType>")
 
 			// Validate all expected strings are present
 			for _, expectedStr := range tc.expect {

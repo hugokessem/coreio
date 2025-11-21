@@ -8,6 +8,7 @@ import (
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
+	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
 	lockedamountrelease "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_release"
 	ministatementbydaterange "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_date_range"
@@ -27,6 +28,8 @@ type FundTransferResult = fundtransfer.FundTransferResult
 type RevertFundTransferParam = revertfundtransfer.RevertFundTransferParams
 type RevertFundTransferResult = revertfundtransfer.RevertFundTransferResult
 
+type LockedAmountFTParam = lockedamountft.LockedAmountFTParams
+type LockedAmountFTResult = lockedamountft.LockedAmountFTResult
 type ListLockedAmountParam = lockedamountlist.ListLockedAmountParam
 type ListLockedAmountResult = lockedamountlist.ListLockedAmountResult
 type CreateLockedAmountParam = lockedamountcreate.CreateLockedAmountParam
@@ -53,6 +56,7 @@ type CBECoreAPIInterface interface {
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 
+	LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTResult, error)
 	ListLockedAmount(param ListLockedAmountParam) (*ListLockedAmountResult, error)
 	CreateLockedAmount(param CreateLockedAmountParam) (*CreateLockedAmountResult, error)
 	ReleaseLockedAmount(param ReleaseLockedAmountParam) (*ReleaseLockedAmountResult, error)
@@ -250,6 +254,48 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 	}
 
 	result, err := lockedamountcreate.ParseCreateLockedAmountSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTResult, error) {
+	params := lockedamountft.Params{
+		Username:            c.config.Username,
+		Password:            c.config.Password,
+		CreditCurrent:       param.CreditCurrent,
+		CreditAccountNumber: param.CreditAccountNumber,
+		CrediterReference:   param.CrediterReference,
+		DebitAmount:         param.DebitAmount,
+		DebitAccountNumber:  param.DebitAccountNumber,
+		DebitCurrency:       param.DebitCurrency,
+		DebiterReference:    param.DebiterReference,
+		ClientReference:     param.ClientReference,
+		LockID:              param.LockID,
+	}
+
+	xmlRequest := lockedamountft.NewLockedAmountFt(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := lockedamountft.ParseLockedAmountFTSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}

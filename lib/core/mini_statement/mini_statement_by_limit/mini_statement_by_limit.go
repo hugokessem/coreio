@@ -113,6 +113,13 @@ func ParseMiniStatementByLimitSOAP(xmlData string) (*MiniStatementByLimitResult,
 			}, nil
 		}
 
+		if resp.MiniStatementType.Group == nil {
+			return &MiniStatementByLimitResult{
+				Success: true,
+				Details: []MiniStatementDetail{},
+			}, nil
+		}
+
 		return &MiniStatementByLimitResult{
 			Success: true,
 			Details: resp.MiniStatementType.Group.Details,
