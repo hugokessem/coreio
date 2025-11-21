@@ -76,9 +76,9 @@ func (w *WalletAPI) AgentAccountLookup(param AgentAccountLookupParams) (*AgentAc
 
 	xmlRequest := agent_accountlookup.NewAgentAccountLookup(internalParams)
 	headers := map[string]string{
-		"Content-Type":     "application/xml",
+		"Content-Type":      "application/xml",
 		"iib_authorization": w.config.IIBAuthorization,
-		"Authorization":    w.config.Authorization,
+		"Authorization":     w.config.Authorization,
 	}
 
 	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
@@ -125,9 +125,9 @@ func (w *WalletAPI) AgentFundTransfer(param AgentFundTransferParams) (*AgentFund
 
 	xmlRequest := agent_fundtransfer.NewAgentFundTransfer(internalParams)
 	headers := map[string]string{
-		"Content-Type":     "application/xml",
+		"Content-Type":      "application/xml",
 		"iib_authorization": w.config.IIBAuthorization,
-		"Authorization":    w.config.Authorization,
+		"Authorization":     w.config.Authorization,
 	}
 
 	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
@@ -168,9 +168,9 @@ func (w *WalletAPI) CustomerAccountLookup(param CustomerAccountLookupParam) (*Cu
 
 	xmlRequest := cutomer_accountlookup.NewCustomerAccountLookup(internalParams)
 	headers := map[string]string{
-		"Content-Type":     "application/xml",
+		"Content-Type":      "application/xml",
 		"iib_authorization": w.config.IIBAuthorization,
-		"Authorization":    w.config.Authorization,
+		"Authorization":     w.config.Authorization,
 	}
 
 	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
@@ -217,9 +217,9 @@ func (w *WalletAPI) CustomerFundTransfer(param CustomerFundTransferParams) (*Cus
 
 	xmlRequest := cutomer_fundtransfer.NewCustomerFundTransfer(internalParams)
 	headers := map[string]string{
-		"Content-Type":     "application/xml",
+		"Content-Type":      "application/xml",
 		"iib_authorization": w.config.IIBAuthorization,
-		"Authorization":    w.config.Authorization,
+		"Authorization":     w.config.Authorization,
 	}
 
 	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
