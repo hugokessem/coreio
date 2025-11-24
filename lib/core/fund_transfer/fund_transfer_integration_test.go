@@ -20,7 +20,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CreditCurrency:      "ETB",
 		DebitAmount:         "124.00",
 		TransationID:        "TXN123456789",
-		DebitReference:      "Payment to CBE awura",
+		DebitReference:      "Payment",
 		CreditReference:     "Received payment",
 		PaymentDetail:       "Fund transfer",
 	}

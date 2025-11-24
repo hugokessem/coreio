@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIntegrationCreateStandingOrder(t *testing.T) {
+func TestIntegrationCancelStandingOrder(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",

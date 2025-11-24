@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIntegrationMiniStatement(t *testing.T) {
+func TestIntegrationMiniStatementByDate(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
@@ -48,6 +48,7 @@ func TestIntegrationMiniStatement(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
+	t.Log(result.Detail.Group)
 
 	assert.Equal(t, "1000184349713", result.Detail.AccountNumber)
 	assert.Equal(t, "1026902114", result.Detail.CustomerNumber)
