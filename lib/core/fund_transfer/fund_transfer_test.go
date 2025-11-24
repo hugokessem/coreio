@@ -22,7 +22,7 @@ func TestFundTransferGeneratedXML(t *testing.T) {
 				DebitReference:      "Payment for invoice",
 				CreditReference:     "Received payment",
 				DebitAmount:         "1500.75",
-				TransationID:        "TXN123456",
+				TransactionID:       "TXN123456",
 				PaymentDetail:       "Urgent transfer",
 			},
 			expect: []string{

@@ -54,7 +54,7 @@ func main() {
 		DebitCurrency:       "ETB",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "260.00",
-		TransationID:        "TXN12345689",
+		TransactionID:       "TXN12345689",
 		DebitReference:      "Payment to CBE awura neger eshi",
 		CreditReference:     "Received payment",
 		PaymentDetail:       "Fund transfer",

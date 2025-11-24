@@ -18,7 +18,7 @@ type Params struct {
 	DebitReference      string
 	CreditReference     string
 	DebitAmount         string
-	TransationID        string
+	TransactionID       string
 	PaymentDetail       string
 }
 
@@ -30,7 +30,7 @@ type FundTransferParam struct {
 	DebitReference      string
 	CreditReference     string
 	DebitAmount         string
-	TransationID        string
+	TransactionID       string
 	PaymentDetail       string
 }
 
@@ -68,7 +68,7 @@ func NewFundTransfer(param Params) string {
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransationID)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID)
 }
 
 type Envelope struct {
