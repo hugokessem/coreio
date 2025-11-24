@@ -1,4 +1,4 @@
-package accountlookup
+package fundtransfer
 
 import (
 	"crypto/tls"
@@ -16,18 +16,29 @@ import (
 
 func TestIPSAccountLookup(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	n := r.Intn(100078546981)
+	n := r.Intn(12345678)
+	o := r.Intn(12345678)
+	endtoend := fmt.Sprintf("ENDTOEND%s", strconv.Itoa(r.Intn(12345678)))
+	ft := fmt.Sprintf("FT%s", strconv.Itoa(r.Intn(12345678)))
 	params := Params{
-		CreditAccountNumber:  "1234567890",
-		DebitBankBIC:         "CBETETAA",
-		CreditBankBIC:        "FP",
-		BizMessageIdentifier: fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
-		MessageIdentifier:    fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
-		CreditDateTime:       "2023-06-24T00:00:00.000+03:00",
-		CreditDate:           "2023-06-24T00:00:00.000Z",
+		CreditAccountNumber:       "1234567890",
+		DebitBankBIC:              "CBETETAA",
+		CreditBankBIC:             "ETSETAA",
+		BizMessageIdentifier:      fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
+		MessageIdentifier:         fmt.Sprintf("CBETETAA%s", strconv.Itoa(o)),
+		CreditDateTime:            "2023-06-24T00:00:00.000+03:00",
+		CreditDate:                "2023-06-24T00:00:00.000Z",
+		EndToEndIdentifier:        endtoend,
+		TransactionIdentifier:     ft,
+		InterBankSettlementAmount: "10",
+		AccptanceDtatTime:         "2023-06-24T00:00:00.000+03:00",
+		InstructedAmount:          "10",
+		DebitAccountNumber:        "1234567890",
+		CreditAccountHolderName:   "test",
+		Narative:                  "Fule",
 	}
 
-	xmlRequest := NewAccountLookup(params)
+	xmlRequest := NewFundTransfer(params)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/mb_ips_soap?target=https://api-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -57,7 +68,7 @@ func TestIPSAccountLookup(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseAccountLookupSOAP(string(responseData))
+	result, err := ParseFundTransferSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
@@ -66,7 +77,10 @@ func TestIPSAccountLookup(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, "1234567890", result.Detail.CreditAccountNumber)
+		assert.Equal(t, endtoend, result.Detail.OriginalEndtoEndIdentifier)
+		assert.Equal(t, ft, result.Detail.OriginalTransactionIdentifier)
+		t.Log("passed")
+	} else {
 		t.Error("Expected Detail to be non-nil")
 	}
 }

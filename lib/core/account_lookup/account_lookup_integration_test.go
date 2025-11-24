@@ -46,7 +46,8 @@ func TestIntegrationAccountLookup(t *testing.T) {
 
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
-	// assert.NotNil(t, result.Detail)
+	assert.NotNil(t, result.Detail)
+	t.Log("result", result.Detail)
 
 	if result.Detail != nil {
 		assert.Equal(t, "1000000006924", result.Detail.AccountNumber)

@@ -35,7 +35,7 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMb9vUY6ZiQ8Hm3saAUvnOnomKNeyx2LtLKIiVOlS5HCrq0MqsVXu-dkx_rCaOz06i4p_zuv-NM0z4hsJP5gJL850zWT5NMGcLHy2Sb8hUpbW17yLXtGyC7xkVuz23grZgrKeJ_GtaTTRhivQ4apigR")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDO3fYtB73GxhqX4-4KfZLCDbwE3FSIeTnjmWmtg2VbFzelBO5qfkl1yWX4-0MpU05fkUbqsakF6JkAPJ1_Pj_bAjz3p2QL4SKqKkB9y4T7ooYQ1GQicAT0Ps4S584ZJ9YXfcnZ1RoM0-l0woO_wjVJ3")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -63,7 +63,6 @@ func TestIntegrationAgentAccountLookup(t *testing.T) {
 	}
 
 	// Check that the lookup succeeded
-	t.Logf("result: %v", result)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 

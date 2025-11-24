@@ -40,7 +40,7 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMrRWF4sCCASFEJLE1w2rkAJbx3lraVZ_xGEn4ao-5OLEQ1BhLXvDyRsJIfTMRKpDZ-yxwp7_WkT2chr1wWHu-92fgGsyE9lgyU1ep2XQ8H8Y8UK_aZaVfF5bKvKIXbhKF7_seLlgBIY2Ai8OWc6KTU")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDO3fYtB73GxhqX4-4KfZLCDbwE3FSIeTnjmWmtg2VbFzelBO5qfkl1yWX4-0MpU05fkUbqsakF6JkAPJ1_Pj_bAjz3p2QL4SKqKkB9y4T7ooYQ1GQicAT0Ps4S584ZJ9YXfcnZ1RoM0-l0woO_wjVJ3")
 
 	client := &http.Client{
 		Transport: &http.Transport{

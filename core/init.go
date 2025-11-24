@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"io"
 	"time"
 
@@ -497,7 +498,7 @@ func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*Mi
 
 	xmlRequest := ministatementbylimit.NewMiniStatementByLimit(params)
 	headers := map[string]string{
-		"Content-Type": "application/xml",
+		"Content-Type": "text/xml; charset=utf-8",
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -531,8 +532,9 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	}
 
 	xmlRequest := ministatementbydaterange.NewMiniStatementByDateRange(params)
+	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
-		"Content-Type": "application/xml",
+		"Content-Type": "text/xml; charset=utf-8",
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -551,6 +553,7 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	}
 
 	result, err := ministatementbydaterange.ParseMiniStatementByDateRangeSOAP(string(responseData))
+	fmt.Println("result", result)
 	if err != nil {
 		return nil, err
 	}
