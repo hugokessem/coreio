@@ -21,10 +21,11 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 	var err error
 
 	client := &http.Client{
-		Timeout: config.Timeout,
+		// Timeout: config.Timeout * time.Second,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
+				InsecureSkipVerify: false,
+				MinVersion:         tls.VersionTLS13,
 			},
 			DisableKeepAlives: true,
 			IdleConnTimeout:   10 * time.Second,
@@ -46,8 +47,8 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 			return resp, nil // success or 4xx error (no retry)
 		}
 
-		// Clean up response if we'll retry
-		if resp != nil && resp.Body != nil {
+		// Clean up response if we’ll retry
+		if resp != nil {
 			io.Copy(io.Discard, resp.Body)
 			resp.Body.Close()
 		}
