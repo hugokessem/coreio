@@ -102,7 +102,7 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 		}
 
 		if resp.ListStandingOrderType == nil ||
-			resp.ListStandingOrderType.Group != nil ||
+			resp.ListStandingOrderType.Group == nil ||
 			len(resp.ListStandingOrderType.Group.Details) == 0 {
 			return &ListStandingOrderResult{
 				Success: true,
