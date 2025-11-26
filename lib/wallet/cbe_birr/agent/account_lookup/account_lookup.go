@@ -121,7 +121,7 @@ func ParseAgentLookupSOAP(xmlData string) (*AgentAccountLookupResult, error) {
 		return nil, err
 	}
 
-	if env.Body.Result.Header != nil && env.Body.Result.ResultBody != nil {
+	if env.Body.Result != nil && env.Body.Result.Header != nil && env.Body.Result.ResultBody != nil {
 		resp := env.Body.Result
 		if resp.ResultBody.ResultCode != "0" {
 			// 1001 - Credential Error
@@ -136,6 +136,13 @@ func ParseAgentLookupSOAP(xmlData string) (*AgentAccountLookupResult, error) {
 			return &AgentAccountLookupResult{
 				Success: false,
 				Message: "Invalid Request!",
+			}, nil
+		}
+
+		if resp.ResultBody.QueryOrganizationInfo.OrganizationBasicData == nil {
+			return &AgentAccountLookupResult{
+				Success: false,
+				Message: "Invalid Request! Missing OrganizationBasicData",
 			}, nil
 		}
 
