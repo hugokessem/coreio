@@ -71,7 +71,7 @@ func TestParseListStandingOrderSOAP(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.True(t, result.Success)
 	assert.Len(t, result.Details, 1)
-	
+
 	if len(result.Details) > 0 {
 		detail := result.Details[0]
 		assert.Equal(t, "1000000006924.13", detail.StandingOrderId)
