@@ -85,7 +85,7 @@ type ResultBody struct {
 type CustomerKYCData struct {
 	BOCompletedTime string `xml:"BOCompletedTime"`
 	SimpleKYCData   *struct {
-		KycField []KycField `xml:"KycField"`
+		KycField []KycField `xml:"KYCField"`
 	} `xml:"SimpleKYCData"`
 	IDDetailsData *struct {
 		IDRecord *struct {
