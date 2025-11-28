@@ -70,6 +70,7 @@ type AccountLookupDetail struct {
 	WorkingBalance string `xml:"WorkingBalance"`
 	CustomerID     string `xml:"CustomerID"`
 	AccountType    string `xml:"AccountType"`
+	PhoneNumber    string `xml:"PhoneNo"`
 }
 
 // ----------------- Failure or no records -----------------
@@ -127,6 +128,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 				WorkingBalance: resp.AccountEnquirySuperappType.Group.Details.WorkingBalance,
 				CustomerID:     resp.AccountEnquirySuperappType.Group.Details.CustomerID,
 				AccountType:    resp.AccountEnquirySuperappType.Group.Details.AccountType,
+				PhoneNumber:    resp.AccountEnquirySuperappType.Group.Details.PhoneNumber,
 			},
 		}, nil
 	}
