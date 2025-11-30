@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns26:CustomerInformationDetailsResponse
+            xmlns:ns2="http://temenos.com/ACCTSTOLISTHISSUPERAPP"
+            xmlns:ns3="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP"
+            xmlns:ns4="http://temenos.com/FUNDSTRANSFER"
+            xmlns:ns5="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP"
+            xmlns:ns6="http://temenos.com/ATMCARDTYPEENQMBX"
+            xmlns:ns7="http://temenos.com/ATMCARDSTATUSENQMBX"
+            xmlns:ns8="http://temenos.com/BRANCHLISTSUPERAPP"
+            xmlns:ns9="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP"
+            xmlns:ns10="http://temenos.com/ACCTSTMTRGSUPERAPP"
+            xmlns:ns11="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP"
+            xmlns:ns12="http://temenos.com/ACLOCKEDEVENTS"
+            xmlns:ns13="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP"
+            xmlns:ns14="http://temenos.com/STANDINGORDER"
+            xmlns:ns15="http://temenos.com/ACCOUNTENQUIRYSUPERAPP"
+            xmlns:ns16="http://temenos.com/CBEMINISTMTENQ"
+            xmlns:ns17="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP"
+            xmlns:ns18="http://temenos.com/ATMCARDREGDET"
+            xmlns:ns19="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP"
+            xmlns:ns20="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP"
+            xmlns:ns21="http://temenos.com/CUSTOMERINFOSUPERAPP"
+            xmlns:ns22="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP"
+            xmlns:ns23="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP"
+            xmlns:ns24="http://temenos.com/ACCTSTOLISTSUPERAPP"
+            xmlns:ns25="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP"
+            xmlns:ns26="http://temenos.com/CBESUPERAPP">
+            <Status>
+                <successIndicator>Success</successIndicator>
+            </Status>
+            <CUSTOMERINFOSUPERAPPType>
+                <ns21:gCUSTOMERINFOSUPERAPPDetailType>
+                    <ns21:mCUSTOMERINFOSUPERAPPDetailType>
+                        <ns21:FullName>LUKAS DASALEGN HATIYE</ns21:FullName>
+                        <ns21:BirthDate>19630507</ns21:BirthDate>
+                        <ns21:Gender>MALE</ns21:Gender>
+                        <ns21:Address>SNNPWO</ns21:Address>
+                        <ns21:PhoneNumber>+251916138917</ns21:PhoneNumber>
+                        <ns21:Email></ns21:Email>
+                        <ns21:City>SNNP</ns21:City>
+                        <ns21:Nationality>ET</ns21:Nationality>
+                        <ns21:MaritalStatus>MARRIED</ns21:MaritalStatus>
+                        <ns21:PostalCode></ns21:PostalCode>
+                        <ns21:IDDocument>KEBELE ID</ns21:IDDocument>
+                        <ns21:Title>MR</ns21:Title>
+                        <ns21:FirstName>LUKAS</ns21:FirstName>
+                        <ns21:LastName>DASALEGN</ns21:LastName>
+                    </ns21:mCUSTOMERINFOSUPERAPPDetailType>
+                </ns21:gCUSTOMERINFOSUPERAPPDetailType>
+            </CUSTOMERINFOSUPERAPPType>
+        </ns26:CustomerInformationDetailsResponse>
+    </S:Body>
+</S:Envelope>
