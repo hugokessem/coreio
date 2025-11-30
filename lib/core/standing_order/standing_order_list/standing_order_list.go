@@ -110,9 +110,27 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 			}, nil
 		}
 
+		details := resp.ListStandingOrderType.Group.Details
+		detailsList := make([]ListStandingOrderDetail, len(details))
+		for i, detail := range details {
+			detailsList[i] = ListStandingOrderDetail{
+				StandingOrderId:         detail.StandingOrderId,
+				OrderType:               detail.OrderType,
+				PaymentDetail:           detail.PaymentDetail,
+				Currency:                detail.Currency,
+				Amount:                  detail.Amount,
+				Frequency:               detail.Frequency,
+				DebitAccountNumber:      detail.DebitAccountNumber,
+				DebitAccountHolderName:  detail.DebitAccountHolderName,
+				CreditAccountNumber:     detail.CreditAccountNumber,
+				CreditAccountHolderName: detail.CreditAccountHolderName,
+				CurrentDate:             detail.CurrentDate,
+			}
+		}
+
 		return &ListStandingOrderResult{
 			Success: true,
-			Details: resp.ListStandingOrderType.Group.Details,
+			Details: detailsList,
 		}, nil
 	}
 
