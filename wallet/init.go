@@ -141,7 +141,7 @@ func (w *WalletAPI) AgentFundTransfer(param AgentFundTransferParams) (*AgentFund
 		return nil, err
 	}
 
-	result, err := agent_fundtransfer.ParserAgentFundTransfer(string(responseData))
+	result, err := agent_fundtransfer.ParseAgentFundTransfer(string(responseData))
 	if err != nil {
 		return nil, err
 	}

@@ -9,6 +9,7 @@ import (
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
+	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
@@ -27,6 +28,8 @@ type AccountLookupParam = accountlookup.AccountLookupParam
 type AccountLookupResult = accountlookup.AccountLookupResult
 type FundTransferParam = fundtransfer.FundTransferParam
 type FundTransferResult = fundtransfer.FundTransferResult
+type FundTransferCheckParam = fundtransfercheck.FundTransferCheckParams
+type FundTransferCheckResult = fundtransfercheck.FundTransferCheckResult
 type RevertFundTransferParam = revertfundtransfer.RevertFundTransferParams
 type RevertFundTransferResult = revertfundtransfer.RevertFundTransferResult
 
@@ -58,6 +61,7 @@ type CustomerLookupResult = customerlookup.CustomerLookupResult
 
 type CBECoreAPIInterface interface {
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
+	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 
@@ -189,6 +193,40 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 	}
 
 	result, err := fundtransfer.ParseFundTransferSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *CBECoreAPI) FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error) {
+	params := fundtransfercheck.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		FTNumber: param.FTNumber,
+	}
+
+	xmlRequest := fundtransfercheck.NewFundTransferCheck(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := fundtransfercheck.ParseFundTransferCheckSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}

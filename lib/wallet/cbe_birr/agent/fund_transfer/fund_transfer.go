@@ -114,7 +114,7 @@ type Result struct {
 }
 type Header struct {
 	Version                         string `xml:"Version"`
-	OriginalConverstationIdentifier string `xml:"OriginatorConversationID"`
+	OriginalConversationIdentifier string `xml:"OriginatorConversationID"`
 	ConversationIdentifier          string `xml:"ConversationID"`
 }
 
@@ -123,7 +123,7 @@ type ResultBody struct {
 	ResultCode        string `xml:"ResultCode"`
 	ResultDescription string `xml:"ResultDesc"`
 	TransactionResult *struct {
-		TrasnactionId string `xml:"TransactionID"`
+		TransactionId string `xml:"TransactionID"`
 	} `xml:"TransactionResult"`
 	ReferenceData *struct {
 		Details []ReferenceDetail `xml:"ReferenceItem"`
@@ -137,7 +137,7 @@ type ReferenceDetail struct {
 
 type FundTransferDetail struct {
 	FTNumber                string
-	ConverstationIdentifier string
+	ConversationIdentifier string
 	ReferenceDetail         []ReferenceDetail
 }
 
@@ -147,9 +147,9 @@ type AgentFundTransferResult struct {
 	Message string
 }
 
-func ParserAgentFundTransfer(xmlDate string) (*AgentFundTransferResult, error) {
+func ParseAgentFundTransfer(xmlData string) (*AgentFundTransferResult, error) {
 	var env Envelope
-	err := xml.Unmarshal([]byte(xmlDate), &env)
+	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
 		return nil, err
 	}
@@ -173,8 +173,8 @@ func ParserAgentFundTransfer(xmlDate string) (*AgentFundTransferResult, error) {
 		return &AgentFundTransferResult{
 			Status: true,
 			Detail: &FundTransferDetail{
-				FTNumber:                resp.ResultBody.TransactionResult.TrasnactionId,
-				ConverstationIdentifier: resp.Header.ConversationIdentifier,
+				FTNumber:                resp.ResultBody.TransactionResult.TransactionId,
+				ConversationIdentifier: resp.Header.ConversationIdentifier,
 				ReferenceDetail:         resp.ResultBody.ReferenceData.Details,
 			},
 		}, nil

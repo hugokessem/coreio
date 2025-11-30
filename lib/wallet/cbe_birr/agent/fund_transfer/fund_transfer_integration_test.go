@@ -57,7 +57,7 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParserAgentFundTransfer(string(responseData))
+	result, err := ParseAgentFundTransfer(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
@@ -68,7 +68,7 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 	if result.Detail != nil {
 		assert.True(t, result.Status)
 		assert.NotEmpty(t, result.Detail.FTNumber)
-		assert.NotEmpty(t, result.Detail.ConverstationIdentifier)
+		assert.NotEmpty(t, result.Detail.ConversationIdentifier)
 		assert.Greater(t, len(result.Detail.ReferenceDetail), 0)
 	} else {
 		t.Error("Expected Detail to be non-nil")
