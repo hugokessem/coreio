@@ -35,7 +35,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 
 	req.Header.Set("Content-Type", "application/xml")
 	req.Header.Set("iib_authorization", "Basic VW5pZmllZDpQYXNzd29yZA==")
-	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDOIXvWPVqJ_ZaUmLOWGwjkzvBC9mSUuHcepWk98MT2pPYoRxuMjUSCEAJSNHNgI44_-Ta5-ogX8K5uQVs2NX_zD-AgmxeiLysKCpId5xKiDBpOfRHvo_RAnWiVskSqsMh8SIeu0V7fndsXXazBA_bwq")
+	req.Header.Set("Authorization", "Bearer AAIgZjFjZWViZDhkNmQ1YjgwMmRjN2ZkODMzMmFiMzM2MDMvZwY6NerYvcf5bD5UHo6YCGJ5bjjyk1kp77SK2DmFnPTMuorkYxE090DDB0XEY9PF8MkJTyYuyGrd4g2ywbxX7YoKJpisSnF5_YYl0nNGspW0evSOfcxhrd73m2Hr5_8YchqCuszX3AiNbfzBv5lT")
 
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -65,6 +65,13 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
+	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField)
+	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[7].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[7].KYCValue)
+	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[24].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[24].KYCValue)
+	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[25].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[25].KYCValue)
+	t.Log("fistname", result.Detail.FirstName)
+	t.Log("lastname", result.Detail.LastName)
+	t.Log("phonenumber", result.Detail.PhoneNumber)
 
 	if result.Detail != nil {
 		t.Logf("result: %v", result.Detail.CustomerKYCData)

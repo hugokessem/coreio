@@ -50,7 +50,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
 	// Check that the lookup succeededt
-	t.Log(result)
+	t.Log(result.Detail)
 
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)

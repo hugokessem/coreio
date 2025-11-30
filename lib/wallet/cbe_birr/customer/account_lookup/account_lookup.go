@@ -107,6 +107,10 @@ type CustomerAccountLookupResponse struct {
 	OriginalConverstationIdentifier string
 	ConversationIdentifier          string
 	CustomerKYCData                 CustomerKYCData
+	FirstName                       string
+	MiddleName                      string
+	LastName                        string
+	PhoneNumber                     string
 }
 type CustomerAccountLookupResult struct {
 	Success bool
@@ -146,6 +150,9 @@ func ParseCustomerLookupSOAP(xmlData string) (*CustomerAccountLookupResult, erro
 				OriginalConverstationIdentifier: resp.Header.OriginalConverstationIdentifier,
 				ConversationIdentifier:          resp.Header.ConversationIdentifier,
 				CustomerKYCData:                 *resp.ResultBody.QueryCustomerKYCData,
+				FirstName:                       resp.ResultBody.QueryCustomerKYCData.SimpleKYCData.KycField[24].KYCValue,
+				LastName:                        resp.ResultBody.QueryCustomerKYCData.SimpleKYCData.KycField[25].KYCValue,
+				PhoneNumber:                     resp.ResultBody.QueryCustomerKYCData.SimpleKYCData.KycField[7].KYCValue,
 			},
 		}, nil
 	}
