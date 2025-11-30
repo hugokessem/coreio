@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationCustomerLookup(t *testing.T) {
-	params := CustomerLookup{
+	params := Params{
 		Username:           "SUPERAPP",
 		Password:           "123456",
 		CustomerIdentifier: "1020746756",

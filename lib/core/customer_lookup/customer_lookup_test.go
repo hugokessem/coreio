@@ -9,12 +9,12 @@ import (
 func TestNewCustomerLookupGeneratedXML(t *testing.T) {
 	test := []struct {
 		name   string
-		param  CustomerLookup
+		param  Params
 		expect []string
 	}{
 		{
 			name: "Validate Customer Lookup XML Generation",
-			param: CustomerLookup{
+			param: Params{
 				Username:           "SUPERAPP",
 				Password:           "123456",
 				CustomerIdentifier: "1000123456789",
@@ -35,7 +35,7 @@ func TestNewCustomerLookupGeneratedXML(t *testing.T) {
 		},
 		{
 			name: "Validate Customer Lookup with different values",
-			param: CustomerLookup{
+			param: Params{
 				Username:           "TESTUSER",
 				Password:           "TESTPASS",
 				CustomerIdentifier: "2000987654321",

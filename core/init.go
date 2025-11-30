@@ -7,6 +7,7 @@ import (
 
 	"github.com/hugokessem/coreio/core/internal"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
+	customerlookup "github.com/hugokessem/coreio/lib/core/customer_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
@@ -52,6 +53,9 @@ type MiniStatementByLimitResult = ministatementbylimit.MiniStatementByLimitResul
 type MiniStatementByDateRangeParam = ministatementbydaterange.MiniStatementByDateRangeParam
 type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDateRangeResult
 
+type CustomerLookupParam = customerlookup.CustomerLookupParam
+type CustomerLookupResult = customerlookup.CustomerLookupResult
+
 type CBECoreAPIInterface interface {
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
@@ -68,6 +72,8 @@ type CBECoreAPIInterface interface {
 	CancleStandingOrder(param CancleStandingOrderParam) (*CancelStandingOrderResult, error)
 	MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
 	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
+
+	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
 }
 
 type CBECoreCredential struct {
@@ -553,6 +559,41 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	}
 
 	result, err := ministatementbydaterange.ParseMiniStatementByDateRangeSOAP(string(responseData))
+	fmt.Println("result", result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error) {
+	params := customerlookup.Params{
+		Username:           c.config.Username,
+		Password:           c.config.Password,
+		CustomerIdentifier: param.CustomerIdentifier,
+	}
+	xmlRequest := customerlookup.NewCustomerLookup(params)
+	fmt.Println("xmlRequest", xmlRequest)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := customerlookup.ParseCustomerLookupSOAP(string(responseData))
 	fmt.Println("result", result)
 	if err != nil {
 		return nil, err

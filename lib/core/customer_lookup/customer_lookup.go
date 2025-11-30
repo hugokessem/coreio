@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type CustomerLookup struct {
+type Params struct {
 	Username           string
 	Password           string
 	CustomerIdentifier string
@@ -14,11 +14,9 @@ type CustomerLookup struct {
 
 type CustomerLookupParam struct {
 	CustomerIdentifier string
-	Username           string
-	Password           string
 }
 
-func NewCustomerLookup(param CustomerLookup) string {
+func NewCustomerLookup(param Params) string {
 	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
 xmlns:cbes="http://temenos.com/CBESUPERAPP">
     <soapenv:Header/>
