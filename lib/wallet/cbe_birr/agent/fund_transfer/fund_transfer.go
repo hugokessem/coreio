@@ -113,9 +113,9 @@ type Result struct {
 	ResultBody *ResultBody `xml:"Body"`
 }
 type Header struct {
-	Version                         string `xml:"Version"`
+	Version                        string `xml:"Version"`
 	OriginalConversationIdentifier string `xml:"OriginatorConversationID"`
-	ConversationIdentifier          string `xml:"ConversationID"`
+	ConversationIdentifier         string `xml:"ConversationID"`
 }
 
 type ResultBody struct {
@@ -136,9 +136,9 @@ type ReferenceDetail struct {
 }
 
 type FundTransferDetail struct {
-	FTNumber                string
+	FTNumber               string
 	ConversationIdentifier string
-	ReferenceDetail         []ReferenceDetail
+	ReferenceDetail        []ReferenceDetail
 }
 
 type AgentFundTransferResult struct {
@@ -173,9 +173,9 @@ func ParseAgentFundTransfer(xmlData string) (*AgentFundTransferResult, error) {
 		return &AgentFundTransferResult{
 			Status: true,
 			Detail: &FundTransferDetail{
-				FTNumber:                resp.ResultBody.TransactionResult.TransactionId,
+				FTNumber:               resp.ResultBody.TransactionResult.TransactionId,
 				ConversationIdentifier: resp.Header.ConversationIdentifier,
-				ReferenceDetail:         resp.ResultBody.ReferenceData.Details,
+				ReferenceDetail:        resp.ResultBody.ReferenceData.Details,
 			},
 		}, nil
 	}
