@@ -20,7 +20,7 @@ func TestIPSAccountLookup(t *testing.T) {
 	params := Params{
 		CreditAccountNumber:  "1234567890",
 		DebitBankBIC:         "CBETETAA",
-		CreditBankBIC:        "FP",
+		CreditBankBIC:        "ETSETAA",
 		BizMessageIdentifier: fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
 		MessageIdentifier:    fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
 		CreditDateTime:       "2023-06-24T00:00:00.000+03:00",
@@ -39,7 +39,7 @@ func TestIPSAccountLookup(t *testing.T) {
 	req.Header.Set("password", "cbe1")
 	req.Header.Set("grant_type", "password")
 	req.Header.Set("Jwt_Assertion", "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJDQkVURVRBQSIsImNlcnRfaXNzIjoiQ049VEVTVCBFVFMgSVBTIElzc3VpbmcgQ0EsIE89RXRoU3dpdGNoLCBDPUVUIiwiY2VydF9zbiI6IjQyMzcxNDE1OTEwNjI1MzI5NjM5NDAzNTQxMTM0NDcwNjU1Njk4MDYyNTQ3MiIsImp0aSI6IjExMjIzMzEyNDEyMzIxIiwiZXhwIjo0NjgzNDc2NjU3MDR9.HhTOwliC86XOhpXhNUwD0t_-S7tcSvAoJrs5fLnzQ7jjJHu3GrjZKyqjhzjg5E5DydsOiht8BONlYeuSjou9QD7ZMayzq1DATdo26TVsSzLrp4Ao_8c12xbCYV8yvGjI1xXOGTNF08ylxcznGj-Jiyp9QmywTQFIGPceJYEsi83TJePbO2dWiHIyQexT45dNivp1DAvxk8CD7W63q_R4bRgKW-F8thy9ER5NC-V5l_xWSxvPl0Iu_JyD1ig59Mpc5UjQ92fpe1D0vXBsRrDMmqCVWL5Axj9ZTKY9HZziu0kNQxgpxKB1ZXFs_Btoqni6LWE4sO_i9JV9uyPOFmy7vw")
-	req.Header.Set("Authorization", "Bearer AAIgNTljMjFmZThhMDdhN2NiNmYzNjM2ZjZmMzExMjQ2NTNehw667-rm4bCYAIp0D73Eo3SMq-8IXfXBXfn1TGYvbBRz09OVjY4Rwb2DAX9IqLpBg1FkXINYZF8RApxIlQuJRFSpr2ILOabI7PZaBoRPJWVJnZeAGL8XlxSYvGizoWwLGEoncYUCLoBsLKqRFXMv")
+	req.Header.Set("Authorization", "Bearer AAIgNTljMjFmZThhMDdhN2NiNmYzNjM2ZjZmMzExMjQ2NTPdvOxGLQLlybCMT-2xD5BR45UFUrCIkbce_hFB_u-1lQkRNtxxD6QaeinffTK3hiDTHYJYKRn8nNAlwUxk8BxHC5ZfpW2Lo1KHibwzIaAJg0GEcz6NYazhraJomLRjxd1Q_DhXomWrqxo8eRKJB1u5")
 
 	client := &http.Client{
 		Timeout: 30 * time.Second,

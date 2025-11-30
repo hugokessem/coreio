@@ -90,7 +90,7 @@ func NewAccountLookup(param Params) string {
             </input1>
         </mb:AccountVerfication>
     </soapenv:Body>
-</soapenv:Envelope>`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, "ETSETAA", param.MessageIdentifier, param.CreditAccountNumber)
+</soapenv:Envelope>`, param.DebitBankBIC, "FP", param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.MessageIdentifier, param.CreditAccountNumber)
 }
 
 type Envelope struct {
