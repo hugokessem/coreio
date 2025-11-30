@@ -8,7 +8,7 @@ import (
 	"github.com/hugokessem/coreio/core/internal"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer_lookup"
-	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer"
+	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
