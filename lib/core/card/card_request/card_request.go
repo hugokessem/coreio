@@ -15,6 +15,13 @@ type Params struct {
 	CardType      string
 }
 
+type CardRequestParam struct {
+	AccountNumber string
+	BranchCode    string
+	PhoneNumber   string
+	CardType      string
+}
+
 func NewCardRequest(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -86,13 +93,13 @@ type ATMCardRequestDetail struct {
 	VirtualFlag string `xml:"VIRTUALFLAG"`
 }
 
-type ATMCardRequestResult struct {
+type CardRequestResult struct {
 	Success  bool
 	Detail   *ATMCardRequestDetail
 	Messages []string
 }
 
-func ParseATMCardRequestSOAP(xmlData string) (*ATMCardRequestResult, error) {
+func ParseATMCardRequestSOAP(xmlData string) (*CardRequestResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
@@ -102,31 +109,31 @@ func ParseATMCardRequestSOAP(xmlData string) (*ATMCardRequestResult, error) {
 	if env.Body.ATMCardNewRequestResponse == nil {
 		resp := env.Body.ATMCardNewRequestResponse
 		if resp.Status == nil {
-			return &ATMCardRequestResult{
+			return &CardRequestResult{
 				Success:  false,
 				Messages: []string{"Missing Status"},
 			}, nil
 		}
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
-			return &ATMCardRequestResult{
+			return &CardRequestResult{
 				Success:  false,
 				Messages: []string{"API returned failure"},
 			}, nil
 		}
 		if resp.ATMCardRequestDetail == nil {
-			return &ATMCardRequestResult{
+			return &CardRequestResult{
 				Success:  false,
 				Messages: []string{"Missing ATMCardRequestDetail"},
 			}, nil
 		}
 
-		return &ATMCardRequestResult{
+		return &CardRequestResult{
 			Success: true,
 			Detail:  resp.ATMCardRequestDetail,
 		}, nil
 	}
 
-	return &ATMCardRequestResult{
+	return &CardRequestResult{
 		Success: true,
 		Detail:  env.Body.ATMCardNewRequestResponse.ATMCardRequestDetail,
 	}, nil

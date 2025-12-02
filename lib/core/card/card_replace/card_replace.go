@@ -17,6 +17,15 @@ type Params struct {
 	ProductType       string
 }
 
+type CardReplaceParam struct {
+	AccountNumber     string
+	BranchCode        string
+	PhoneNumber       string
+	CardType          string
+	ReplacementReason string
+	ProductType       string
+}
+
 func NewCardReplace(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:atm="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP">

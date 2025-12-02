@@ -55,7 +55,7 @@ func main() {
 		CreditCurrency:      "ETB",
 		DebitAmount:         "260.00",
 		TransactionID:       "TXN12345689",
-		DebitReference:      "Payment to CBE awura neger eshi",
+		DebitReference:      "Payment",
 		CreditReference:     "Received payment",
 		PaymentDetail:       "Fund transfer",
 	}
@@ -76,8 +76,8 @@ func main() {
 	fmt.Println("result", result)
 	if result.Success {
 		fmt.Println("amount", result)
-		// fmt.Println("credit account number", result.Detail.Currency)
-		// fmt.Println("ft", result.Detail.TransactionID)
+		fmt.Println("TransctionID", result.Detail.TransactionID)
+		fmt.Println("ft", result.Detail.FTNumber)
 		return
 	} else {
 		// fmt.Println("error", result.Message)

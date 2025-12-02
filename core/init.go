@@ -7,6 +7,8 @@ import (
 
 	"github.com/hugokessem/coreio/core/internal"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
+	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
+	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
@@ -59,6 +61,11 @@ type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDa
 type CustomerLookupParam = customerlookup.CustomerLookupParam
 type CustomerLookupResult = customerlookup.CustomerLookupResult
 
+type CardReplaceParam = cardreplace.CardReplaceParam
+type CardReplaceResult = cardreplace.CardReplaceResult
+type CardRequestParam = cardrequest.CardRequestParam
+type CardRequestResult = cardrequest.CardRequestResult
+
 type CBECoreAPIInterface interface {
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
@@ -78,6 +85,9 @@ type CBECoreAPIInterface interface {
 	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
 
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
+
+	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
+	CardRequest(param CardRequestParam) (*CardRequestResult, error)
 }
 
 type CBECoreCredential struct {
@@ -633,6 +643,72 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 
 	result, err := customerlookup.ParseCustomerLookupSOAP(string(responseData))
 	fmt.Println("result", result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CardReplace(param CardReplaceParam) (*CardReplaceResult, error) {
+	params := cardreplace.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumber: param.AccountNumber,
+	}
+	xmlRequest := cardreplace.NewCardReplace(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := cardreplace.ParseCardReplaceResponse(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, error) {
+	params := cardrequest.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumner: param.AccountNumber,
+		BranchCode:    param.BranchCode,
+		PhoneNumber:   param.PhoneNumber,
+		CardType:      param.CardType,
+	}
+
+	xmlRequest := cardrequest.NewCardRequest(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := cardrequest.ParseATMCardRequestSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}

@@ -294,8 +294,24 @@ type Document struct {
 }
 
 type PaymentResponseDetail struct {
+	CreditBankBIC                 string
+	DebitBankBIC                  string
+	CreditAccountNumber           string
+	CreditAccountHolderName       string
+	DebitAccountNumber            string
+	DebitAccountHolderName        string
+	CreditDate                    string
+	CreditDateTime                string
+	EndToEndIdentifier            string
+	TransactionIdentifier         string
+	InterBankSettlementAmount     string
+	AccptanceDtatTime             string
+	InstructedAmount              string
+	Narative                      string
 	OriginalTransactionIdentifier string
 	OriginalEndtoEndIdentifier    string
+	OriginalCreditDateTime        string
+	OriginalMessageIdentifier     string
 }
 
 type FundTransferResult struct {
@@ -325,6 +341,21 @@ func ParseFundTransferSOAP(xmlDate string) (*FundTransferResult, error) {
 			Detail: &PaymentResponseDetail{
 				OriginalTransactionIdentifier: resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OriginalTransactionIdentifier,
 				OriginalEndtoEndIdentifier:    resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OriginalEndtoEndIdentifier,
+				OriginalCreditDateTime:        resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlGrpInf.OriginalCreditDateTime,
+				OriginalMessageIdentifier:     resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlGrpInf.OriginalMessageIdentifier,
+				InterBankSettlementAmount:     resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.InterBankSettlementAmount,
+				AccptanceDtatTime:             resp.Document.FIToFIPmtStsRpt.TxInfAndSts.AccptanceDtatTime,
+				InstructedAmount:              resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.InterBankSettlementAmount,
+				DebitAccountNumber:            resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.Dbtr.Pty.Nm,
+				DebitAccountHolderName:        resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.Dbtr.Pty.Nm,
+				CreditBankBIC:                 resp.AppHdr.To.FIID.FinInstnId.Other.Identifier,
+				DebitBankBIC:                  resp.AppHdr.From.FIID.FinInstnId.Other.Identifier,
+				CreditDate:                    resp.AppHdr.CreditDate,
+				CreditDateTime:                resp.AppHdr.Rltd.CreditDate,
+				EndToEndIdentifier:            resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OriginalEndtoEndIdentifier,
+				CreditAccountNumber:           resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.CdtrAcct.Id.Othr.Id,
+				CreditAccountHolderName:       resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.Cdtr.Pty.Nm,
+				Narative:                      resp.Document.FIToFIPmtStsRpt.TxInfAndSts.OrgnlTransactionRefrence.RmtInf.Ustrd,
 			},
 		}, nil
 
