@@ -78,27 +78,26 @@ type Body struct {
 }
 
 type FundTransferDetail struct {
-	TransactionType                   string   `xml:"TRANSACTIONTYPE"`
-	XMLName                           xml.Name `xml:"FUNDSTRANSFERType"`
-	FTNumber                          string   `xml:"id,attr"`
-	TransactionID                     string   `xml:"MTOREF"`
-	DebitAccountNumber                string   `xml:"DEBITACCTNO"`
-	DebitAccountHolderName            string   `xml:"SENDERNAME"`
-	DebitAccountCurrentWorkingBalance string   `xml:"CEKCS"`
-	DebitReference                    string   `xml:"DEBITTHEIRREF"`
-	DebitCurrency                     string   `xml:"DEBITCURRENCY"`
-	DebitAmount                       string   `xml:"DEBITAMOUNT"`
-	DebitAmountWithCurrency           string   `xml:"AMOUNTDEBITED"`
-
-	CreditAccountHolderName            string `xml:"RECEIVERNAME"`
-	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
-	CreditAccountNumber                string `xml:"CREDITACCTNO"`
-	CreditAmountWithCurrency           string `xml:"AMOUNTCREDITED"`
-	CreditReference                    string `xml:"CREDITTHEIRREF"`
-	CreditCurrency                     string `xml:"CREDITCURRENCY"`
-	CreditValidationDare               string `xml:"CREDITVALUEDATE"`
-	ProcessingDate                     string `xml:"PROCESSINGDATE"`
-	ChargeCommisionDisplay             string `xml:"CHARGECOMDISPLAY"`
+	TransactionType                    string   `xml:"TRANSACTIONTYPE"`
+	XMLName                            xml.Name `xml:"FUNDSTRANSFERType"`
+	FTNumber                           string   `xml:"id,attr"`
+	TransactionID                      string   `xml:"MTOREF"`
+	DebitAccountNumber                 string   `xml:"DEBITACCTNO"`
+	DebitAccountHolderName             string   `xml:"SENDERNAME"`
+	DebitAccountCurrentWorkingBalance  string   `xml:"CEKCS"`
+	DebitReference                     string   `xml:"DEBITTHEIRREF"`
+	DebitCurrency                      string   `xml:"DEBITCURRENCY"`
+	DebitAmount                        string   `xml:"DEBITAMOUNT"`
+	DebitAmountWithCurrency            string   `xml:"AMOUNTDEBITED"`
+	CreditAccountHolderName            string   `xml:"RECEIVERNAME"`
+	CreditAccountCurrentWorkingBalance string   `xml:"GPONU"`
+	CreditAccountNumber                string   `xml:"CREDITACCTNO"`
+	CreditAmountWithCurrency           string   `xml:"AMOUNTCREDITED"`
+	CreditReference                    string   `xml:"CREDITTHEIRREF"`
+	CreditCurrency                     string   `xml:"CREDITCURRENCY"`
+	CreditValidationDare               string   `xml:"CREDITVALUEDATE"`
+	ProcessingDate                     string   `xml:"PROCESSINGDATE"`
+	ChargeCommisionDisplay             string   `xml:"CHARGECOMDISPLAY"`
 }
 
 type FundTransferResponse struct {
