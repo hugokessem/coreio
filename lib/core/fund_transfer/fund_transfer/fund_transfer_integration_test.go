@@ -17,15 +17,17 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		DebitAccountNumber:  "1000000006924",
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000357597823",
-		CreditCurrency:      "ETB",
-		DebitAmount:         "124.00",
-		TransactionID:       "TXN123456789",
-		DebitReference:      "Payment",
-		CreditReference:     "Received payment",
-		PaymentDetail:       "Fund transfer",
+		// CreditAccountNumber: "1000200300134",
+		CreditCurrency:  "ETB",
+		DebitAmount:     "124.00",
+		TransactionID:   "TXN123456789",
+		DebitReference:  "Payment",
+		CreditReference: "Received payment",
+		PaymentDetail:   "Fund transfer",
 	}
 
 	xmlRequest := NewFundTransfer(params)
+	t.Log("xmlRequest", xmlRequest)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -54,9 +56,10 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
 	// Check that the lookup succeeded
+	t.Log("result", result)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Log("result", result.Detail)
+	t.Log("resultDetail", result.Detail)
 
 	if result.Detail != nil {
 		assert.Equal(t, "1000000006924", result.Detail.DebitAccountNumber)
