@@ -14,7 +14,7 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000000006924",
+		AccountNumber: "1000517052152",
 		// AccountNumber: "1000200300134",
 	}
 
@@ -51,8 +51,8 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	t.Log("resultDetail", result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, "1000000006924", result.Detail.AccountNumber)
-		assert.Equal(t, "ABIY HAILEYESUS MENGISTU", result.Detail.CustomerName)
+		assert.Equal(t, "1000517052152", result.Detail.AccountNumber)
+		assert.Equal(t, "YOHHANES TESHOME SHIFERAW", result.Detail.CustomerName)
 		assert.Equal(t, "ETB", result.Detail.Currency)
 	} else {
 		t.Error("Expected Detail to be non-nil")
