@@ -60,9 +60,6 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
                 </fun:gPAYMENTDETAILS>
                 <fun:COMMISSIONCODE/>
                 <fun:CHARGECODE/>
-                <fun:gCHARGETYPE g="1">
-                    <fun:CHARGETYPE/>
-                </fun:gCHARGETYPE>
                 <fun:ClientReference>%s</fun:ClientReference>
                 <fun:LockID>%s</fun:LockID>
             </FUNDSTRANSFERFTTXNSUPERAPPType>
