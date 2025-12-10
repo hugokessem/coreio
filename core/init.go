@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hugokessem/coreio/core/internal"
+	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
@@ -28,6 +29,9 @@ import (
 
 type AccountLookupParam = accountlookup.AccountLookupParam
 type AccountLookupResult = accountlookup.AccountLookupResult
+type AccountListParam = accountlist.AccountListParams
+type AccountListResult = accountlist.AccountListResult
+
 type FundTransferParam = fundtransfer.FundTransferParam
 type FundTransferResult = fundtransfer.FundTransferResult
 type FundTransferCheckParam = fundtransfercheck.FundTransferCheckParams
@@ -161,6 +165,41 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 	}
 
 	result, err := accountlookup.ParseAccountLookupSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, error) {
+	params := accountlist.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		ColumnName:    param.ColumnName,
+		CriteriaValue: param.CriteriaValue,
+	}
+
+	xmlRequest := accountlist.NewAccountList(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := accountlist.ParseAccountListSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
