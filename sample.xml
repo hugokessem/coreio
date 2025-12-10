@@ -1,140 +1,89 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
     <S:Body>
-        <ns30:AccountListByCIFResponse xmlns:ns2="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns3="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns4="http://temenos.com/FUNDSTRANSFER" xmlns:ns5="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns9="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns10="http://temenos.com/GETPHONECUSTOMER" xmlns:ns11="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns12="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns13="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns14="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns15="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns16="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns17="http://temenos.com/STANDINGORDER" xmlns:ns18="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns19="http://temenos.com/CBEMINISTMTENQ" xmlns:ns20="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns21="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns22="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns23="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns24="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns25="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns26="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns27="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns28="http://temenos.com/CUSTOMERLIMITSETUP" xmlns:ns29="http://temenos.com/CUSTOMERLIMIT" xmlns:ns30="http://temenos.com/CBESUPERAPP">
+        <ns30:StandingOrderHistorylistbyAcResponse xmlns:ns2="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns3="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns4="http://temenos.com/FUNDSTRANSFER" xmlns:ns5="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns9="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns10="http://temenos.com/GETPHONECUSTOMER" xmlns:ns11="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns12="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns13="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns14="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns15="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns16="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns17="http://temenos.com/STANDINGORDER" xmlns:ns18="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns19="http://temenos.com/CBEMINISTMTENQ" xmlns:ns20="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns21="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns22="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns23="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns24="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns25="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns26="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns27="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns28="http://temenos.com/CUSTOMERLIMITSETUP" xmlns:ns29="http://temenos.com/CUSTOMERLIMIT" xmlns:ns30="http://temenos.com/CBESUPERAPP">
             <Status>
                 <successIndicator>Success</successIndicator>
             </Status>
-            <ACCOUNTINFOSUPERAPPType>
-                <ns24:gACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000446094649</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1000</ns24:Category>
-                        <ns24:AccountType></ns24:AccountType>
-                        <ns24:BranchCode></ns24:BranchCode>
-                        <ns24:BranchName></ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo></ns24:PhoneNo>
-                        <ns24:Industry></ns24:Industry>
-                        <ns24:Sector></ns24:Sector>
-                        <ns24:Ownership></ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target></ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000446094673</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1000</ns24:Category>
-                        <ns24:AccountType></ns24:AccountType>
-                        <ns24:BranchCode></ns24:BranchCode>
-                        <ns24:BranchName></ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo></ns24:PhoneNo>
-                        <ns24:Industry></ns24:Industry>
-                        <ns24:Sector></ns24:Sector>
-                        <ns24:Ownership></ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target></ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000446094878</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1000</ns24:Category>
-                        <ns24:AccountType></ns24:AccountType>
-                        <ns24:BranchCode></ns24:BranchCode>
-                        <ns24:BranchName></ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo></ns24:PhoneNo>
-                        <ns24:Industry></ns24:Industry>
-                        <ns24:Sector></ns24:Sector>
-                        <ns24:Ownership></ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target></ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000000000969</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>5004</ns24:Category>
-                        <ns24:AccountType>Deposit With Other D</ns24:AccountType>
-                        <ns24:BranchCode>ET0010001</ns24:BranchCode>
-                        <ns24:BranchName>CBE-HEAD OFFICE</ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo>+251911540610</ns24:PhoneNo>
-                        <ns24:Industry>3002</ns24:Industry>
-                        <ns24:Sector>3001</ns24:Sector>
-                        <ns24:Ownership>3000</ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target>1</ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000446094665</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1000</ns24:Category>
-                        <ns24:AccountType></ns24:AccountType>
-                        <ns24:BranchCode></ns24:BranchCode>
-                        <ns24:BranchName></ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo></ns24:PhoneNo>
-                        <ns24:Industry></ns24:Industry>
-                        <ns24:Sector></ns24:Sector>
-                        <ns24:Ownership></ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target></ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000000938738</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1001</ns24:Category>
-                        <ns24:AccountType>CURRENT ACCOUNT</ns24:AccountType>
-                        <ns24:BranchCode>ET0010222</ns24:BranchCode>
-                        <ns24:BranchName>Addis Ababa Branch</ns24:BranchName>
-                        <ns24:DistrictName>ARADA</ns24:DistrictName>
-                        <ns24:PhoneNo>+251911540610</ns24:PhoneNo>
-                        <ns24:Industry>3002</ns24:Industry>
-                        <ns24:Sector>3001</ns24:Sector>
-                        <ns24:Ownership>3000</ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target>1</ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                    <ns24:mACCOUNTINFOSUPERAPPDetailType>
-                        <ns24:AccountNumber>1000446094638</ns24:AccountNumber>
-                        <ns24:CustomerName>UNITED BANK-ECX</ns24:CustomerName>
-                        <ns24:Restriction>NO</ns24:Restriction>
-                        <ns24:Currency>ETB</ns24:Currency>
-                        <ns24:CustomerID>1000000015</ns24:CustomerID>
-                        <ns24:Category>1000</ns24:Category>
-                        <ns24:AccountType></ns24:AccountType>
-                        <ns24:BranchCode></ns24:BranchCode>
-                        <ns24:BranchName></ns24:BranchName>
-                        <ns24:DistrictName></ns24:DistrictName>
-                        <ns24:PhoneNo></ns24:PhoneNo>
-                        <ns24:Industry></ns24:Industry>
-                        <ns24:Sector></ns24:Sector>
-                        <ns24:Ownership></ns24:Ownership>
-                        <ns24:CustomerSegment></ns24:CustomerSegment>
-                        <ns24:Target></ns24:Target>
-                    </ns24:mACCOUNTINFOSUPERAPPDetailType>
-                </ns24:gACCOUNTINFOSUPERAPPDetailType>
-            </ACCOUNTINFOSUPERAPPType>
-        </ns30:AccountListByCIFResponse>
+            <ACCTSTOLISTHISSUPERAPPType>
+                <ns2:gACCTSTOLISTHISSUPERAPPDetailType>
+                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                        <ns2:StandingOrderID>1000373456776.2</ns2:StandingOrderID>
+                        <ns2:KTYPE>Fixed</ns2:KTYPE>
+                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA</ns2:PAYMENTDETAILS>
+                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
+                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
+                        <ns2:CURRENTFREQUENCY>Daily</ns2:CURRENTFREQUENCY>
+                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
+                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
+                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
+                        <ns2:CURRENTENDDATE>20210310</ns2:CURRENTENDDATE>
+                        <ns2:CURRFREQDATE>20210310</ns2:CURRFREQDATE>
+                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
+                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
+                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                        <ns2:StandingOrderID>1000373456776.3</ns2:StandingOrderID>
+                        <ns2:KTYPE>Fixed</ns2:KTYPE>
+                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA KG 1D</ns2:PAYMENTDETAILS>
+                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
+                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
+                        <ns2:CURRENTFREQUENCY>Daily</ns2:CURRENTFREQUENCY>
+                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
+                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
+                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
+                        <ns2:CURRENTENDDATE>20210410</ns2:CURRENTENDDATE>
+                        <ns2:CURRFREQDATE>20210410</ns2:CURRFREQDATE>
+                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
+                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
+                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
+                        <ns2:KTYPE>Fixed</ns2:KTYPE>
+                        <ns2:PAYMENTDETAILS>EDUCATION FEE</ns2:PAYMENTDETAILS>
+                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
+                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
+                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
+                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
+                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
+                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
+                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
+                        <ns2:CURRFREQDATE>20210308</ns2:CURRFREQDATE>
+                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
+                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
+                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
+                        <ns2:KTYPE>Fixed</ns2:KTYPE>
+                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA</ns2:PAYMENTDETAILS>
+                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
+                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
+                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
+                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
+                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
+                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
+                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
+                        <ns2:CURRFREQDATE>20210408</ns2:CURRFREQDATE>
+                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
+                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
+                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
+                        <ns2:KTYPE>Fixed</ns2:KTYPE>
+                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA KG 1D</ns2:PAYMENTDETAILS>
+                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
+                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
+                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
+                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
+                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
+                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
+                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
+                        <ns2:CURRFREQDATE>20210705</ns2:CURRFREQDATE>
+                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
+                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
+                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
+                </ns2:gACCTSTOLISTHISSUPERAPPDetailType>
+            </ACCTSTOLISTHISSUPERAPPType>
+        </ns30:StandingOrderHistorylistbyAcResponse>
     </S:Body>
 </S:Envelope>

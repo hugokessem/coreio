@@ -82,7 +82,7 @@ func TestParseListStandingOrderSOAP(t *testing.T) {
 		assert.Equal(t, "Weekly", detail.Frequency)
 		assert.Equal(t, "1000357597823", detail.CreditAccountNumber)
 		assert.Equal(t, "SHIMALIS ZERFU A/C FOR SOSINA SHIMA", detail.CreditAccountHolderName)
-		assert.Equal(t, "20260101", detail.CurrentDate)
+		assert.Equal(t, "20260101", detail.StartDate)
 		assert.Equal(t, "ABIY HAILEYESUS MENGISTU", detail.DebitAccountHolderName)
 		assert.Equal(t, "100000000692", detail.DebitAccountNumber)
 	}

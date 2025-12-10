@@ -23,6 +23,7 @@ import (
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
 	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
 	standingorderlist "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list"
+	standingorderlisthistory "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list_history"
 	standingorderupdate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_update"
 	"github.com/hugokessem/coreio/utils"
 )
@@ -52,6 +53,8 @@ type CreateStandingOrderParam = standingordercreate.CreateStandingOrderParams
 type CreateStandingOrderResult = standingordercreate.StandingOrderResult
 type ListStandingOrderParam = standingorderlist.ListStandingOrderParams
 type ListStandingOrderResult = standingorderlist.ListStandingOrderResult
+type ListStandingOrderHistoryParam = standingorderlisthistory.ListStandingOrderHistoryParams
+type ListStandingOrderHistoryResult = standingorderlisthistory.StandingOrderListHistoryResult
 type UpdateStandingOrderParam = standingorderupdate.UpdateStandingOrderParam
 type UpdateStandingOrderResult = standingorderupdate.UpdateStandingOrderResult
 type CancleStandingOrderParam = standingordercancel.CancelStandingOrderParams
@@ -85,11 +88,13 @@ type CBECoreAPIInterface interface {
 	UpdateStandingOrder(param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error)
 	CreateStandingOrder(param CreateStandingOrderParam) (*CreateStandingOrderResult, error)
 	CancleStandingOrder(param CancleStandingOrderParam) (*CancelStandingOrderResult, error)
+	ListStandingOrderHistory(param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error)
+
 	MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
 	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
 
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
-
+	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
 }
@@ -507,6 +512,35 @@ func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*Updat
 	return result, nil
 }
 
+func (c *CBECoreAPI) ListStandingOrderHistory(param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error) {
+	params := standingorderlisthistory.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumber: param.AccountNumber,
+	}
+	xmlRequest := standingorderlisthistory.NewListStandingOrderHistory(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := standingorderlisthistory.ParseStandingOrderListHistorySOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*CreateStandingOrderResult, error) {
 	params := standingordercreate.Params{
 		Username:            c.config.Username,

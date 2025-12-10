@@ -1,4 +1,4 @@
-package standingorderlist
+package standingorderlisthistory
 
 import (
 	"encoding/xml"
@@ -12,30 +12,30 @@ type Params struct {
 	AccountNumber string
 }
 
-type ListStandingOrderParams struct {
+type ListStandingOrderHistoryParams struct {
 	AccountNumber string
 }
 
-func NewListStandingOrder(param Params) string {
-	return fmt.Sprintf(
-		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <cbes:ListStandingOrders>
-            <WebRequestCommon>
-                <company></company>
-                <password>%s</password>
-                <userName>%s</userName>
-            </WebRequestCommon>
-            <ACCTSTOLISTSUPERAPPType>
-                <enquiryInputCollection>
-                    <columnName>ID</columnName>
-                    <criteriaValue>%s</criteriaValue>
-                    <operand>CT</operand>
-                </enquiryInputCollection>
-            </ACCTSTOLISTSUPERAPPType>
-        </cbes:ListStandingOrders>
-    </soapenv:Body>
+func NewListStandingOrderHistory(param Params) string {
+	return fmt.Sprintf(`
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <cbes:StandingOrderHistorylistbyAc>
+         <WebRequestCommon>
+            <company></company>
+            <password>%s</password>
+            <userName>%s</userName>
+         </WebRequestCommon>
+         <ACCTSTOLISTHISSUPERAPPType>
+            <enquiryInputCollection>
+               <columnName>ACCOUNT</columnName>
+               <criteriaValue>%s</criteriaValue>
+               <operand>CT</operand>
+            </enquiryInputCollection>
+         </ACCTSTOLISTHISSUPERAPPType>
+      </cbes:StandingOrderHistorylistbyAc>
+   </soapenv:Body>
 </soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber)
 }
 
@@ -45,21 +45,21 @@ type Envelope struct {
 }
 
 type Body struct {
-	ListStandingOrderResponse *ListStandingOrderResponse `xml:"ListStandingOrdersResponse"`
+	StandingOrderHistorylistbyAcResponse *StandingOrderHistorylistbyAcResponse `xml:"StandingOrderHistorylistbyAcResponse"`
 }
 
-type ListStandingOrderResponse struct {
+type StandingOrderHistorylistbyAcResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
 	} `xml:"Status"`
-	ListStandingOrderType *struct {
+	ACCTSTOLISTHISSUPERAPPType *struct {
 		Group *struct {
-			Details []ListStandingOrderDetail `xml:"mACCTSTOLISTSUPERAPPDetailType"`
-		} `xml:"gACCTSTOLISTSUPERAPPDetailType"`
-	} `xml:"ACCTSTOLISTSUPERAPPType"`
+			Details []StandingOrderHistorylistbyAcDetail `xml:"mACCTSTOLISTHISSUPERAPPDetailType"`
+		} `xml:"gACCTSTOLISTHISSUPERAPPDetailType"`
+	} `xml:"ACCTSTOLISTHISSUPERAPPType"`
 }
 
-type ListStandingOrderDetail struct {
+type StandingOrderHistorylistbyAcDetail struct {
 	StandingOrderId         string `xml:"StandingOrderID"`
 	OrderType               string `xml:"KTYPE"`
 	PaymentDetail           string `xml:"PAYMENTDETAILS"`
@@ -75,47 +75,42 @@ type ListStandingOrderDetail struct {
 	StartDate               string `xml:"STOSTARTDATE"`
 }
 
-type ListStandingOrderResult struct {
+type StandingOrderListHistoryResult struct {
 	Success bool
-	Details []ListStandingOrderDetail
+	Details []StandingOrderHistorylistbyAcDetail
 	Message []string
 }
 
-func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error) {
+func ParseStandingOrderListHistorySOAP(xmlData string) (*StandingOrderListHistoryResult, error) {
 	var env Envelope
 	if err := xml.Unmarshal([]byte(xmlData), &env); err != nil {
 		return nil, err
 	}
 
-	if env.Body.ListStandingOrderResponse != nil {
-		resp := env.Body.ListStandingOrderResponse
+	if env.Body.StandingOrderHistorylistbyAcResponse != nil {
+		resp := env.Body.StandingOrderHistorylistbyAcResponse
 		if resp.Status == nil {
-			return &ListStandingOrderResult{
+			return &StandingOrderListHistoryResult{
 				Success: false,
 				Message: []string{"Missing Status"},
 			}, nil
 		}
-
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
-			return &ListStandingOrderResult{
+			return &StandingOrderListHistoryResult{
 				Success: false,
 				Message: []string{"API returned failure"},
 			}, nil
 		}
-
-		if resp.ListStandingOrderType == nil ||
-			resp.ListStandingOrderType.Group == nil ||
-			len(resp.ListStandingOrderType.Group.Details) == 0 {
-			return &ListStandingOrderResult{
+		if resp.ACCTSTOLISTHISSUPERAPPType == nil || resp.ACCTSTOLISTHISSUPERAPPType.Group == nil || len(resp.ACCTSTOLISTHISSUPERAPPType.Group.Details) == 0 {
+			return &StandingOrderListHistoryResult{
 				Success: true,
-				Message: []string{"No Standing Order Found!"},
+				Message: []string{"No Standing Order History Found!"},
 			}, nil
 		}
-
-		details := resp.ListStandingOrderType.Group.Details
-		detailsList := make([]ListStandingOrderDetail, len(details))
+		details := resp.ACCTSTOLISTHISSUPERAPPType.Group.Details
+		detailsList := make([]StandingOrderHistorylistbyAcDetail, len(details))
 		for i, detail := range details {
-			detailsList[i] = ListStandingOrderDetail{
+			detailsList[i] = StandingOrderHistorylistbyAcDetail{
 				StandingOrderId:         detail.StandingOrderId,
 				OrderType:               detail.OrderType,
 				PaymentDetail:           detail.PaymentDetail,
@@ -126,20 +121,19 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 				DebitAccountHolderName:  detail.DebitAccountHolderName,
 				CreditAccountNumber:     detail.CreditAccountNumber,
 				CreditAccountHolderName: detail.CreditAccountHolderName,
-				StartDate:               detail.StartDate,
 				CurrentFrequencyDate:    detail.CurrentFrequencyDate,
 				EndDate:                 detail.EndDate,
+				StartDate:               detail.StartDate,
 			}
 		}
-
-		return &ListStandingOrderResult{
+		return &StandingOrderListHistoryResult{
 			Success: true,
 			Details: detailsList,
 		}, nil
 	}
 
-	return &ListStandingOrderResult{
+	return &StandingOrderListHistoryResult{
 		Success: false,
-		Message: []string{"Invalid response format"},
+		Message: []string{"Invalid response type"},
 	}, nil
 }
