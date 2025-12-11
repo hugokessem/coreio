@@ -1,89 +1,35 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
     <S:Body>
-        <ns30:StandingOrderHistorylistbyAcResponse xmlns:ns2="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns3="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns4="http://temenos.com/FUNDSTRANSFER" xmlns:ns5="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns9="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns10="http://temenos.com/GETPHONECUSTOMER" xmlns:ns11="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns12="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns13="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns14="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns15="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns16="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns17="http://temenos.com/STANDINGORDER" xmlns:ns18="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns19="http://temenos.com/CBEMINISTMTENQ" xmlns:ns20="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns21="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns22="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns23="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns24="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns25="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns26="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns27="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns28="http://temenos.com/CUSTOMERLIMITSETUP" xmlns:ns29="http://temenos.com/CUSTOMERLIMIT" xmlns:ns30="http://temenos.com/CBESUPERAPP">
+        <ns32:CustomerLimitAmendmentResponse xmlns:ns2="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns3="http://temenos.com/GETPHONECUSTOMER" xmlns:ns4="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns5="http://temenos.com/STANDINGORDER" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns9="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns10="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns11="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns12="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns13="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns14="http://temenos.com/FUNDSTRANSFER" xmlns:ns15="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns16="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns17="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns18="http://temenos.com/EXCHANGERATESUPERAPP" xmlns:ns19="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns20="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns21="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns22="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns23="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns24="http://temenos.com/CBEMINISTMTENQ" xmlns:ns25="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns26="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns27="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns28="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns29="http://temenos.com/CUSTOMERLIMITCUSTOMLIMIT" xmlns:ns30="http://temenos.com/CUSTOMERLIMIT" xmlns:ns31="http://temenos.com/CUSTOMERLIMITVIEW" xmlns:ns32="http://temenos.com/CBESUPERAPP">
             <Status>
+                <transactionId>1026582446</transactionId>
+                <messageId></messageId>
                 <successIndicator>Success</successIndicator>
+                <application>CUSTOMER.LIMIT</application>
             </Status>
-            <ACCTSTOLISTHISSUPERAPPType>
-                <ns2:gACCTSTOLISTHISSUPERAPPDetailType>
-                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                        <ns2:StandingOrderID>1000373456776.2</ns2:StandingOrderID>
-                        <ns2:KTYPE>Fixed</ns2:KTYPE>
-                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA</ns2:PAYMENTDETAILS>
-                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
-                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
-                        <ns2:CURRENTFREQUENCY>Daily</ns2:CURRENTFREQUENCY>
-                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
-                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
-                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
-                        <ns2:CURRENTENDDATE>20210310</ns2:CURRENTENDDATE>
-                        <ns2:CURRFREQDATE>20210310</ns2:CURRFREQDATE>
-                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
-                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
-                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                        <ns2:StandingOrderID>1000373456776.3</ns2:StandingOrderID>
-                        <ns2:KTYPE>Fixed</ns2:KTYPE>
-                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA KG 1D</ns2:PAYMENTDETAILS>
-                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
-                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
-                        <ns2:CURRENTFREQUENCY>Daily</ns2:CURRENTFREQUENCY>
-                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
-                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
-                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
-                        <ns2:CURRENTENDDATE>20210410</ns2:CURRENTENDDATE>
-                        <ns2:CURRFREQDATE>20210410</ns2:CURRFREQDATE>
-                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
-                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
-                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
-                        <ns2:KTYPE>Fixed</ns2:KTYPE>
-                        <ns2:PAYMENTDETAILS>EDUCATION FEE</ns2:PAYMENTDETAILS>
-                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
-                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
-                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
-                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
-                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
-                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
-                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
-                        <ns2:CURRFREQDATE>20210308</ns2:CURRFREQDATE>
-                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
-                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
-                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
-                        <ns2:KTYPE>Fixed</ns2:KTYPE>
-                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA</ns2:PAYMENTDETAILS>
-                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
-                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
-                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
-                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
-                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
-                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
-                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
-                        <ns2:CURRFREQDATE>20210408</ns2:CURRFREQDATE>
-                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
-                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
-                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                    <ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                        <ns2:StandingOrderID>1000373456776.1</ns2:StandingOrderID>
-                        <ns2:KTYPE>Fixed</ns2:KTYPE>
-                        <ns2:PAYMENTDETAILS>BILISUMA BAYISA KG 1D</ns2:PAYMENTDETAILS>
-                        <ns2:CURRENCY>ETB</ns2:CURRENCY>
-                        <ns2:CURRENTAMOUNTBAL>550.00</ns2:CURRENTAMOUNTBAL>
-                        <ns2:CURRENTFREQUENCY>Monthly</ns2:CURRENTFREQUENCY>
-                        <ns2:CPTYACCTNO>1000374758822</ns2:CPTYACCTNO>
-                        <ns2:TOACCTNAME>BETHEL ACADEMY</ns2:TOACCTNAME>
-                        <ns2:STOSTARTDATE></ns2:STOSTARTDATE>
-                        <ns2:CURRENTENDDATE>20210710</ns2:CURRENTENDDATE>
-                        <ns2:CURRFREQDATE>20210705</ns2:CURRFREQDATE>
-                        <ns2:DEBITACCTDESC>BILISUMA BAYISA MINOR URGE AYANA JE</ns2:DEBITACCTDESC>
-                        <ns2:DebitAccount>100037345677</ns2:DebitAccount>
-                    </ns2:mACCTSTOLISTHISSUPERAPPDetailType>
-                </ns2:gACCTSTOLISTHISSUPERAPPDetailType>
-            </ACCTSTOLISTHISSUPERAPPType>
-        </ns30:StandingOrderHistorylistbyAcResponse>
+            <CUSTOMERLIMITType id="1026582446">
+                <ns30:gUSERCHANNELTYPE>
+                    <ns30:mUSERCHANNELTYPE>
+                        <ns30:USERCHANNELTYPE>APP</ns30:USERCHANNELTYPE>
+                        <ns30:USERMAXLIMIT>800000</ns30:USERMAXLIMIT>
+                    </ns30:mUSERCHANNELTYPE>
+                    <ns30:mUSERCHANNELTYPE>
+                        <ns30:USERCHANNELTYPE>USSD</ns30:USERCHANNELTYPE>
+                        <ns30:USERMAXLIMIT>150000</ns30:USERMAXLIMIT>
+                    </ns30:mUSERCHANNELTYPE>
+                </ns30:gUSERCHANNELTYPE>
+                <ns30:CURRNO>1</ns30:CURRNO>
+                <ns30:gINPUTTER>
+                    <ns30:INPUTTER>10731_SUPERAPP.1__OFS_GCS</ns30:INPUTTER>
+                </ns30:gINPUTTER>
+                <ns30:gDATETIME>
+                    <ns30:DATETIME>2512120054</ns30:DATETIME>
+                </ns30:gDATETIME>
+                <ns30:AUTHORISER>10731_SUPERAPP.1_OFS_GCS</ns30:AUTHORISER>
+                <ns30:COCODE>ET0010001</ns30:COCODE>
+                <ns30:DEPTCODE>1</ns30:DEPTCODE>
+            </CUSTOMERLIMITType>
+        </ns32:CustomerLimitAmendmentResponse>
     </S:Body>
 </S:Envelope>

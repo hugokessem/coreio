@@ -36,7 +36,8 @@ xmlns:cbes="http://temenos.com/CBESUPERAPP">
             </CUSTOMERINFOSUPERAPPType>
         </cbes:CustomerInformationDetails>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.CustomerIdentifier)
+</soapenv:Envelope>
+`, param.Password, param.Username, param.CustomerIdentifier)
 }
 
 type Envelope struct {

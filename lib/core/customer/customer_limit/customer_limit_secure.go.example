@@ -1,0 +1,192 @@
+package customerlimit
+
+import (
+	"encoding/xml"
+	"errors"
+	"fmt"
+	"strings"
+)
+
+// Constants for validation
+const (
+	MaxUsernameLength      = 100
+	MaxPasswordLength      = 200
+	MaxTransactionIDLength = 50
+	MaxXMLSize             = 10 * 1024 * 1024 // 10MB
+)
+
+// SecureParams represents validated parameters for customer limit requests
+type SecureParams struct {
+	Username      string
+	Password      string
+	TransactionID string
+}
+
+// ValidateParams validates input parameters
+func ValidateParams(param Params) (*SecureParams, error) {
+	// Trim whitespace
+	username := strings.TrimSpace(param.Username)
+	password := strings.TrimSpace(param.Password)
+	transactionID := strings.TrimSpace(param.TransactionID)
+
+	// Validate username
+	if username == "" {
+		return nil, errors.New("username cannot be empty")
+	}
+	if len(username) > MaxUsernameLength {
+		return nil, fmt.Errorf("username exceeds maximum length of %d characters", MaxUsernameLength)
+	}
+
+	// Validate password
+	if password == "" {
+		return nil, errors.New("password cannot be empty")
+	}
+	if len(password) > MaxPasswordLength {
+		return nil, fmt.Errorf("password exceeds maximum length of %d characters", MaxPasswordLength)
+	}
+
+	// Validate transaction ID
+	if transactionID == "" {
+		return nil, errors.New("transaction ID cannot be empty")
+	}
+	if len(transactionID) > MaxTransactionIDLength {
+		return nil, fmt.Errorf("transaction ID exceeds maximum length of %d characters", MaxTransactionIDLength)
+	}
+
+	return &SecureParams{
+		Username:      username,
+		Password:      password,
+		TransactionID: transactionID,
+	}, nil
+}
+
+// NewCustomerLimitSecure creates a SOAP XML request with proper XML escaping
+func NewCustomerLimitSecure(param Params) (string, error) {
+	// Validate parameters
+	secureParams, err := ValidateParams(param)
+	if err != nil {
+		return "", fmt.Errorf("parameter validation failed: %w", err)
+	}
+
+	// Escape XML special characters
+	passwordEscaped := escapeXML(secureParams.Password)
+	usernameEscaped := escapeXML(secureParams.Username)
+	transactionIDEscaped := escapeXML(secureParams.TransactionID)
+
+	// Build XML with escaped values
+	xmlRequest := fmt.Sprintf(`
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:cbes="http://temenos.com/CBESUPERAPP">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <cbes:CustomerLimitView>
+            <WebRequestCommon>
+                <company/>
+                <password>%s</password>
+                <userName>%s</userName>
+            </WebRequestCommon>
+            <CUSTOMERLIMITSETUPType>
+                <transactionId>%s</transactionId>
+            </CUSTOMERLIMITSETUPType>
+        </cbes:CustomerLimitView>
+    </soapenv:Body>
+</soapenv:Envelope>`, passwordEscaped, usernameEscaped, transactionIDEscaped)
+
+	return xmlRequest, nil
+}
+
+// escapeXML escapes XML special characters
+func escapeXML(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		switch r {
+		case '<':
+			b.WriteString("&lt;")
+		case '>':
+			b.WriteString("&gt;")
+		case '&':
+			b.WriteString("&amp;")
+		case '"':
+			b.WriteString("&quot;")
+		case '\'':
+			b.WriteString("&apos;")
+		default:
+			// Check if it's a valid XML character
+			if xml.IsChar(r) {
+				b.WriteRune(r)
+			}
+			// Invalid characters are silently dropped
+		}
+	}
+	return b.String()
+}
+
+// ParseCustomerLimitSOAPSecure parses SOAP XML response with security measures
+func ParseCustomerLimitSOAPSecure(xmlData string) (*CustomerLimitResult, error) {
+	// Check XML size to prevent memory exhaustion
+	if len(xmlData) > MaxXMLSize {
+		return nil, fmt.Errorf("XML payload exceeds maximum size of %d bytes", MaxXMLSize)
+	}
+
+	// Use secure XML decoder to prevent XXE attacks
+	decoder := xml.NewDecoder(strings.NewReader(xmlData))
+	decoder.Strict = false
+	// Prevent external entity expansion
+	decoder.Entity = xml.HTMLEntity
+
+	var env Envelope
+	err := decoder.Decode(&env)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse XML: %w", err)
+	}
+
+	if env.Body.CustomerLimitResponse != nil {
+		resp := env.Body.CustomerLimitResponse
+		if resp.Status == nil {
+			return &CustomerLimitResult{
+				Success: false,
+				Message: []string{"Missing Status"},
+			}, nil
+		}
+
+		// Case-insensitive success check with trimming
+		successIndicator := strings.ToUpper(strings.TrimSpace(resp.Status.SuccessIndicator))
+		if successIndicator != "SUCCESS" {
+			return &CustomerLimitResult{
+				Success: false,
+				Message: []string{"API returned failure"},
+			}, nil
+		}
+
+		if resp.CustomerLimitType == nil {
+			return &CustomerLimitResult{
+				Success: false,
+				Message: []string{"No details found"},
+			}, nil
+		}
+
+		return &CustomerLimitResult{
+			Success: true,
+			Detail: &CustomerLimitDetail{
+				ChannelTypeGroup:  resp.CustomerLimitType.ChannelTypeGroup,
+				ConvRoleTypeGroup: resp.CustomerLimitType.ConvRoleTypeGroup,
+				IfbRoleTypeGroup:  resp.CustomerLimitType.IfbRoleTypeGroup,
+				CustomerMaxLimit:  resp.CustomerLimitType.CustomerMaxLimit,
+				CustomerMinLimit:  resp.CustomerLimitType.CustomerMinLimit,
+				CustomerCount:     resp.CustomerLimitType.CustomerCount,
+				AccountMaxLimit:   resp.CustomerLimitType.AccountMaxLimit,
+				AccountMinLimit:   resp.CustomerLimitType.AccountMinLimit,
+				AccountCount:      resp.CustomerLimitType.AccountCount,
+				CurrencyNo:        resp.CustomerLimitType.CurrencyNo,
+				GlobalDateTime:    resp.CustomerLimitType.GlobalDateTime,
+				GlobalInputter:    resp.CustomerLimitType.GlobalInputter,
+				Authoriser:        resp.CustomerLimitType.Authoriser,
+				CoCode:            resp.CustomerLimitType.CoCode,
+				DeptCode:          resp.CustomerLimitType.DeptCode,
+			},
+		}, nil
+	}
+
+	return nil, errors.New("invalid response type")
+}
+

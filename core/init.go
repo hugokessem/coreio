@@ -7,10 +7,13 @@ import (
 
 	"github.com/hugokessem/coreio/core/internal"
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
-	accountlookup "github.com/hugokessem/coreio/lib/core/account_lookup"
+	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
-	customerlookup "github.com/hugokessem/coreio/lib/core/customer_lookup"
+	customerlimit "github.com/hugokessem/coreio/lib/core/customer/customer_limit"
+	customerlimitamendment "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amendment"
+	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
+	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
@@ -19,6 +22,7 @@ import (
 	lockedamountrelease "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_release"
 	ministatementbydaterange "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_date_range"
 	ministatementbylimit "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_limit"
+	phonelookup "github.com/hugokessem/coreio/lib/core/phone_lookup"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
 	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
@@ -28,6 +32,7 @@ import (
 	"github.com/hugokessem/coreio/utils"
 )
 
+type ExchangeRatesResult = exchangerate.ExchangeRateResult
 type AccountLookupParam = accountlookup.AccountLookupParam
 type AccountLookupResult = accountlookup.AccountLookupResult
 type AccountListParam = accountlist.AccountListParams
@@ -67,6 +72,13 @@ type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDa
 
 type CustomerLookupParam = customerlookup.CustomerLookupParam
 type CustomerLookupResult = customerlookup.CustomerLookupResult
+type CustomerLimitParam = customerlimit.CustomerLimitParams
+type CustomerLimitResult = customerlimit.CustomerLimitResult
+type CustomerLimitAmendmentParam = customerlimitamendment.CustomerLimitAmendmentParam
+type CustomerLimitAmendmentResult = customerlimitamendment.CustomerLimitAmendmentResult
+
+type PhoneLookupParam = phonelookup.PhoneLookupParam
+type PhoneLookupResult = phonelookup.PhoneLookupResult
 
 type CardReplaceParam = cardreplace.CardReplaceParam
 type CardReplaceResult = cardreplace.CardReplaceResult
@@ -93,6 +105,8 @@ type CBECoreAPIInterface interface {
 	MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
 	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
 
+	PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error)
+
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
@@ -107,6 +121,127 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
+	params := exchangerate.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+	}
+	xmlRequest := exchangerate.NewExchangeRate(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := exchangerate.ParseExchangeRateSOAP(string(responseData))
+
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error) {
+	params := customerlimitamendment.Params{
+		Username:         c.config.Username,
+		Password:         c.config.Password,
+		CustomerID:       param.CustomerID,
+		AppUserMaxLimit:  param.AppUserMaxLimit,
+		USSDUserMaxLimit: param.USSDUserMaxLimit,
+	}
+	xmlRequest := customerlimitamendment.NewCustomerLimitAmendment(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerlimitamendment.ParseCustomerLimitAmendmentSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error) {
+	params := customerlimit.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		TransactionID: param.TransactionID,
+	}
+	xmlRequest := customerlimit.NewCustomerLimit(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerlimit.ParseCustomerLimitSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error) {
+	params := phonelookup.Params{
+		Username:    c.config.Username,
+		Password:    c.config.Password,
+		PhoneNumber: param.PhoneNumber,
+	}
+	xmlRequest := phonelookup.NewPhoneLookup(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := phonelookup.ParsePhoneLookupSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error) {
