@@ -71,6 +71,8 @@ type AccountLookupDetail struct {
 	CustomerID     string `xml:"CustomerID"`
 	AccountType    string `xml:"AccountType"`
 	PhoneNumber    string `xml:"PhoneNo"`
+	BirthOfDate    string `xml:"DOB"`
+	Gender         string `xml:"Gender"`
 }
 
 // ----------------- Failure or no records -----------------
@@ -129,6 +131,8 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 				CustomerID:     resp.AccountEnquirySuperappType.Group.Details.CustomerID,
 				AccountType:    resp.AccountEnquirySuperappType.Group.Details.AccountType,
 				PhoneNumber:    resp.AccountEnquirySuperappType.Group.Details.PhoneNumber,
+				BirthOfDate:    resp.AccountEnquirySuperappType.Group.Details.BirthOfDate,
+				Gender:         resp.AccountEnquirySuperappType.Group.Details.Gender,
 			},
 		}, nil
 	}
