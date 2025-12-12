@@ -12,6 +12,7 @@ import (
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	customerlimit "github.com/hugokessem/coreio/lib/core/customer/customer_limit"
 	customerlimitamendment "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amendment"
+	customerlimitfetch "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
@@ -76,6 +77,8 @@ type CustomerLimitParam = customerlimit.CustomerLimitParams
 type CustomerLimitResult = customerlimit.CustomerLimitResult
 type CustomerLimitAmendmentParam = customerlimitamendment.CustomerLimitAmendmentParam
 type CustomerLimitAmendmentResult = customerlimitamendment.CustomerLimitAmendmentResult
+type CustomerLimitFetchParam = customerlimitfetch.CustomerLimitFetchParam
+type CustomerLimitFetchResult = customerlimitfetch.CustomerLimitFetchResult
 
 type PhoneLookupParam = phonelookup.PhoneLookupParam
 type PhoneLookupResult = phonelookup.PhoneLookupResult
@@ -110,6 +113,7 @@ type CBECoreAPIInterface interface {
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
 	CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error)
 	CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error)
+	CustomerLimitFetch(param CustomerLimitFetchParam) (*CustomerLimitFetchResult, error)
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
@@ -123,6 +127,35 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) CustomerLimitFetch(param CustomerLimitFetchParam) (*CustomerLimitFetchResult, error) {
+	params := customerlimitfetch.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+	xmlRequest := customerlimitfetch.NewCustomerLimitFetch(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerlimitfetch.ParseCustomerLimitFetchSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {

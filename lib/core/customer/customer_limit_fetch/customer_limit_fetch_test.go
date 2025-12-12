@@ -9,12 +9,12 @@ import (
 func TestNewCustomerLimitFetch(t *testing.T) {
 	tests := []struct {
 		name   string
-		param  Param
+		param  Params
 		expect []string
 	}{
 		{
 			name: "Validate customer limit fetch XML generation",
-			param: Param{
+			param: Params{
 				Username:       "SUPERAPP",
 				Password:       "123456",
 				CustomerNumber: "1026582446",
@@ -32,7 +32,7 @@ func TestNewCustomerLimitFetch(t *testing.T) {
 		},
 		{
 			name: "Validate customer limit fetch with different values",
-			param: Param{
+			param: Params{
 				Username:       "TESTUSER",
 				Password:       "PASSWORD123",
 				CustomerNumber: "1234567890",
@@ -45,7 +45,7 @@ func TestNewCustomerLimitFetch(t *testing.T) {
 		},
 		{
 			name: "Validate customer limit fetch with empty customer number",
-			param: Param{
+			param: Params{
 				Username:       "SUPERAPP",
 				Password:       "123456",
 				CustomerNumber: "",

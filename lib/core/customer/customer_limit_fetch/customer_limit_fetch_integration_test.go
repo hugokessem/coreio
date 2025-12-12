@@ -11,7 +11,7 @@ import (
 )
 
 func TestIntegrationCustomerLimitFetch(t *testing.T) {
-	params := Param{
+	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
 		CustomerNumber: "1026582446",
@@ -91,7 +91,7 @@ func TestIntegrationCustomerLimitFetch(t *testing.T) {
 }
 
 func TestIntegrationCustomerLimitFetch_WithDifferentCustomerNumber(t *testing.T) {
-	params := Param{
+	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
 		CustomerNumber: "GLOBAL",
@@ -133,4 +133,3 @@ func TestIntegrationCustomerLimitFetch_WithDifferentCustomerNumber(t *testing.T)
 		t.Logf("Customer limit fetch returned failure for customer: %s, Message: %s", params.CustomerNumber, result.Message)
 	}
 }
-

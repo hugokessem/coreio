@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type Param struct {
+type Params struct {
 	Username       string
 	Password       string
 	CustomerNumber string
@@ -16,7 +16,7 @@ type CustomerLimitFetchParam struct {
 	CustomerNumber string
 }
 
-func NewCustomerLimitFetch(param Param) string {
+func NewCustomerLimitFetch(param Params) string {
 	return fmt.Sprintf(`
 		<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
 	xmlns:cbes="http://temenos.com/CBESUPERAPP">
