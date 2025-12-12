@@ -95,7 +95,13 @@ type FundTransferType struct {
 	TotSndChgCrcCy          string                    `xml:"TOTSNDCHGCRCCY"`
 	AuthDate                string                    `xml:"AUTHDATE"`
 	RoundType               string                    `xml:"ROUNDTYPE"`
-	StatementNos            struct {
+	GlobalTaxType           struct {
+		TaxType []struct {
+			TaxType   string `xml:"TAXTYPE"`
+			TaxAmount string `xml:"TAXAMT"`
+		} `xml:"mTAXTYPE"`
+	} `xml:"gTAXTYPE"`
+	StatementNos struct {
 		StatementNo []string `xml:"STMTNOS"`
 	} `xml:"gSTMTNOS"`
 	CurrNo    string `xml:"CURRNO"`
@@ -200,19 +206,14 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				SecAnswer:               resp.FundTransferType.SecAnswer,
 				SecNumber:               resp.FundTransferType.SecNumber,
 				LmtssSendNo:             resp.FundTransferType.LmtssSendNo,
+				GlobalTaxType:           resp.FundTransferType.GlobalTaxType,
 			},
 			Message: resp.Status.MessageId,
 		}, nil
 	}
 
-	// Handle case where TransferViewDetailsResponse is nil
-	message := ""
-	if env.Body.TransferViewDetailsResponse != nil && env.Body.TransferViewDetailsResponse.Status != nil {
-		message = env.Body.TransferViewDetailsResponse.Status.MessageId
-	}
-
 	return &FundTransferCheckResult{
 		Status:  false,
-		Message: message,
+		Message: env.Body.TransferViewDetailsResponse.Status.MessageId,
 	}, nil
 }
