@@ -57,7 +57,7 @@ func NewFundTransfer(param Params) string {
             <urn1:Document>
                <urn1:FIToFICstmrCdtTrf>
                   <urn1:GrpHdr>
-                     <urn1:MsgId>CBETETAA894480939908</urn1:MsgId>
+                     <urn1:MsgId>%s</urn1:MsgId>
                      <urn1:CreDtTm>%s</urn1:CreDtTm>
                      <urn1:NbOfTxs>1</urn1:NbOfTxs>
                      <urn1:SttlmInf>
@@ -150,7 +150,7 @@ func NewFundTransfer(param Params) string {
       </mb:Payment>
    </soapenv:Body>
 </soapenv:Envelope>
-	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditAccountHolderName, param.CreditAccountNumber, param.Narative)
+	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditAccountHolderName, param.CreditAccountNumber, param.Narative)
 }
 
 type Envelop struct {
