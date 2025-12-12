@@ -20,6 +20,8 @@ type Params struct {
 	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
+	ChargeCode          string
+	ServiceCode         string
 }
 
 type FundTransferParam struct {
@@ -32,6 +34,8 @@ type FundTransferParam struct {
 	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
+	ChargeCode          string
+	ServiceCode         string
 }
 
 func NewFundTransfer(param Params) string {
@@ -56,16 +60,26 @@ func NewFundTransfer(param Params) string {
 					<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
 					<fun:CREDITAMOUNT></fun:CREDITAMOUNT>
 					<fun:gPAYMENTDETAILS g="1">
-					<fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
+						<fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
 					</fun:gPAYMENTDETAILS>
-					<fun:COMMISSIONCODE></fun:COMMISSIONCODE>
-					<fun:CHARGECODE></fun:CHARGECODE>
+					<fun:gCOMMISSIONTYPE g="1">
+						<fun:mCOMMISSIONTYPE m="1">
+							<fun:COMMISSIONTYPE>COMMLMT</fun:COMMISSIONTYPE>
+							<fun:COMMISSIONAMT/>
+						</fun:mCOMMISSIONTYPE>
+						<fun:mCOMMISSIONTYPE m="2">
+							<fun:COMMISSIONTYPE>CABLECHRG</fun:COMMISSIONTYPE>
+							<fun:COMMISSIONAMT/>
+						</fun:mCOMMISSIONTYPE>
+					</fun:gCOMMISSIONTYPE>
+					<fun:CHARGECODE>%s</fun:CHARGECODE>
 					<fun:ClientReference>%s</fun:ClientReference>
+					<fun:ServiceCode>%s</fun:ServiceCode>
 				</FUNDSTRANSFERFTTXNSUPERAPPType>
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.ChargeCode, param.TransactionID, param.ServiceCode)
 }
 
 type Envelope struct {
@@ -78,38 +92,106 @@ type Body struct {
 }
 
 type FundTransferDetail struct {
-	TransactionType                    string   `xml:"TRANSACTIONTYPE"`
-	XMLName                            xml.Name `xml:"FUNDSTRANSFERType"`
-	FTNumber                           string   `xml:"id,attr"`
-	TransactionID                      string   `xml:"MTOREF"`
-	DebitAccountNumber                 string   `xml:"DEBITACCTNO"`
-	DebitAccountHolderName             string   `xml:"SENDERNAME"`
-	DebitAccountCurrentWorkingBalance  string   `xml:"CEKCS"`
-	DebitReference                     string   `xml:"DEBITTHEIRREF"`
-	DebitCurrency                      string   `xml:"DEBITCURRENCY"`
-	DebitAmount                        string   `xml:"DEBITAMOUNT"`
-	DebitAmountWithCurrency            string   `xml:"AMOUNTDEBITED"`
-	CreditAccountHolderName            string   `xml:"RECEIVERNAME"`
-	CreditAccountCurrentWorkingBalance string   `xml:"GPONU"`
-	CreditAccountNumber                string   `xml:"CREDITACCTNO"`
-	CreditAmountWithCurrency           string   `xml:"AMOUNTCREDITED"`
-	CreditReference                    string   `xml:"CREDITTHEIRREF"`
-	CreditCurrency                     string   `xml:"CREDITCURRENCY"`
-	CreditValidationDare               string   `xml:"CREDITVALUEDATE"`
-	ProcessingDate                     string   `xml:"PROCESSINGDATE"`
-	ChargeCommisionDisplay             string   `xml:"CHARGECOMDISPLAY"`
+	XMLName              xml.Name `xml:"FUNDSTRANSFERType"`
+	FTNumber             string   `xml:"id,attr"`
+	TransactionType      string   `xml:"TRANSACTIONTYPE"`
+	DebitAccountNumber   string   `xml:"DEBITACCTNO"`
+	CurrencyMarketDebit  string   `xml:"CURRENCYMKTDR"`
+	DebitCurrency        string   `xml:"DEBITCURRENCY"`
+	DebitAmount          string   `xml:"DEBITAMOUNT"`
+	DebitValueDate       string   `xml:"DEBITVALUEDATE"`
+	DebitReference       string   `xml:"DEBITTHEIRREF"`
+	CreditReference      string   `xml:"CREDITTHEIRREF"`
+	CreditAccountNumber  string   `xml:"CREDITACCTNO"`
+	CurrencyMarketCredit string   `xml:"CURRENCYMKTCR"`
+	CreditCurrency       string   `xml:"CREDITCURRENCY"`
+	CreditValidationDare string   `xml:"CREDITVALUEDATE"`
+	ProcessingDate       string   `xml:"PROCESSINGDATE"`
+	PaymentDetails       struct {
+		PaymentDetail string `xml:"PAYMENTDETAILS"`
+	} `xml:"gPAYMENTDETAILS"`
+	ChargeCommisionDisplay string `xml:"CHARGECOMDISPLAY"`
+	CommissionCode         string `xml:"COMMISSIONCODE"`
+	GlobalCommissionType   struct {
+		MultipleCommissionType []struct {
+			CommissionType   string `xml:"COMMISSIONTYPE"`
+			CommissionAmount string `xml:"COMMISSIONAMT"`
+		} `xml:"mCOMMISSIONTYPE"`
+	} `xml:"gCOMMISSIONTYPE"`
+	ChargeCode           string `xml:"CHARGECODE"`
+	ProfitCentreCustomer string `xml:"PROFITCENTRECUST"`
+	ReturnToDept         string `xml:"RETURNTODEPT"`
+	FedFunds             string `xml:"FEDFUNDS"`
+	PositionType         string `xml:"POSITIONTYPE"`
+	GlobalTaxType        struct {
+		MultipleTaxType []struct {
+			TaxType   string `xml:"TAXTYPE"`
+			TaxAmount string `xml:"TAXAMT"`
+		} `xml:"mTAXTYPE"`
+	} `xml:"gTAXTYPE"`
+	DebitAmountWithCurrency  string `xml:"AMOUNTDEBITED"`
+	CreditAmountWithCurrency string `xml:"AMOUNTCREDITED"`
+	TotalChargeAmount        string `xml:"TOTALCHARGEAMT"`
+	TotalTaxAmount           string `xml:"TOTALTAXAMOUNT"`
+	DeliveryOutRef           struct {
+		MultipleDeliveryOutRef []string `xml:"DELIVERYOUTREF"`
+	} `xml:"gDELIVERYOUTREF"`
+	CreditCompanyCode            string `xml:"CREDITCOMPCODE"`
+	DebitCompanyCode             string `xml:"DEBITCOMPCODE"`
+	LocalAmountDebited           string `xml:"LOCAMTDEBITED"`
+	LocalAmountCredited          string `xml:"LOCAMTCREDITED"`
+	LocalTotalTaxAmount          string `xml:"LOCTOTTAXAMT"`
+	LocalChargeAmount            string `xml:"LOCALCHARGEAMT"`
+	LocalPositionChargesAmount   string `xml:"LOCPOSCHGSAMT"`
+	CustomerGroupLevel           string `xml:"CUSTGROUPLEVEL"`
+	DebitCustomer                string `xml:"DEBITCUSTOMER"`
+	CreditCustomer               string `xml:"CREDITCUSTOMER"`
+	DebitAdviceRequired          string `xml:"DRADVICEREQDYN"`
+	CreditAdviceRequired         string `xml:"CRADVICEREQDYN"`
+	ChargedCustomer              string `xml:"CHARGEDCUSTOMER"`
+	TotalReceivedCommission      string `xml:"TOTRECCOMM"`
+	TotalReceivedCommissionLocal string `xml:"TOTRECCOMMLCL"`
+	TotalReceivedCharge          string `xml:"TOTRECCHG"`
+	TotalReceivedChargeLocal     string `xml:"TOTRECCHGLCL"`
+	RateFixing                   string `xml:"RATEFIXING"`
+	TotalReceivedChargeCurrency  string `xml:"TOTRECCHGCRCCY"`
+	TotalSentChargeCurrency      string `xml:"TOTSNDCHGCRCCY"`
+	AuthDate                     string `xml:"AUTHDATE"`
+	RoundType                    string `xml:"ROUNDTYPE"`
+	GlobalStatementNumbers       struct {
+		MultipleStatementNumbers []string `xml:"STMTNOS"`
+	} `xml:"gSTMTNOS"`
+	GlobalOverride struct {
+		Override []string `xml:"OVERRIDE"`
+	} `xml:"gOVERRIDE"`
+	CurrentNumber  string `xml:"CURRNO"`
+	GlobalInputter struct {
+		Inputter string `xml:"INPUTTER"`
+	} `xml:"gINPUTTER"`
+	GlobalDateTime struct {
+		DateTime string `xml:"DATETIME"`
+	} `xml:"gDATETIME"`
+	Authoriser                         string `xml:"AUTHORISER"`
+	CompanyCode                        string `xml:"COCODE"`
+	DepartmentCode                     string `xml:"DEPTCODE"`
+	InputVersion                       string `xml:"LINPUTVERSION"`
+	AuthVersion                        string `xml:"LAUTHVERSION"`
+	TransactionID                      string `xml:"MTOREF"`
+	DebitAccountHolderName             string `xml:"SENDERNAME"`
+	ReceiverName                       string `xml:"RECEIVERNAME"`
+	ServiceCode                        string `xml:"SERVICECODE"`
+	DebitAccountCurrentWorkingBalance  string `xml:"CEKCS"`
+	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
 }
 
 type FundTransferResponse struct {
-	Status           FundTransferStatus  `xml:"Status"`
+	Status *struct {
+		SuccessIndicator string   `xml:"successIndicator"`
+		TransactionID    string   `xml:"transactionId"`
+		Application      string   `xml:"application"`
+		Messages         []string `xml:"messages"`
+	} `xml:"Status"`
 	FundTransferType *FundTransferDetail `xml:"FUNDSTRANSFERType"`
-}
-
-type FundTransferStatus *struct {
-	SuccessIndicator string   `xml:"successIndicator"`
-	TransactionID    string   `xml:"transactionId"`
-	Application      string   `xml:"application"`
-	Messages         []string `xml:"messages"`
 }
 
 type FundTransferResult struct {
@@ -149,27 +231,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 
 		return &FundTransferResult{
 			Success: true,
-			Detail: &FundTransferDetail{
-				TransactionType:                    resp.FundTransferType.TransactionType,
-				FTNumber:                           resp.FundTransferType.FTNumber,
-				TransactionID:                      resp.FundTransferType.TransactionID,
-				DebitAccountNumber:                 resp.FundTransferType.DebitAccountNumber,
-				DebitAccountHolderName:             resp.FundTransferType.DebitAccountHolderName,
-				DebitAmount:                        resp.FundTransferType.DebitAmount,
-				DebitCurrency:                      resp.FundTransferType.DebitCurrency,
-				DebitAmountWithCurrency:            resp.FundTransferType.DebitAmountWithCurrency,
-				DebitAccountCurrentWorkingBalance:  resp.FundTransferType.DebitAccountCurrentWorkingBalance,
-				DebitReference:                     resp.FundTransferType.DebitReference,
-				CreditAccountNumber:                resp.FundTransferType.CreditAccountNumber,
-				CreditAccountHolderName:            resp.FundTransferType.CreditAccountHolderName,
-				CreditAccountCurrentWorkingBalance: resp.FundTransferType.CreditAccountCurrentWorkingBalance,
-				CreditAmountWithCurrency:           resp.FundTransferType.CreditAmountWithCurrency,
-				CreditReference:                    resp.FundTransferType.CreditReference,
-				CreditCurrency:                     resp.FundTransferType.CreditCurrency,
-				CreditValidationDare:               resp.FundTransferType.CreditValidationDare,
-				ProcessingDate:                     resp.FundTransferType.ProcessingDate,
-				ChargeCommisionDisplay:             resp.FundTransferType.ChargeCommisionDisplay,
-			},
+			Detail:  resp.FundTransferType,
 		}, nil
 	}
 

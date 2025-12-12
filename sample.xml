@@ -1,35 +1,112 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
     <S:Body>
-        <ns32:CustomerLimitAmendmentResponse xmlns:ns2="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns3="http://temenos.com/GETPHONECUSTOMER" xmlns:ns4="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns5="http://temenos.com/STANDINGORDER" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns9="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns10="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns11="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns12="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns13="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns14="http://temenos.com/FUNDSTRANSFER" xmlns:ns15="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns16="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns17="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns18="http://temenos.com/EXCHANGERATESUPERAPP" xmlns:ns19="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns20="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns21="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns22="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns23="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns24="http://temenos.com/CBEMINISTMTENQ" xmlns:ns25="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns26="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns27="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns28="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns29="http://temenos.com/CUSTOMERLIMITCUSTOMLIMIT" xmlns:ns30="http://temenos.com/CUSTOMERLIMIT" xmlns:ns31="http://temenos.com/CUSTOMERLIMITVIEW" xmlns:ns32="http://temenos.com/CBESUPERAPP">
+        <ns32:AccountTransferResponse xmlns:ns2="http://temenos.com/BRANCHLISTSUPERAPP" xmlns:ns3="http://temenos.com/GETPHONECUSTOMER" xmlns:ns4="http://temenos.com/STANDINGORDERMANAGEORDERSUPERAPP" xmlns:ns5="http://temenos.com/STANDINGORDER" xmlns:ns6="http://temenos.com/ATMCARDREGDETCARDREPLACESUPERAPP" xmlns:ns7="http://temenos.com/ATMCARDREGDET" xmlns:ns8="http://temenos.com/ACCTLOCKEDAMOUNTSSUPERAPP" xmlns:ns9="http://temenos.com/ACCTSTOLISTSUPERAPP" xmlns:ns10="http://temenos.com/ACLOCKEDEVENTSRELEASELOCKSUPERAPP" xmlns:ns11="http://temenos.com/ACLOCKEDEVENTS" xmlns:ns12="http://temenos.com/ACCTSTOLISTHISSUPERAPP" xmlns:ns13="http://temenos.com/FUNDSTRANSFERVIEWDETAILSSUPERAPP" xmlns:ns14="http://temenos.com/FUNDSTRANSFER" xmlns:ns15="http://temenos.com/FUNDSTRANSFERFTREVERSESUPERAPP" xmlns:ns16="http://temenos.com/ATMCARDREGDETCARDREQSUPERAPP" xmlns:ns17="http://temenos.com/ATMCARDTYPEENQMBX" xmlns:ns18="http://temenos.com/EXCHANGERATESUPERAPP" xmlns:ns19="http://temenos.com/STANDINGORDERTXNLISTSUPERAPP" xmlns:ns20="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP" xmlns:ns21="http://temenos.com/ACCTSTMTRGSUPERAPP" xmlns:ns22="http://temenos.com/CARDSTATUSSUPERAPP" xmlns:ns23="http://temenos.com/ACCOUNTENQUIRYSUPERAPP" xmlns:ns24="http://temenos.com/CBEMINISTMTENQ" xmlns:ns25="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP" xmlns:ns26="http://temenos.com/CUSTOMERINFOSUPERAPP" xmlns:ns27="http://temenos.com/ACCOUNTINFOSUPERAPP" xmlns:ns28="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP" xmlns:ns29="http://temenos.com/CUSTOMERLIMITCUSTOMLIMIT" xmlns:ns30="http://temenos.com/CUSTOMERLIMIT" xmlns:ns31="http://temenos.com/CUSTOMERLIMITVIEW" xmlns:ns32="http://temenos.com/CBESUPERAPP">
             <Status>
-                <transactionId>1026582446</transactionId>
+                <transactionId>FT21343Y0P1L</transactionId>
                 <messageId></messageId>
                 <successIndicator>Success</successIndicator>
-                <application>CUSTOMER.LIMIT</application>
+                <application>FUNDS.TRANSFER</application>
             </Status>
-            <CUSTOMERLIMITType id="1026582446">
-                <ns30:gUSERCHANNELTYPE>
-                    <ns30:mUSERCHANNELTYPE>
-                        <ns30:USERCHANNELTYPE>APP</ns30:USERCHANNELTYPE>
-                        <ns30:USERMAXLIMIT>800000</ns30:USERMAXLIMIT>
-                    </ns30:mUSERCHANNELTYPE>
-                    <ns30:mUSERCHANNELTYPE>
-                        <ns30:USERCHANNELTYPE>USSD</ns30:USERCHANNELTYPE>
-                        <ns30:USERMAXLIMIT>150000</ns30:USERMAXLIMIT>
-                    </ns30:mUSERCHANNELTYPE>
-                </ns30:gUSERCHANNELTYPE>
-                <ns30:CURRNO>1</ns30:CURRNO>
-                <ns30:gINPUTTER>
-                    <ns30:INPUTTER>10731_SUPERAPP.1__OFS_GCS</ns30:INPUTTER>
-                </ns30:gINPUTTER>
-                <ns30:gDATETIME>
-                    <ns30:DATETIME>2512120054</ns30:DATETIME>
-                </ns30:gDATETIME>
-                <ns30:AUTHORISER>10731_SUPERAPP.1_OFS_GCS</ns30:AUTHORISER>
-                <ns30:COCODE>ET0010001</ns30:COCODE>
-                <ns30:DEPTCODE>1</ns30:DEPTCODE>
-            </CUSTOMERLIMITType>
-        </ns32:CustomerLimitAmendmentResponse>
+            <FUNDSTRANSFERType id="FT21343Y0P1L">
+                <ns14:TRANSACTIONTYPE>ACSA</ns14:TRANSACTIONTYPE>
+                <ns14:DEBITACCTNO>1000000006924</ns14:DEBITACCTNO>
+                <ns14:CURRENCYMKTDR>1</ns14:CURRENCYMKTDR>
+                <ns14:DEBITCURRENCY>ETB</ns14:DEBITCURRENCY>
+                <ns14:DEBITAMOUNT>50.00</ns14:DEBITAMOUNT>
+                <ns14:DEBITVALUEDATE>20211209</ns14:DEBITVALUEDATE>
+                <ns14:DEBITTHEIRREF>DEBIT NARRATIVE</ns14:DEBITTHEIRREF>
+                <ns14:CREDITTHEIRREF>CREDIT NARRATIVE</ns14:CREDITTHEIRREF>
+                <ns14:CREDITACCTNO>1000357597823</ns14:CREDITACCTNO>
+                <ns14:CURRENCYMKTCR>1</ns14:CURRENCYMKTCR>
+                <ns14:CREDITCURRENCY>ETB</ns14:CREDITCURRENCY>
+                <ns14:CREDITVALUEDATE>20211209</ns14:CREDITVALUEDATE>
+                <ns14:PROCESSINGDATE>20211209</ns14:PROCESSINGDATE>
+                <ns14:gPAYMENTDETAILS>
+                    <ns14:PAYMENTDETAILS>TEST PAYMENT</ns14:PAYMENTDETAILS>
+                </ns14:gPAYMENTDETAILS>
+                <ns14:CHARGECOMDISPLAY>NO</ns14:CHARGECOMDISPLAY>
+                <ns14:COMMISSIONCODE>DEBIT PLUS CHARGES</ns14:COMMISSIONCODE>
+                <ns14:gCOMMISSIONTYPE>
+                    <ns14:mCOMMISSIONTYPE>
+                        <ns14:COMMISSIONTYPE>COMMLMT</ns14:COMMISSIONTYPE>
+                        <ns14:COMMISSIONAMT>ETB3.00</ns14:COMMISSIONAMT>
+                    </ns14:mCOMMISSIONTYPE>
+                </ns14:gCOMMISSIONTYPE>
+                <ns14:CHARGECODE>WAIVE</ns14:CHARGECODE>
+                <ns14:PROFITCENTRECUST>1000080127</ns14:PROFITCENTRECUST>
+                <ns14:RETURNTODEPT>NO</ns14:RETURNTODEPT>
+                <ns14:FEDFUNDS>NO</ns14:FEDFUNDS>
+                <ns14:POSITIONTYPE>TR</ns14:POSITIONTYPE>
+                <ns14:gTAXTYPE>
+                    <ns14:mTAXTYPE>
+                        <ns14:TAXTYPE>17</ns14:TAXTYPE>
+                        <ns14:TAXAMT>ETB0.45</ns14:TAXAMT>
+                    </ns14:mTAXTYPE>
+                </ns14:gTAXTYPE>
+                <ns14:AMOUNTDEBITED>ETB53.45</ns14:AMOUNTDEBITED>
+                <ns14:AMOUNTCREDITED>ETB50.00</ns14:AMOUNTCREDITED>
+                <ns14:TOTALCHARGEAMT>ETB3.45</ns14:TOTALCHARGEAMT>
+                <ns14:TOTALTAXAMOUNT>ETB0.45</ns14:TOTALTAXAMOUNT>
+                <ns14:gDELIVERYOUTREF>
+                    <ns14:DELIVERYOUTREF>D20251212376084602801-900.1.1       DEBIT ADVICE</ns14:DELIVERYOUTREF>
+                    <ns14:DELIVERYOUTREF>D20251212376084602802-910.2.1       CREDIT ADVICE</ns14:DELIVERYOUTREF>
+                </ns14:gDELIVERYOUTREF>
+                <ns14:CREDITCOMPCODE>ET0010434</ns14:CREDITCOMPCODE>
+                <ns14:DEBITCOMPCODE>ET0010222</ns14:DEBITCOMPCODE>
+                <ns14:LOCAMTDEBITED>53.45</ns14:LOCAMTDEBITED>
+                <ns14:LOCAMTCREDITED>50.00</ns14:LOCAMTCREDITED>
+                <ns14:LOCTOTTAXAMT>0.45</ns14:LOCTOTTAXAMT>
+                <ns14:LOCALCHARGEAMT>3.45</ns14:LOCALCHARGEAMT>
+                <ns14:LOCPOSCHGSAMT>3.45</ns14:LOCPOSCHGSAMT>
+                <ns14:CUSTGROUPLEVEL>1</ns14:CUSTGROUPLEVEL>
+                <ns14:DEBITCUSTOMER>1000080127</ns14:DEBITCUSTOMER>
+                <ns14:CREDITCUSTOMER>1047608946</ns14:CREDITCUSTOMER>
+                <ns14:DRADVICEREQDYN>Y</ns14:DRADVICEREQDYN>
+                <ns14:CRADVICEREQDYN>Y</ns14:CRADVICEREQDYN>
+                <ns14:CHARGEDCUSTOMER>1000080127</ns14:CHARGEDCUSTOMER>
+                <ns14:TOTRECCOMM>0</ns14:TOTRECCOMM>
+                <ns14:TOTRECCOMMLCL>0</ns14:TOTRECCOMMLCL>
+                <ns14:TOTRECCHG>0</ns14:TOTRECCHG>
+                <ns14:TOTRECCHGLCL>0</ns14:TOTRECCHGLCL>
+                <ns14:RATEFIXING>NO</ns14:RATEFIXING>
+                <ns14:TOTRECCHGCRCCY>0</ns14:TOTRECCHGCRCCY>
+                <ns14:TOTSNDCHGCRCCY>3.45</ns14:TOTSNDCHGCRCCY>
+                <ns14:AUTHDATE>20211209</ns14:AUTHDATE>
+                <ns14:ROUNDTYPE>NATURAL</ns14:ROUNDTYPE>
+                <ns14:gSTMTNOS>
+                    <ns14:STMTNOS>211663760846027.00</ns14:STMTNOS>
+                    <ns14:STMTNOS>1-3</ns14:STMTNOS>
+                    <ns14:STMTNOS>1</ns14:STMTNOS>
+                    <ns14:STMTNOS>ET0010222</ns14:STMTNOS>
+                    <ns14:STMTNOS>211663760846027.01</ns14:STMTNOS>
+                    <ns14:STMTNOS>1-2</ns14:STMTNOS>
+                    <ns14:STMTNOS>ET0010434</ns14:STMTNOS>
+                    <ns14:STMTNOS>211663760846027.02</ns14:STMTNOS>
+                    <ns14:STMTNOS>1-2</ns14:STMTNOS>
+                </ns14:gSTMTNOS>
+                <ns14:gOVERRIDE>
+                    <ns14:OVERRIDE>STAFF.TXN.AUTH}{</ns14:OVERRIDE>
+                </ns14:gOVERRIDE>
+                <ns14:CURRNO>1</ns14:CURRNO>
+                <ns14:gINPUTTER>
+                    <ns14:INPUTTER>37608_SUPERAPP.1__OFS_GCS</ns14:INPUTTER>
+                </ns14:gINPUTTER>
+                <ns14:gDATETIME>
+                    <ns14:DATETIME>2512121247</ns14:DATETIME>
+                </ns14:gDATETIME>
+                <ns14:AUTHORISER>37608_SUPERAPP.1_OFS_GCS</ns14:AUTHORISER>
+                <ns14:COCODE>ET0010001</ns14:COCODE>
+                <ns14:DEPTCODE>1</ns14:DEPTCODE>
+                <ns14:LINPUTVERSION>FUNDS.TRANSFER,FT.TXN.SUPERAPP</ns14:LINPUTVERSION>
+                <ns14:LAUTHVERSION>FUNDS.TRANSFER,FT.TXN.SUPERAPP</ns14:LAUTHVERSION>
+                <ns14:MTOREF>12385824578895</ns14:MTOREF>
+                <ns14:SENDERNAME>ABIY HAILEYESUS MENGISTU</ns14:SENDERNAME>
+                <ns14:RECEIVERNAME>SHIMALIS ZERFU A/C FOR SOSINA SHIMA</ns14:RECEIVERNAME>
+                <ns14:SERVICECODE>GLOBAL</ns14:SERVICECODE>
+                <ns14:CEKCS>5587591375.85</ns14:CEKCS>
+                <ns14:GPONU>3233.8</ns14:GPONU>
+            </FUNDSTRANSFERType>
+        </ns32:AccountTransferResponse>
     </S:Body>
 </S:Envelope>

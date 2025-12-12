@@ -10,13 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 func TestIntegrationCustomerLimitAmendment(t *testing.T) {
 	params := Params{
 		Username:         "SUPERAPP",
