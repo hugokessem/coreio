@@ -108,6 +108,8 @@ type CBECoreAPIInterface interface {
 	PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error)
 
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
+	CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error)
+	CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error)
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)

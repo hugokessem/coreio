@@ -14,10 +14,11 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
-		FTNumber: "FT21343CXGBD",
+		FTNumber: "FT21343SSQ4Y",
 	}
 
 	xmlRequest := NewFundTransferCheck(params)
+	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
