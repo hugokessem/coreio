@@ -14,10 +14,6 @@ import (
 )
 
 func TestIntegrationFundTransfer(t *testing.T) {
-	if testing.Short() {
-		t.Skip("Skipping integration test in short mode")
-	}
-
 	// Test parameters matching the curl request
 	params := Params{
 		Username:            "SUPERAPP",
