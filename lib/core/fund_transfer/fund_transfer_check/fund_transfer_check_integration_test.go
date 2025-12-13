@@ -14,11 +14,10 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
-		FTNumber: "FT21343SSQ4Y",
+		FTNumber: "FT213438F2QZ",
 	}
 
 	xmlRequest := NewFundTransferCheck(params)
-	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -64,14 +63,6 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 			t.Logf("Amount Debited: %s", result.Detail.AmountDebited)
 			t.Logf("Amount Credited: %s", result.Detail.AmountCredited)
 			t.Logf("Total Charge Amount: %s", result.Detail.TotalChargeAmount)
-
-			// Validate that fund transfer details are populated
-			if result.Detail.DebitAccountNumber != "" {
-				assert.NotEmpty(t, result.Detail.DebitAccountNumber)
-			}
-			if result.Detail.CreditAccountNumber != "" {
-				assert.NotEmpty(t, result.Detail.CreditAccountNumber)
-			}
 		}
 	} else {
 		t.Logf("Fund transfer check failed with message: %s", result.Message)

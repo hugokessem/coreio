@@ -22,7 +22,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		DebitCurrency:       "ETB",
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
-		LockID:              "ACLK213439SGJN",
+		LockID:              "ACLK21343J4L7P",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
@@ -51,6 +51,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	result, err := ParseLockedAmountFTSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
+	t.Log("details", result.Detail)
 
 	assert.True(t, result.Success)
 	assert.NotEmpty(t, result.Detail.TransactionId)

@@ -2,7 +2,6 @@ package fundtransfercheck
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 )
 
@@ -95,6 +94,7 @@ type FundTransferType struct {
 	TotSndChgCrcCy          string                    `xml:"TOTSNDCHGCRCCY"`
 	AuthDate                string                    `xml:"AUTHDATE"`
 	RoundType               string                    `xml:"ROUNDTYPE"`
+	PaymentDetail           PaymentDetail             `xml:"gPAYMENTDETAILS"`
 	GlobalTaxType           struct {
 		TaxType []struct {
 			TaxType   string `xml:"TAXTYPE"`
@@ -120,6 +120,10 @@ type FundTransferType struct {
 	LmtssSendNo string `xml:"LMTSSENDNO"`
 }
 
+type PaymentDetail struct {
+	PaymentDetail string `xml:"PAYMENTDETAILS"`
+}
+
 type ChargeCommissionDisplay struct {
 	CommisionType struct {
 		ComissionType   string `xml:"COMMISSIONTYPE"`
@@ -130,7 +134,7 @@ type ChargeCommissionDisplay struct {
 type FundTransferCheckResult struct {
 	Status  bool
 	Detail  *FundTransferType
-	Message string
+	Message []string
 }
 
 func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error) {
@@ -143,13 +147,22 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 	if env.Body.TransferViewDetailsResponse != nil {
 		resp := env.Body.TransferViewDetailsResponse
 		if resp.Status == nil {
-			return nil, errors.New("missing status")
+			return &FundTransferCheckResult{
+				Status:  false,
+				Message: []string{"Missing Status!"},
+			}, nil
 		}
 		if resp.Status.SuccessIndicator != "Success" {
-			return nil, errors.New(resp.Status.MessageId)
+			return &FundTransferCheckResult{
+				Status:  false,
+				Message: []string{"API return failur!"},
+			}, nil
 		}
 		if resp.FundTransferType == nil {
-			return nil, errors.New("missing fund transfer type")
+			return &FundTransferCheckResult{
+				Status:  true,
+				Message: []string{},
+			}, nil
 		}
 		return &FundTransferCheckResult{
 			Status: true,
@@ -207,13 +220,13 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				SecNumber:               resp.FundTransferType.SecNumber,
 				LmtssSendNo:             resp.FundTransferType.LmtssSendNo,
 				GlobalTaxType:           resp.FundTransferType.GlobalTaxType,
+				PaymentDetail:           resp.FundTransferType.PaymentDetail,
 			},
-			Message: resp.Status.MessageId,
 		}, nil
 	}
 
 	return &FundTransferCheckResult{
 		Status:  false,
-		Message: env.Body.TransferViewDetailsResponse.Status.MessageId,
+		Message: []string{},
 	}, nil
 }
