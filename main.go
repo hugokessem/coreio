@@ -60,6 +60,7 @@ func main() {
 		PaymentDetail:       "Fund transfer",
 	}
 
+	result, err := calls.FT(ft)
 	// ft := core.MiniStatementByDateRangeParam{
 	// 	AccountNumber: "1000184349713",
 	// 	From:          "20200101",
@@ -67,7 +68,6 @@ func main() {
 	// }
 
 	// result, err := calls.MiniStatementByDate(ctx, ft)
-	result, err := calls.FT(ft)
 	if err != nil {
 		log.Fatalf("%v", err)
 		return

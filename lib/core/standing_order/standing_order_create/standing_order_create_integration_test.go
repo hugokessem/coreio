@@ -15,7 +15,7 @@ func TestIntegrationCreateStandingOrder(t *testing.T) {
 		Username:            "SUPERAPP",
 		Password:            "123456",
 		DebitAccountNumber:  "1000000006924",
-		CreditAccountNumber: "1000357597823",
+		CreditAccountNumber: "1000099636436",
 		PaymentDetail:       "Fund transfer",
 		CurrentDate:         "20260101",
 		Amount:              "124.00",
