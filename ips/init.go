@@ -49,7 +49,13 @@ func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 
 	xmlRequest := statuscheck.NewStatusCheck(param)
 	headers := map[string]string{
-		"Content-Type": "application/xml",
+		"Content-Type":     "application/xml",
+		"username":         c.config.Username,
+		"password":         c.config.Password,
+		"grant_type":       c.config.GrantType,
+		"Jwt_Assertion":    c.config.JwtAssertion,
+		"MB_authorization": c.config.MBAuthorization,
+		"Authorization":    c.config.Authorization,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
 	if err != nil {
