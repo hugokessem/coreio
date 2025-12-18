@@ -401,6 +401,8 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 	headers := map[string]string{
 		"Content-Type": "text/xml; charset=utf-8",
 	}
+
+	fmt.Println("xmlRequest", xmlRequest)
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,

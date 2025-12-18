@@ -8,6 +8,7 @@ import (
 	"github.com/hugokessem/coreio/ips/internal"
 	accountlookup "github.com/hugokessem/coreio/lib/ips/account_lookup"
 	fundtransfer "github.com/hugokessem/coreio/lib/ips/fund_transfer"
+	qrpayment "github.com/hugokessem/coreio/lib/ips/qr_payment"
 	statuscheck "github.com/hugokessem/coreio/lib/ips/status_check"
 	"github.com/hugokessem/coreio/utils"
 )
@@ -21,10 +22,14 @@ type FundTransferResult = fundtransfer.FundTransferResult
 type StatusCheckParam = statuscheck.Params
 type StatusCheckResult = statuscheck.PaymentStatusResult
 
+type QRPaymentParam = qrpayment.Params
+type QRPaymentResult = qrpayment.QrPaymentResult
+
 type IPSCoreAPIInterface interface {
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
+	QRPayment(param QRPaymentParam) (*QRPaymentParam, error)
 }
 
 type IPSCredentials struct {
@@ -39,6 +44,10 @@ type IPSCredentials struct {
 
 type IPSCoreAPI struct {
 	config *internal.Config
+}
+
+func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QRPaymentParam, error) {
+	return nil, nil
 }
 
 func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {

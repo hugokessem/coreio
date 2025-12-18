@@ -49,15 +49,18 @@ func main() {
 		// DebitAccountNumber:  "1000382499388",
 		// CreditAccountNumber: "1000000006924",
 
-		CreditAccountNumber: "1000382499388",
-		DebitAccountNumber:  "1000000006924",
-		DebitCurrency:       "ETB",
-		CreditCurrency:      "ETB",
-		DebitAmount:         "260.00",
-		TransactionID:       "TXN12345689",
-		DebitReference:      "Payment",
-		CreditReference:     "Received payment",
-		PaymentDetail:       "Fund transfer",
+		CreditAccountNumber: "1000517052152",
+		DebitAccountNumber:  "1000319950331", // usd account
+		DebitCurrency:       "USD",
+		// DebitAmount:         "2.00",
+		CreditAmount:    "12",
+		CreditCurrency:  "ETB",
+		TransactionID:   "TXN123458889",
+		DebitReference:  "Payment",
+		CreditReference: "Received payment",
+		PaymentDetail:   "Fund transfer",
+		ChargeCode:      "WAIVE",
+		ServiceCode:     "GLOBAL",
 	}
 
 	result, err := calls.FT(ft)
@@ -76,6 +79,7 @@ func main() {
 	fmt.Println("result", result)
 	if result.Success {
 		fmt.Println("amount", result)
+		fmt.Println("detai;", result.Detail)
 		fmt.Println("TransctionID", result.Detail.TransactionID)
 		fmt.Println("ft", result.Detail.FTNumber)
 		return
