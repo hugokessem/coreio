@@ -390,6 +390,9 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		DebitCurrency:       param.DebitCurrency,
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
+		CreditAmount:        param.CreditAmount,
+		ChargeCode:          param.ChargeCode,
+		ServiceCode:         param.ServiceCode,
 		DebitReference:      param.DebitReference,
 		CreditReference:     param.CreditReference,
 		DebitAmount:         param.DebitAmount,
@@ -402,7 +405,6 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		"Content-Type": "text/xml; charset=utf-8",
 	}
 
-	fmt.Println("xmlRequest", xmlRequest)
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
