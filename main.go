@@ -46,12 +46,12 @@ func main() {
 
 	calls := InitCoreAPICalls("SUPERAPP", "123456", "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null")
 	ft := core.FundTransferParam{
-		// DebitAccountNumber:  "1000382499388",
+		DebitAccountNumber:  "1000382499388",
 		CreditAccountNumber: "1000000006924",
 
 		// CreditAccountNumber: "1000517052152",
-		DebitAccountNumber: "1000319950331", // usd account
-		DebitCurrency:      "USD",
+		// DebitAccountNumber: "1000319950331", // usd account
+		DebitCurrency: "ETB",
 		// DebitAmount:         "2.00",
 		CreditAmount:    "12",
 		CreditCurrency:  "ETB",

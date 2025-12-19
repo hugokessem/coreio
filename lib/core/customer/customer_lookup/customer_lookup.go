@@ -130,6 +130,7 @@ func ParseCustomerLookupSOAP(response string) (*CustomerLookupResult, error) {
 				PostalCode:    resp.CustomerInformation.CustomerDetails.CustomerLookupDetail.PostalCode,
 				IDDocument:    resp.CustomerInformation.CustomerDetails.CustomerLookupDetail.IDDocument,
 				MaritalStatus: resp.CustomerInformation.CustomerDetails.CustomerLookupDetail.MaritalStatus,
+				Gender:        resp.CustomerInformation.CustomerDetails.CustomerLookupDetail.Gender,
 			},
 		}, nil
 	}
