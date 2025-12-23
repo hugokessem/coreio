@@ -16,15 +16,28 @@ type ServiceLimitParam struct {
 	ChannelLimit []ChannelLimit
 }
 
+type UserChannelType string
+
+const (
+	USSD UserChannelType = "USSD"
+	APP  UserChannelType = "APP"
+)
+
 type ChannelLimit struct {
-	UserChannelType string // USSD, APP
+	UserChannelType UserChannelType
 	ServiceLimits   []ServiceLimits
 }
 
+type ServiceTypeC string
+
+const (
+	TeleBirr ServiceTypeC = "TELE_BIRR"
+)
+
 type ServiceLimits struct {
-	ServiceType   string `xml:"SERVICETYPE"`
-	ServiceMaxAmt string `xml:"SERVICEMAXAMT"`
-	UserMaxCnt    string `xml:"USERMAXCNT"`
+	ServiceType   ServiceTypeC `xml:"SERVICETYPE"` // TELEBITT,
+	ServiceMaxAmt string       `xml:"SERVICEMAXAMT"`
+	UserMaxCnt    string       `xml:"USERMAXCNT"`
 }
 
 func NewServiceLimit(param Params) string {
