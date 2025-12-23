@@ -25,6 +25,7 @@ import (
 	ministatementbylimit "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_limit"
 	phonelookup "github.com/hugokessem/coreio/lib/core/phone_lookup"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
+	servicelimit "github.com/hugokessem/coreio/lib/core/service/service_limit"
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
 	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
 	standingorderlist "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list"
@@ -38,6 +39,8 @@ type AccountLookupParam = accountlookup.AccountLookupParam
 type AccountLookupResult = accountlookup.AccountLookupResult
 type AccountListParam = accountlist.AccountListParams
 type AccountListResult = accountlist.AccountListResult
+type ServiceLimitParam = servicelimit.ServiceLimitParam
+type ServiceLimitResult = servicelimit.ServiceLimitResult
 
 type FundTransferParam = fundtransfer.FundTransferParam
 type FundTransferResult = fundtransfer.FundTransferResult
@@ -89,6 +92,7 @@ type CardRequestParam = cardrequest.CardRequestParam
 type CardRequestResult = cardrequest.CardRequestResult
 
 type CBECoreAPIInterface interface {
+	ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
@@ -127,6 +131,35 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error) {
+	params := servicelimit.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+	}
+	xmlRequest := servicelimit.NewServiceLimit(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := servicelimit.ParseServiceLimitSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *CBECoreAPI) CustomerLimitFetch(param CustomerLimitFetchParam) (*CustomerLimitFetchResult, error) {

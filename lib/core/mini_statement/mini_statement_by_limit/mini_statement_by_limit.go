@@ -57,7 +57,8 @@ type Body struct {
 
 type MiniStatementResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	MiniStatementType *struct {
 		Group *struct {
@@ -78,9 +79,9 @@ type MiniStatementDetail struct {
 }
 
 type MiniStatementByLimitResult struct {
-	Success bool
-	Details []MiniStatementDetail
-	Message []string
+	Success  bool
+	Details  []MiniStatementDetail
+	Messages []string
 }
 
 func ParseMiniStatementByLimitSOAP(xmlData string) (*MiniStatementByLimitResult, error) {
@@ -94,22 +95,22 @@ func ParseMiniStatementByLimitSOAP(xmlData string) (*MiniStatementByLimitResult,
 		resp := env.Body.MiniStatementResponse
 		if resp.Status == nil {
 			return &MiniStatementByLimitResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &MiniStatementByLimitResult{
-				Success: false,
-				Message: []string{"API returned failure"},
+				Success:  false,
+				Messages: []string{"API returned failure"},
 			}, nil
 		}
 
 		if resp.MiniStatementType == nil {
 			return &MiniStatementByLimitResult{
-				Success: false,
-				Message: []string{},
+				Success:  false,
+				Messages: []string{},
 			}, nil
 		}
 
@@ -127,7 +128,7 @@ func ParseMiniStatementByLimitSOAP(xmlData string) (*MiniStatementByLimitResult,
 	}
 
 	return &MiniStatementByLimitResult{
-		Success: false,
-		Message: []string{"Invalid response type"},
+		Success:  false,
+		Messages: []string{"Invalid response type"},
 	}, nil
 }

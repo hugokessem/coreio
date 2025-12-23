@@ -14,7 +14,7 @@ func TestIntegrationMiniStatementByRange(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		AccountNumber:       "1000030677308",
+		AccountNumber:       "1000304523267",
 		NumberOfTransaction: "3",
 	}
 
@@ -46,6 +46,7 @@ func TestIntegrationMiniStatementByRange(t *testing.T) {
 
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
+	t.Log("log", result)
 	assert.NotNil(t, result.Details)
 
 	if len(result.Details) > 0 {
