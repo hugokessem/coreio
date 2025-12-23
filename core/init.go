@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hugokessem/coreio/core/internal"
+	accountcreation "github.com/hugokessem/coreio/lib/core/account/acccount_creation"
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
@@ -41,6 +42,9 @@ type AccountListParam = accountlist.AccountListParams
 type AccountListResult = accountlist.AccountListResult
 type ServiceLimitParam = servicelimit.ServiceLimitParam
 type ServiceLimitResult = servicelimit.ServiceLimitResult
+
+type AccountCreationParam = accountcreation.AccountCreationParams
+type AccountCreationResult = accountcreation.AccountCreationResult
 
 type FundTransferParam = fundtransfer.FundTransferParam
 type FundTransferResult = fundtransfer.FundTransferResult
@@ -97,6 +101,7 @@ type CBECoreAPIInterface interface {
 	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
+	AccountCreation(param AccountCreationParam) (*AccountCreationResult, error)
 
 	LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTResult, error)
 	ListLockedAmount(param ListLockedAmountParam) (*ListLockedAmountResult, error)
@@ -131,6 +136,37 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
+	params := accountcreation.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		Customer: param.Customer,
+		Category: param.Category,
+		Currency: param.Currency,
+	}
+	xmlRequest := accountcreation.NewAccountCreation(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error) {
