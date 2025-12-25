@@ -15,7 +15,7 @@ func TestIntegrationAccountList(t *testing.T) {
 		Username:      "SUPERAPP",
 		Password:      "123456",
 		ColumnName:    "CUS.ID",
-		CriteriaValue: "1000000015",
+		CriteriaValue: "1072666796",
 	}
 
 	xmlRequest := NewAccountList(params)

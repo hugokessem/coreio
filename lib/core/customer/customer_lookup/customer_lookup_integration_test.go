@@ -14,7 +14,7 @@ func TestIntegrationCustomerLookup(t *testing.T) {
 	params := Params{
 		Username:           "SUPERAPP",
 		Password:           "123456",
-		CustomerIdentifier: "1020746756",
+		CustomerIdentifier: "1072666796",
 	}
 
 	xmlRequest := NewCustomerLookup(params)
