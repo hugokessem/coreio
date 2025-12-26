@@ -80,8 +80,8 @@ type FundTransferType struct {
 	LocalChargeAmount       string                    `xml:"LOCALCHARGEAMT"`
 	LocalPosChgsAmount      string                    `xml:"LOCPOSCHGSAMT"`
 	CustGroupLevel          string                    `xml:"CUSTGROUPLEVEL"`
-	DebitCustomer           string                    `xml:"DEBITCUSTOMER"`
-	CreditCustomer          string                    `xml:"CREDITCUSTOMER"`
+	DebitCustomer           string                    `xml:"SENDERNAME"`
+	CreditCustomer          string                    `xml:"RECEIVERNAME"`
 	DrAdvicerEqdYN          string                    `xml:"DRADVICEREQDYN"`
 	CrAdvicerEqdYN          string                    `xml:"CRADVICEREQDYN"`
 	ChargedCustomer         string                    `xml:"CHARGEDCUSTOMER"`
