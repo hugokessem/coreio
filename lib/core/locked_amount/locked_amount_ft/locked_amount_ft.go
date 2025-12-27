@@ -17,6 +17,7 @@ type Params struct {
 	DebitCurrency       string
 	DebiterReference    string
 	ClientReference     string
+	ServiceCode         string
 	LockID              string
 }
 
@@ -29,6 +30,7 @@ type LockedAmountFTParams struct {
 	DebitCurrency       string
 	DebiterReference    string
 	ClientReference     string
+	ServiceCode         string
 	LockID              string
 }
 
@@ -62,11 +64,12 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
                 <fun:CHARGECODE/>
                 <fun:ClientReference>%s</fun:ClientReference>
                 <fun:LockID>%s</fun:LockID>
+				<fun:SERVICECODE>%s</fun:SERVICECODE>
             </FUNDSTRANSFERFTTXNSUPERAPPType>
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebiterReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrent, param.ClientReference, param.LockID)
+	`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebiterReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrent, param.ClientReference, param.LockID, param.ServiceCode)
 }
 
 type Envelope struct {

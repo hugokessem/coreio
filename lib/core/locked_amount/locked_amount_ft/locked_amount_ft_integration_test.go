@@ -22,6 +22,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		DebitCurrency:       "ETB",
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
+		ServiceCode:         "GLOBAL",
 		LockID:              "ACLK21343J4L7P",
 	}
 
