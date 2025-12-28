@@ -64,7 +64,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
                 <fun:CHARGECODE/>
                 <fun:ClientReference>%s</fun:ClientReference>
                 <fun:LockID>%s</fun:LockID>
-				<fun:SERVICECODE>%s</fun:SERVICECODE>
+				<fun:ServiceCode>%s</fun:ServiceCode>
             </FUNDSTRANSFERFTTXNSUPERAPPType>
         </cbes:AccountTransfer>
     </soapenv:Body>
