@@ -58,7 +58,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	if result.Detail != nil {
 		assert.Equal(t, "20251111", result.Detail.To)
 		assert.Equal(t, "20251109", result.Detail.From)
-		assert.Equal(t, "250.00", result.Detail.LockedAmount)
+		assert.Equal(t, "251.00", result.Detail.LockedAmount)
 		assert.Equal(t, "3 Click Payment", result.Detail.Description)
 		assert.Equal(t, "1000000006924", result.Detail.AccountNumber)
 	} else {

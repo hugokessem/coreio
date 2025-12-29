@@ -17,16 +17,17 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		CreditCurrent:       "ETB",
 		CreditAccountNumber: "1000382499388",
 		CrediterReference:   "Credit reference",
-		DebitAmount:         "259.00",
+		DebitAmount:         "251.00",
 		DebitAccountNumber:  "1000000006924",
 		DebitCurrency:       "ETB",
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
 		ServiceCode:         "GLOBAL",
-		LockID:              "ACLK21343J4L7P",
+		LockID:              "ACLK21343R4M8B",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
+	t.Log("Request XML:", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
