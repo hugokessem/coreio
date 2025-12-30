@@ -21,7 +21,6 @@ type Params struct {
 	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
-	ChargeCode          string
 	ServiceCode         string
 }
 
@@ -36,7 +35,6 @@ type FundTransferParam struct {
 	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
-	ChargeCode          string
 	ServiceCode         string
 }
 
@@ -64,24 +62,13 @@ func NewFundTransfer(param Params) string {
 					<fun:gPAYMENTDETAILS g="1">
 						<fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
 					</fun:gPAYMENTDETAILS>
-					<fun:gCOMMISSIONTYPE g="1">
-						<fun:mCOMMISSIONTYPE m="1">
-							<fun:COMMISSIONTYPE>COMMLMT</fun:COMMISSIONTYPE>
-							<fun:COMMISSIONAMT/>
-						</fun:mCOMMISSIONTYPE>
-						<fun:mCOMMISSIONTYPE m="2">
-							<fun:COMMISSIONTYPE>CABLECHRG</fun:COMMISSIONTYPE>
-							<fun:COMMISSIONAMT/>
-						</fun:mCOMMISSIONTYPE>
-					</fun:gCOMMISSIONTYPE>
-					<fun:CHARGECODE>%s</fun:CHARGECODE>
 					<fun:ClientReference>%s</fun:ClientReference>
 					<fun:ServiceCode>%s</fun:ServiceCode>
 				</FUNDSTRANSFERFTTXNSUPERAPPType>
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.PaymentDetail, param.ChargeCode, param.TransactionID, param.ServiceCode)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.PaymentDetail, param.TransactionID, param.ServiceCode)
 }
 
 type Envelope struct {
