@@ -13,7 +13,9 @@ import (
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	customerlimit "github.com/hugokessem/coreio/lib/core/customer/customer_limit"
 	customerlimitamendment "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amendment"
-	customerlimitfetch "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch"
+	customerlimitfetch "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
+	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
+
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
@@ -84,8 +86,8 @@ type CustomerLimitParam = customerlimit.CustomerLimitParams
 type CustomerLimitResult = customerlimit.CustomerLimitResult
 type CustomerLimitAmendmentParam = customerlimitamendment.CustomerLimitAmendmentParam
 type CustomerLimitAmendmentResult = customerlimitamendment.CustomerLimitAmendmentResult
-type CustomerLimitFetchParam = customerlimitfetch.CustomerLimitFetchParam
-type CustomerLimitFetchResult = customerlimitfetch.CustomerLimitFetchResult
+type CustomerLimitFetchByCIFParam = customerlimitfetchbycif.CustomerLimitFetchParam
+type CustomerLimitFetchByCIFResult = customerlimitfetchbycif.CustomerLimitFetchResult
 
 type PhoneLookupParam = phonelookup.PhoneLookupParam
 type PhoneLookupResult = phonelookup.PhoneLookupResult
@@ -122,7 +124,7 @@ type CBECoreAPIInterface interface {
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
 	CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error)
 	CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error)
-	CustomerLimitFetch(param CustomerLimitFetchParam) (*CustomerLimitFetchResult, error)
+	CustomerLimitFetchByCIF(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
@@ -198,7 +200,7 @@ func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult,
 	return result, nil
 }
 
-func (c *CBECoreAPI) CustomerLimitFetch(param CustomerLimitFetchParam) (*CustomerLimitFetchResult, error) {
+func (c *CBECoreAPI) CustomerLimitFetchByCIF(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {
 	params := customerlimitfetch.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -460,7 +462,6 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
 		CreditAmount:        param.CreditAmount,
-		ChargeCode:          param.ChargeCode,
 		ServiceCode:         param.ServiceCode,
 		DebitReference:      param.DebitReference,
 		CreditReference:     param.CreditReference,
@@ -615,6 +616,7 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 		DebitCurrency:       param.DebitCurrency,
 		DebiterReference:    param.DebiterReference,
 		ClientReference:     param.ClientReference,
+		ServiceCode:         param.ServiceCode,
 		LockID:              param.LockID,
 	}
 

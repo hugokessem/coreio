@@ -48,6 +48,7 @@ func TestIntegrationCustomerLimit(t *testing.T) {
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 	t.Logf("result: %v", result.Detail)
+	t.Logf("result: %v", result.Detail)
 
 	if result.Detail != nil {
 		assert.NotEmpty(t, result.Detail.CustomerMaxLimit)

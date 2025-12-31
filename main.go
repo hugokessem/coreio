@@ -51,7 +51,7 @@ func main() {
 
 		// CreditAccountNumber: "1000517052152",
 		// DebitAccountNumber: "1000319950331", // usd account
-		DebitCurrency: "ETB",
+		// DebitCurrency: "ETB",
 		// DebitAmount:         "2.00",
 		CreditAmount:    "12",
 		CreditCurrency:  "ETB",
@@ -59,7 +59,6 @@ func main() {
 		DebitReference:  "Payment",
 		CreditReference: "Received payment",
 		PaymentDetail:   "Fund transfer",
-		ChargeCode:      "WAIVE",
 		ServiceCode:     "GLOBAL",
 	}
 
