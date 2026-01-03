@@ -64,6 +64,7 @@ type ListLockedAmountDetail struct {
 	Remark        string `xml:"Remark"`
 	LockedAmount  string `xml:"LockedAmount"`
 	LockedDate    string `xml:"LockedDate"`
+	LockID        string `xml:"LockID"`
 }
 
 type ListLockedAmountResponse struct {
