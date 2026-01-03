@@ -121,6 +121,7 @@ func ParseListLockedAmountSOAP(xmlData string) (*ListLockedAmountResult, error) 
 				Remark:        detail.Remark,
 				LockedAmount:  detail.LockedAmount,
 				LockedDate:    detail.LockedDate,
+				LockID:        detail.LockID,
 			}
 		}
 
