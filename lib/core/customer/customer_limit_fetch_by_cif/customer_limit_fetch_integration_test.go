@@ -14,10 +14,11 @@ func TestIntegrationCustomerLimitFetch(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1026582446",
+		CustomerNumber: "10011",
 	}
 
 	xmlRequest := NewCustomerLimitFetch(params)
+	t.Log("xmlResponse: ", xmlRequest)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -47,7 +48,7 @@ func TestIntegrationCustomerLimitFetch(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Logf("result: %v", result.Detail)
+	t.Logf("---result: %v", result.Message)
 
 	if result.Detail != nil {
 		// Log basic fields
@@ -68,7 +69,7 @@ func TestIntegrationCustomerLimitFetch(t *testing.T) {
 		if result.Detail.UserChannelType != nil && len(result.Detail.UserChannelType.Details) > 0 {
 			t.Logf("User Channel Types: %d found", len(result.Detail.UserChannelType.Details))
 			for i, uct := range result.Detail.UserChannelType.Details {
-				t.Logf("  [%d] ChannelType=%s, MaxLimit=%s", i+1, uct.UserChannelType, uct.UserMaxLimit)
+				t.Logf("  [%d] ChannelType=%s, MaxLimit=%s", i+1, uct.UserChannelType, uct)
 			}
 		} else {
 			t.Log("No user channel types found in response")

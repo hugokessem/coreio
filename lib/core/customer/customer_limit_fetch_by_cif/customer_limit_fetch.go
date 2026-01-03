@@ -49,7 +49,7 @@ type Body struct {
 type CustomerLimitResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		MessageId        string `xml:"messageId"`
+		Message          string `xml:"messageId"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`
@@ -73,14 +73,22 @@ type CustomerLimitDetail struct {
 }
 
 type UserChannelDetail struct {
-	UserChannelType string `xml:"USERCHANNELTYPE"`
-	UserMaxLimit    string `xml:"USERMAXLIMIT"`
+	UserChannelType    string             `xml:"USERCHANNELTYPE"`
+	ServiceTypeDetails ServiceTypeDetails `xml:"sgSERVICETYPE"`
+}
+
+type ServiceTypeDetails struct {
+	ServiceType struct {
+		ServiceType          string `xml:"SERVICETYPE"`
+		ServiceMaximumAmount string `xml:"SERVICEMAXAMT"`
+		UserMaximum          string `xml:"USERMAXCNT"`
+	} `xml:"SERVICETYPE"`
 }
 
 type CustomerLimitFetchResult struct {
 	Success bool
 	Detail  *CustomerLimitDetail
-	Message string
+	Message []string
 }
 
 func ParseCustomerLimitFetchSOAP(xmlData string) (*CustomerLimitFetchResult, error) {
@@ -95,19 +103,23 @@ func ParseCustomerLimitFetchSOAP(xmlData string) (*CustomerLimitFetchResult, err
 		if resp.Status == nil {
 			return &CustomerLimitFetchResult{
 				Success: false,
-				Message: "missing status",
+				Message: []string{"missing status"},
 			}, nil
 		}
 		if resp.CustomerLimitDetail == nil {
 			return &CustomerLimitFetchResult{
 				Success: false,
-				Message: "missing customer limit detail",
+				Message: []string{"missing customer limit detail"},
 			}, nil
 		}
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+			var messages []string
+			for _, v := range resp.Status.Message {
+				messages = append(messages, string(v))
+			}
 			return &CustomerLimitFetchResult{
 				Success: false,
-				Message: "API returned failure",
+				Message: messages,
 			}, nil
 		}
 
@@ -118,6 +130,6 @@ func ParseCustomerLimitFetchSOAP(xmlData string) (*CustomerLimitFetchResult, err
 	}
 	return &CustomerLimitFetchResult{
 		Success: false,
-		Message: "invalid response type",
+		Message: []string{"invalid response type"},
 	}, nil
 }

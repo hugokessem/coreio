@@ -363,15 +363,12 @@ func TestParseCustomerLimitFetchSOAP_DetailFields(t *testing.T) {
 
 			// Check first channel type
 			assert.Equal(t, "APP", result.Detail.UserChannelType.Details[0].UserChannelType)
-			assert.Equal(t, "800000", result.Detail.UserChannelType.Details[0].UserMaxLimit)
 
 			// Check second channel type
 			assert.Equal(t, "USSD", result.Detail.UserChannelType.Details[1].UserChannelType)
-			assert.Equal(t, "150000", result.Detail.UserChannelType.Details[1].UserMaxLimit)
 
 			// Check third channel type
 			assert.Equal(t, "ATM", result.Detail.UserChannelType.Details[2].UserChannelType)
-			assert.Equal(t, "500000", result.Detail.UserChannelType.Details[2].UserMaxLimit)
 		}
 	}
 }
