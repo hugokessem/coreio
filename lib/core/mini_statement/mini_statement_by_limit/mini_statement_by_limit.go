@@ -68,14 +68,15 @@ type MiniStatementResponse struct {
 }
 
 type MiniStatementDetail struct {
-	ValueDate            string `xml:"ValueDate"`
-	Description          string `xml:"Description"`
-	TransactionReference string `xml:"TxnReference"`
-	Amount               string `xml:"Amount"`
-	Currency             string `xml:"Currency"`
-	OtherPartyAccount    string `xml:"OtherPartyAcc"`
-	PaymentDetails       string `xml:"PaymentDetails"`
-	DateTime             string `xml:"DateTime"`
+	ValueDate                   string `xml:"ValueDate"`
+	Description                 string `xml:"Description"`
+	TransactionReference        string `xml:"TxnReference"`
+	Amount                      string `xml:"Amount"`
+	Currency                    string `xml:"Currency"`
+	OtherPartyAccount           string `xml:"OtherPartyAc"`
+	OtherPartyAccountHolderName string `xml:"OtherPartyAccName"`
+	PaymentDetails              string `xml:"PaymentDetails"`
+	DateTime                    string `xml:"DateTime"`
 }
 
 type MiniStatementByLimitResult struct {
