@@ -66,8 +66,10 @@ type AccountCreationResponse struct {
 }
 
 type AccountCreationDetail struct {
-	Customer           string `xml:"CUSTOMER"`
-	Category           string `xml:"CATEGORY"`
+	XMLName            xml.Name `xml:"ACCOUNTType"`
+	AccountNumber      string   `xml:"id,attr"`
+	Customer           string   `xml:"CUSTOMER"`
+	Category           string   `xml:"CATEGORY"`
 	GlobalAccountTitle struct {
 		AccountTitle string `xml:"ACCOUNTTITLE1"`
 	} `xml:"gACCOUNTTITLE1"`
