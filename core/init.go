@@ -15,6 +15,7 @@ import (
 	customerlimitamendment "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amendment"
 	customerlimitfetch "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
 	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
+	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
@@ -44,6 +45,9 @@ type AccountListParam = accountlist.AccountListParams
 type AccountListResult = accountlist.AccountListResult
 type ServiceLimitParam = servicelimit.ServiceLimitParam
 type ServiceLimitResult = servicelimit.ServiceLimitResult
+
+type SplitPaymentParam = splitpayment.SplitPaymentParam
+type SplitPaymentResult = splitpayment.SplitPaymentResult
 
 type AccountCreationParam = accountcreation.AccountCreationParams
 type AccountCreationResult = accountcreation.AccountCreationResult
@@ -128,6 +132,8 @@ type CBECoreAPIInterface interface {
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
+
+	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
 }
 
 type CBECoreCredential struct {
@@ -138,6 +144,42 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error) {
+	params := splitpayment.Param{
+		Username:                 c.config.Username,
+		Password:                 c.config.Password,
+		DebitCurrency:            param.DebitCurrency,
+		DebitAccount:             param.DebitAccount,
+		DebitReference:           param.DebitReference,
+		CreditCurrency:           param.CreditCurrency,
+		CreditAccountInformation: param.CreditAccountInformation,
+	}
+
+	xmlRequest := splitpayment.NewSplitPayment(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := splitpayment.ParseSplitPaymentSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
