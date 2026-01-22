@@ -44,7 +44,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 
 		resp, err = client.Do(req)
 		if err == nil && resp.StatusCode < 500 {
-			return resp, nil // success or 4xx error (no retry)
+			return resp, nil
 		}
 
 		// Clean up response if we’ll retry
