@@ -6,6 +6,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strings"
+
+	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 )
 
 type Params struct {
@@ -22,6 +24,7 @@ type Params struct {
 	TransactionID       string
 	PaymentDetail       string
 	ServiceCode         string
+	Meta                frauddetection.FraudAPIPayload
 }
 
 type FundTransferParam struct {
@@ -36,6 +39,7 @@ type FundTransferParam struct {
 	TransactionID       string
 	PaymentDetail       string
 	ServiceCode         string
+	Meta                frauddetection.FraudAPIPayload
 }
 
 func NewFundTransfer(param Params) string {

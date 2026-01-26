@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -11,6 +12,7 @@ import (
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
+	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
@@ -137,9 +139,16 @@ type CBECoreAPIInterface interface {
 }
 
 type CBECoreCredential struct {
-	Username string
-	Password string
-	Url      string
+	Username           string
+	Password           string
+	Url                string
+	FraudAPICredential FraudAPICredential
+}
+
+type FraudAPICredential struct {
+	Authorization string
+	ForwardHost   string
+	Url           string
 }
 
 type CBECoreAPI struct {
@@ -522,7 +531,24 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		DebitAmount:         param.DebitAmount,
 		TransactionID:       param.TransactionID,
 		PaymentDetail:       param.PaymentDetail,
+		Meta:                param.Meta,
 	}
+
+	fraud := frauddetection.NewFraudAPI(
+		c.config.FraudAPIConfig.Authorization,
+		c.config.FraudAPIConfig.ForwardHost,
+		c.config.FraudAPIConfig.Url,
+	)
+	response, err := fraud.Call(param.Meta)
+	if err != nil {
+		return nil, fmt.Errorf("fraud detection call failed: %w", err)
+	}
+
+	if response.Violation != "approved" {
+		return nil, errors.New("transaction blocked by fraud detection")
+	}
+
+	fmt.Println("Fraud detection approved:", response.Violation)
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
 	headers := map[string]string{
@@ -1089,7 +1115,14 @@ func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, er
 }
 
 func NewCBECoreAPI(param CBECoreCredential) CBECoreAPIInterface {
-	config := internal.SetConfig(param.Username, param.Password, param.Url)
+	config := internal.SetConfig(
+		param.Username,
+		param.Password,
+		param.Url,
+		param.FraudAPICredential.Authorization,
+		param.FraudAPICredential.Url,
+		param.FraudAPICredential.ForwardHost,
+	)
 	return &CBECoreAPI{
 		config: config,
 	}

@@ -6,18 +6,24 @@ import (
 	"log"
 
 	"github.com/hugokessem/coreio/core"
+	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 )
 
 type CoreAPI struct {
 	coreInterface core.CBECoreAPIInterface
 }
 
-func InitCoreAPICalls(username, password, url string) CoreAPI {
+func InitCoreAPICalls(username, password, url, fraudAPIAuth, fraudAPIUrl, fraudAPIForwardHost string) CoreAPI {
 	return CoreAPI{
 		coreInterface: core.NewCBECoreAPI(core.CBECoreCredential{
 			Username: username,
 			Password: password,
 			Url:      url,
+			FraudAPICredential: core.FraudAPICredential{
+				Authorization: fraudAPIAuth,
+				Url:           fraudAPIUrl,
+				ForwardHost:   fraudAPIForwardHost,
+			},
 		}),
 	}
 }
@@ -44,9 +50,16 @@ func main() {
 	// ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	// defer cancel()
 
-	calls := InitCoreAPICalls("SUPERAPP", "123456", "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null")
+	calls := InitCoreAPICalls(
+		"SUPERAPP",
+		"123456",
+		"https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null",
+		"Basic YWRtaW46YWRtaW4=",
+		"https://devapisuperapp.cbe.com.et/superapp/parser/proxy/scoringapi/digital-transactions/?target=https://ngdrfms.cbe.com.et",
+		"nguat.cbe.com.et",
+	)
 	ft := core.FundTransferParam{
-		DebitAccountNumber:  "1000382499387",
+		DebitAccountNumber:  "1000517052152",
 		CreditAccountNumber: "1000000006924",
 
 		// CreditAccountNumber: "1000517052152",
@@ -60,9 +73,26 @@ func main() {
 		CreditReference: "Received payment",
 		PaymentDetail:   "Fund transfer",
 		ServiceCode:     "GLOBAL",
+		Meta: frauddetection.FraudAPIPayload{
+			TranasctionID:              "FT24330T1NSA3",
+			AccountID:                  "1000517052152",
+			CustomerName:               "YOHHANES TESHOME SHIFERAW",
+			CustomerPhoneMobileSMS:     "+251911706628",
+			BeneficiaryAccountID:       "1000000006924",
+			BeneficiaryName:            "ABIY HAILEYESUS MENGISTU",
+			AccountCategory:            "6502",
+			AccountCurrency:            "ETB",
+			TransactionConvertedAmount: "180",
+			TransactionType:            "Mobile Transfer",
+			SourceUser:                 "104723KIK",
+			ChangeInPhoneEmail:         "Y",
+			TransactionTimestamp:       "2025-10-28 09:27:20",
+			ChangeInPIN:                "Y",
+			ChangeInPassword:           "N",
+			ChangeInDevice:             "N",
+		},
 	}
 
-	result, err := calls.FT(ft)
 	// ft := core.MiniStatementByDateRangeParam{
 	// 	AccountNumber: "1000184349713",
 	// 	From:          "20200101",
@@ -70,6 +100,7 @@ func main() {
 	// }
 
 	// result, err := calls.MiniStatementByDate(ctx, ft)
+	result, err := calls.FT(ft)
 	if err != nil {
 		log.Fatalf("%v", err)
 		return
