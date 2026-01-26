@@ -11,12 +11,11 @@ import (
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
-	customerlimit "github.com/hugokessem/coreio/lib/core/customer/customer_limit"
-	customerlimitamendment "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amendment"
-	customerlimitfetch "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
-	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
+	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
+	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
+	customerlimitfetchbyservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_service"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
@@ -86,12 +85,6 @@ type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDa
 
 type CustomerLookupParam = customerlookup.CustomerLookupParam
 type CustomerLookupResult = customerlookup.CustomerLookupResult
-type CustomerLimitParam = customerlimit.CustomerLimitParams
-type CustomerLimitResult = customerlimit.CustomerLimitResult
-type CustomerLimitAmendmentParam = customerlimitamendment.CustomerLimitAmendmentParam
-type CustomerLimitAmendmentResult = customerlimitamendment.CustomerLimitAmendmentResult
-type CustomerLimitFetchByCIFParam = customerlimitfetchbycif.CustomerLimitFetchParam
-type CustomerLimitFetchByCIFResult = customerlimitfetchbycif.CustomerLimitFetchResult
 
 type PhoneLookupParam = phonelookup.PhoneLookupParam
 type PhoneLookupResult = phonelookup.PhoneLookupResult
@@ -101,7 +94,17 @@ type CardReplaceResult = cardreplace.CardReplaceResult
 type CardRequestParam = cardrequest.CardRequestParam
 type CardRequestResult = cardrequest.CardRequestResult
 
+type CustomerLimitFetchByCIFResult = customerlimitfetchbycif.CustomerLimitViewResult
+type CustomerLimitFetchByCIFParam = customerlimitfetchbycif.CustomerLimitFetchByCIFParam
+type CustomerLimitFetchByServiceResult = customerlimitfetchbyservice.CustomerLimitFetchResult
+type CustomerLimitFetchByServiceParam = customerlimitfetchbyservice.CustomerLimitFetchByServiceParam
+type CustomerLimitAmendByCIFResult = customerlimitamendbycif.CustomerLimitAmendResult
+type CustomerLimitAmendByCIFParam = customerlimitamendbycif.CustomerLimitAmendByCIFParam
 type CBECoreAPIInterface interface {
+	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
+	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
+	CustomerLimitFetchByService(param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error)
+
 	ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
@@ -126,9 +129,6 @@ type CBECoreAPIInterface interface {
 	PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error)
 
 	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
-	CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error)
-	CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error)
-	CustomerLimitFetchByCIF(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	AccountList(param AccountListParam) (*AccountListResult, error)
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
@@ -144,6 +144,109 @@ type CBECoreCredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {
+	params := customerlimitfetchbycif.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+
+	xmlRequest := customerlimitfetchbycif.NewCustomerLimitFetchByCIF(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := customerlimitfetchbycif.ParseCustomerLimitFetchByCIFSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+func (c *CBECoreAPI) CustomerLimitFetchByService(param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error) {
+	params := customerlimitfetchbyservice.Params{
+		Username:    c.config.Username,
+		Password:    c.config.Password,
+		ServiceCode: param.ServiceCode,
+	}
+	xmlRequest := customerlimitfetchbyservice.NewCustomerLimitFetchByService(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerlimitfetchbyservice.ParseCustomerLimitFetchByServiceSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error) {
+	params := customerlimitamendbycif.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+		ChannelLimit:   param.ChannelLimit,
+	}
+	xmlRequest := customerlimitamendbycif.NewCustomerLimitAmendByCIF(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := customerlimitamendbycif.ParseCustomerLimitAmendByCIFSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error) {
@@ -242,35 +345,6 @@ func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult,
 	return result, nil
 }
 
-func (c *CBECoreAPI) CustomerLimitFetchByCIF(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {
-	params := customerlimitfetch.Params{
-		Username:       c.config.Username,
-		Password:       c.config.Password,
-		CustomerNumber: param.CustomerNumber,
-	}
-	xmlRequest := customerlimitfetch.NewCustomerLimitFetch(params)
-	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
-	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
-	}, headers)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	responseData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	result, err := customerlimitfetch.ParseCustomerLimitFetchSOAP(string(responseData))
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
 func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
 	params := exchangerate.Params{
 		Username: c.config.Username,
@@ -294,68 +368,6 @@ func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
 	}
 	result, err := exchangerate.ParseExchangeRateSOAP(string(responseData))
 
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func (c *CBECoreAPI) CustomerLimitAmendment(param CustomerLimitAmendmentParam) (*CustomerLimitAmendmentResult, error) {
-	params := customerlimitamendment.Params{
-		Username:         c.config.Username,
-		Password:         c.config.Password,
-		CustomerID:       param.CustomerID,
-		AppUserMaxLimit:  param.AppUserMaxLimit,
-		USSDUserMaxLimit: param.USSDUserMaxLimit,
-	}
-	xmlRequest := customerlimitamendment.NewCustomerLimitAmendment(params)
-	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
-	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
-	}, headers)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	responseData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	result, err := customerlimitamendment.ParseCustomerLimitAmendmentSOAP(string(responseData))
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func (c *CBECoreAPI) CustomerLimit(param CustomerLimitParam) (*CustomerLimitResult, error) {
-	params := customerlimit.Params{
-		Username:      c.config.Username,
-		Password:      c.config.Password,
-		TransactionID: param.TransactionID,
-	}
-	xmlRequest := customerlimit.NewCustomerLimit(params)
-	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
-	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
-	}, headers)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	responseData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	result, err := customerlimit.ParseCustomerLimitSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}

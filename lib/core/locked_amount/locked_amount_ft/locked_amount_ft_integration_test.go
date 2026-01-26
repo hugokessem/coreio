@@ -23,7 +23,8 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
 		ServiceCode:         "GLOBAL",
-		LockID:              "ACLK21343R4M8B",
+		PaymentDetail:       "details",
+		LockID:              "ACLK21343GC93J",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
@@ -55,15 +56,20 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	assert.NotNil(t, result, "Expected result to be non-nil")
 	t.Log("details", result.Detail)
 
-	assert.True(t, result.Success)
-	assert.NotEmpty(t, result.Detail.TransactionId)
-	assert.NotEmpty(t, result.Detail.TransactionType)
-	assert.NotEmpty(t, result.Detail.DebitAccountNumber)
-	assert.NotEmpty(t, result.Detail.DebitCurrency)
-	assert.NotEmpty(t, result.Detail.DebitAmount)
-	assert.NotEmpty(t, result.Detail.CreditAccountNumber)
-	assert.NotEmpty(t, result.Detail.CreditCurrenct)
-	assert.NotEmpty(t, result.Detail.CreditAmountWithCurrency)
-	assert.NotEmpty(t, result.Detail.DebitAmountWithCurrency)
-	assert.NotEmpty(t, result.Detail.LockId)
+	if result.Success {
+		assert.True(t, result.Success)
+		assert.NotEmpty(t, result.Detail.TransactionId)
+		assert.NotEmpty(t, result.Detail.TransactionType)
+		assert.NotEmpty(t, result.Detail.DebitAccountNumber)
+		assert.NotEmpty(t, result.Detail.DebitCurrency)
+		assert.NotEmpty(t, result.Detail.DebitAmount)
+		assert.NotEmpty(t, result.Detail.CreditAccountNumber)
+		assert.NotEmpty(t, result.Detail.CreditCurrenct)
+		assert.NotEmpty(t, result.Detail.CreditAmountWithCurrency)
+		assert.NotEmpty(t, result.Detail.DebitAmountWithCurrency)
+		assert.NotEmpty(t, result.Detail.LockId)
+	} else {
+		t.Log("Error Messages:", result.Messages)
+		assert.Fail(t, "Locked Amount FT operation failed")
+	}
 }
