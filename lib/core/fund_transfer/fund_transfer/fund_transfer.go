@@ -24,6 +24,8 @@ type Params struct {
 	TransactionID       string
 	PaymentDetail       string
 	ServiceCode         string
+	CustomerSegment     string
+	TransactionType     string
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -39,6 +41,8 @@ type FundTransferParam struct {
 	TransactionID       string
 	PaymentDetail       string
 	ServiceCode         string
+	CustomerSegment     string
+	TransactionType     string
 	Meta                frauddetection.FraudAPIPayload
 }
 
