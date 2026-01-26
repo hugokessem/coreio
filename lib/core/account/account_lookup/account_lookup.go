@@ -63,16 +63,27 @@ type AccountLookupResponse struct {
 }
 
 type AccountLookupDetail struct {
-	AccountNumber  string `xml:"AccountNumber"`
-	CustomerName   string `xml:"CustomerName"`
-	Restriction    string `xml:"Restriction"`
-	Currency       string `xml:"Currency"`
-	WorkingBalance string `xml:"WorkingBalance"`
-	CustomerID     string `xml:"CustomerID"`
-	AccountType    string `xml:"AccountType"`
-	PhoneNumber    string `xml:"PhoneNo"`
-	BirthOfDate    string `xml:"DOB"`
-	Gender         string `xml:"Gender"`
+	AccountNumber   string `xml:"AccountNumber"`
+	CustomerName    string `xml:"CustomerName"`
+	Restriction     string `xml:"Restriction"`
+	Currency        string `xml:"Currency"`
+	WorkingBalance  string `xml:"WorkingBalance"`
+	CustomerID      string `xml:"CustomerID"`
+	BranchName      string `xml:"BranchName"`
+	Category        string `xml:"Category"`
+	AccountType     string `xml:"AccountType"`
+	PhoneNumber     string `xml:"PhoneNo"`
+	BirthOfDate     string `xml:"DOB"`
+	Gender          string `xml:"Gender"`
+	BranchCode      string `xml:"BranchCode"`
+	DistrictName    string `xml:"DistrictName"`
+	Industry        string `xml:"Industry"`
+	Sector          string `xml:"Sector"`
+	Ownership       string `xml:"Ownership"`
+	CustomerSegment string `xml:"CustomerSegment"`
+	Target          string `xml:"Target"`
+	TinNO           string `xml:"TinNO"`
+	RestrictionType string `xml:"RestrictionType"`
 }
 
 // ----------------- Failure or no records -----------------
@@ -123,16 +134,27 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 		return &AccountLookupResult{
 			Success: true,
 			Detail: &AccountLookupDetail{
-				AccountNumber:  resp.AccountEnquirySuperappType.Group.Details.AccountNumber,
-				CustomerName:   resp.AccountEnquirySuperappType.Group.Details.CustomerName,
-				Restriction:    resp.AccountEnquirySuperappType.Group.Details.Restriction,
-				Currency:       resp.AccountEnquirySuperappType.Group.Details.Currency,
-				WorkingBalance: resp.AccountEnquirySuperappType.Group.Details.WorkingBalance,
-				CustomerID:     resp.AccountEnquirySuperappType.Group.Details.CustomerID,
-				AccountType:    resp.AccountEnquirySuperappType.Group.Details.AccountType,
-				PhoneNumber:    resp.AccountEnquirySuperappType.Group.Details.PhoneNumber,
-				BirthOfDate:    resp.AccountEnquirySuperappType.Group.Details.BirthOfDate,
-				Gender:         resp.AccountEnquirySuperappType.Group.Details.Gender,
+				AccountNumber:   resp.AccountEnquirySuperappType.Group.Details.AccountNumber,
+				CustomerName:    resp.AccountEnquirySuperappType.Group.Details.CustomerName,
+				Restriction:     resp.AccountEnquirySuperappType.Group.Details.Restriction,
+				Currency:        resp.AccountEnquirySuperappType.Group.Details.Currency,
+				WorkingBalance:  resp.AccountEnquirySuperappType.Group.Details.WorkingBalance,
+				CustomerID:      resp.AccountEnquirySuperappType.Group.Details.CustomerID,
+				AccountType:     resp.AccountEnquirySuperappType.Group.Details.AccountType,
+				PhoneNumber:     resp.AccountEnquirySuperappType.Group.Details.PhoneNumber,
+				BirthOfDate:     resp.AccountEnquirySuperappType.Group.Details.BirthOfDate,
+				Gender:          resp.AccountEnquirySuperappType.Group.Details.Gender,
+				RestrictionType: resp.AccountEnquirySuperappType.Group.Details.RestrictionType,
+				BranchName:      resp.AccountEnquirySuperappType.Group.Details.BranchName,
+				BranchCode:      resp.AccountEnquirySuperappType.Group.Details.BranchCode,
+				DistrictName:    resp.AccountEnquirySuperappType.Group.Details.DistrictName,
+				Industry:        resp.AccountEnquirySuperappType.Group.Details.Industry,
+				Sector:          resp.AccountEnquirySuperappType.Group.Details.Sector,
+				Ownership:       resp.AccountEnquirySuperappType.Group.Details.Ownership,
+				CustomerSegment: resp.AccountEnquirySuperappType.Group.Details.CustomerSegment,
+				Target:          resp.AccountEnquirySuperappType.Group.Details.Target,
+				TinNO:           resp.AccountEnquirySuperappType.Group.Details.TinNO,
+				Category:        resp.AccountEnquirySuperappType.Group.Details.Category,
 			},
 		}, nil
 	}
