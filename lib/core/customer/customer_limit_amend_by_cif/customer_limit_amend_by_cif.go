@@ -48,16 +48,14 @@ func NewCustomerLimitAmendByCIF(param Params) string {
 				<cus:SERVICEMAXAMT>%s</cus:SERVICEMAXAMT>
 				<cus:USERMAXCNT>%s</cus:USERMAXCNT>
 				</cus:SERVICETYPE>
-			`, strconv.Itoa(serviceIndex), serviceLimit.ServiceType, serviceLimit.ServiceMaximumAmount, serviceLimit.UserMaximumDebitCount))
+			`, strconv.Itoa(serviceIndex+1), serviceLimit.ServiceType, serviceLimit.ServiceMaximumAmount, serviceLimit.UserMaximumDebitCount))
 		}
 		limit = append(limit, fmt.Sprintf(`
                <cus:mUSERCHANNELTYPE m="%s">
                   <cus:USERCHANNELTYPE>%s</cus:USERCHANNELTYPE>
-                  <cus:sgSERVICETYPE sg="1">
-				  %s
-                  </cus:sgSERVICETYPE>
+                  <cus:sgSERVICETYPE sg="1">%s</cus:sgSERVICETYPE>
                </cus:mUSERCHANNELTYPE>
-			`, strconv.Itoa(channelIndex), channelLimit.Channel, strings.Join(serviceLimits, "")))
+			`, strconv.Itoa(channelIndex+1), channelLimit.Channel, strings.Join(serviceLimits, "")))
 	}
 
 	return fmt.Sprintf(`
@@ -73,9 +71,7 @@ func NewCustomerLimitAmendByCIF(param Params) string {
          <OfsFunction>
          </OfsFunction>
          <CUSTOMERLIMITCUSTOMERSERVICEAMENDType id="%s">
-            <cus:gUSERCHANNELTYPE g="1">
-			%s
-            </cus:gUSERCHANNELTYPE>
+            <cus:gUSERCHANNELTYPE g="1">%s</cus:gUSERCHANNELTYPE>
          </CUSTOMERLIMITCUSTOMERSERVICEAMENDType>
       </cbes:CustomerServiceLimitAmendment>
    </soapenv:Body>
