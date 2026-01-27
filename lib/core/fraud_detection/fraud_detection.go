@@ -39,7 +39,7 @@ type FraudAPIPayload struct {
 
 type FraudAPIResponse struct {
 	TransactionID string `json:"transaction_id"`
-	Violation     string `json:"violation"`
+	Result        string `json:"result"`
 }
 
 func NewFraudAPI(authorization string, forwardHost string, url string) FraudAPIInterface {
@@ -124,6 +124,5 @@ func (f FraudAPI) Call(param FraudAPIPayload) (*FraudAPIResponse, error) {
 		return nil, errors.New("failed to decode response body")
 	}
 
-	fmt.Println("Response Payload:", string(body))
 	return &result, nil
 }

@@ -543,15 +543,13 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		return nil, fmt.Errorf("fraud detection call failed: %w", err)
 	}
 
-	if response.Violation != "approved" {
+	if response.Result != "approved" {
 		// return nil, errors.New("transaction blocked by fraud detection")
 		return &fundtransfer.FundTransferResult{
 			Success:  false,
 			Messages: []string{"transaction blocked by fraud detection"},
 		}, nil
 	}
-
-	fmt.Println("Fraud detection approved:", response.Violation)
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
 	headers := map[string]string{

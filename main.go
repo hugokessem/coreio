@@ -55,7 +55,7 @@ func main() {
 		"123456",
 		"https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null",
 		"Basic YWRtaW46YWRtaW4=",
-		"https://devapisuperapp.cbe.com.et/superapp/parser/proxy/scoringapi/digital-transactions/?target=https://ngdrfms.cbe.com.et",
+		"https://devapisuperapp.cbe.com.et/superapp/parser/proxy/scoringapi/digital-transactions/?target=https://nguat.cbe.com.et",
 		"nguat.cbe.com.et",
 	)
 	ft := core.FundTransferParam{
