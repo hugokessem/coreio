@@ -1,7 +1,6 @@
 package core
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -545,7 +544,11 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 	}
 
 	if response.Violation != "approved" {
-		return nil, errors.New("transaction blocked by fraud detection")
+		// return nil, errors.New("transaction blocked by fraud detection")
+		return &fundtransfer.FundTransferResult{
+			Success:  false,
+			Messages: []string{"transaction blocked by fraud detection"},
+		}, nil
 	}
 
 	fmt.Println("Fraud detection approved:", response.Violation)
