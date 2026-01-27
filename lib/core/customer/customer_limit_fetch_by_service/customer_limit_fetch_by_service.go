@@ -18,7 +18,7 @@ type CustomerLimitFetchByServiceParam struct {
 
 func NewCustomerLimitFetchByService(param Params) string {
 	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"xmlns:cbes="http://temenos.com/CBESUPERAPP">
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
 		<soapenv:Header/>
 		<soapenv:Body>
 			<cbes:GenericLimitView>
@@ -32,7 +32,7 @@ func NewCustomerLimitFetchByService(param Params) string {
 				</CUSTOMERLIMITVIEWType>
 			</cbes:GenericLimitView>
 		</soapenv:Body>
-	<,/soapenv:Envelope>
+	</soapenv:Envelope>
 	`, param.Password, param.Username, param.ServiceCode)
 }
 
