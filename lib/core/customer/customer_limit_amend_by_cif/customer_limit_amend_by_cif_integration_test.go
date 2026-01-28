@@ -21,7 +21,7 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 				ServiceLimits: []ServiceLimit{
 					{
 						ServiceType:           "AAPARKING",
-						ServiceMaximumAmount:  "25000",
+						ServiceMaximumAmount:  "23000",
 						UserMaximumDebitCount: "5",
 					},
 					{
@@ -75,5 +75,9 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 	// Check that the amendment succeeded
 	assert.True(t, result.Success)
 	t.Log("resultMessage", result.Messages)
-	t.Log("resultDetail", result.Detail)
+	t.Log("resultDetail", result.Detail.ID)
+
+	for _, channelLimit := range result.Detail.GUserChannel.MUserChannel {
+		t.Log("Channel:", channelLimit.UserChannelType)
+	}
 }
