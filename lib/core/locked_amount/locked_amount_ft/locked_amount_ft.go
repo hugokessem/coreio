@@ -58,7 +58,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
                 <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
                 <fun:CREDITAMOUNT/>
                 <fun:gPAYMENTDETAILS g="1">
-                    </fun:PAYMENTDETAILS>
+                    <fun:PAYMENTDETAILS/>
                 </fun:gPAYMENTDETAILS>
                 <fun:COMMISSIONCODE/>
                 <fun:CHARGECODE/>

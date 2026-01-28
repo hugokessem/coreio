@@ -698,7 +698,6 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 		DebiterReference:    param.DebiterReference,
 		ClientReference:     param.ClientReference,
 		ServiceCode:         param.ServiceCode,
-		PaymentDetail:       param.PaymentDetail,
 		LockID:              param.LockID,
 	}
 
