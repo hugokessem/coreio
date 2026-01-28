@@ -115,9 +115,14 @@ func ParseCustomerLimitFetchByCIFSOAP(xmlData string) (*CustomerLimitViewResult,
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+			messages := make([]string, 0, len(resp.Status.Messages))
+			for _, v := range resp.Status.Messages {
+				messages = append(messages, v)
+			}
+
 			return &CustomerLimitViewResult{
 				Success:  false,
-				Messages: []string{resp.Status.Application},
+				Messages: messages,
 			}, nil
 		}
 
