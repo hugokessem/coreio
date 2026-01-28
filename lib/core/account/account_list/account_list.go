@@ -21,29 +21,24 @@ type AccountListParams struct {
 func NewAccountList(param Params) string {
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <cbes:AccountListByCIF>
-            <WebRequestCommon>
-                <company/>
-                <password>%s</password>
-                <userName>%s</userName>
-            </WebRequestCommon>
-            <ACCOUNTINFOSUPERAPPType>
-                <enquiryInputCollection>
-                    <columnName>%s</columnName>
-                    <criteriaValue>%s</criteriaValue>
-                    <operand>EQ</operand>
-                </enquiryInputCollection>
-                <enquiryInputCollection>
-                    <columnName>CUS.ID</columnName>
-                    <criteriaValue></criteriaValue>
-                    <operand>EQ</operand>
-                </enquiryInputCollection>
-            </ACCOUNTINFOSUPERAPPType>
-        </cbes:AccountListByCIF>
-    </soapenv:Body>
-</soapenv:Envelope>
+	<soapenv:Header/>
+	<soapenv:Body>
+		<cbes:AccountListByCIF>
+			<WebRequestCommon>
+				<company/>
+				<password>%s</password>
+				<userName>%s</userName>
+			</WebRequestCommon>
+			<ACCOUNTLISTBYCIDSUPERAPPType>
+				<enquiryInputCollection>
+				<columnName>%s</columnName>
+				<criteriaValue>%s</criteriaValue>
+				<operand>EQ</operand>
+				</enquiryInputCollection>
+			</ACCOUNTLISTBYCIDSUPERAPPType>
+		</cbes:AccountListByCIF>
+	</soapenv:Body>
+	</soapenv:Envelope>
 	`, param.Password, param.Username, param.ColumnName, param.CriteriaValue)
 }
 
@@ -62,9 +57,9 @@ type AccountListByCIFResponse struct {
 	} `xml:"Status"`
 	AccountListByCIFType *struct {
 		Group *struct {
-			Details []AccountListByCIFDetail `xml:"mACCOUNTINFOSUPERAPPDetailType"`
-		} `xml:"gACCOUNTINFOSUPERAPPDetailType"`
-	} `xml:"ACCOUNTINFOSUPERAPPType"`
+			Details []AccountListByCIFDetail `xml:"mACCOUNTLISTBYCIDSUPERAPPDetailType"`
+		} `xml:"gACCOUNTLISTBYCIDSUPERAPPDetailType"`
+	} `xml:"ACCOUNTLISTBYCIDSUPERAPPType"`
 }
 
 type AccountListByCIFDetail struct {
@@ -84,6 +79,9 @@ type AccountListByCIFDetail struct {
 	Ownership       string `xml:"Ownership"`
 	CustomerSegment string `xml:"CustomerSegment"`
 	Target          string `xml:"Target"`
+	Gender          string `xml:"Gender"`
+	DateOfBirth     string `xml:"DateOfBirth"`
+	Email           string `xml:"Email"`
 }
 
 type AccountListResult struct {
@@ -142,6 +140,9 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 				Ownership:       detail.Ownership,
 				CustomerSegment: detail.CustomerSegment,
 				Target:          detail.Target,
+				Gender:          detail.Gender,
+				DateOfBirth:     detail.DateOfBirth,
+				Email:           detail.Email,
 			}
 		}
 		return &AccountListResult{

@@ -14,11 +14,12 @@ func TestIntegrationAccountList(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		ColumnName:    "CUS.ID",
-		CriteriaValue: "1072666796",
+		ColumnName:    "CUSTOMER",
+		CriteriaValue: "1024275098",
 	}
 
 	xmlRequest := NewAccountList(params)
+	t.Logf("XML Request: %s", xmlRequest)
 	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
