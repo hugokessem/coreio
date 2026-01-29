@@ -12,12 +12,12 @@ import (
 
 func TestIntegrationAccountList(t *testing.T) {
 	params := Params{
-		Username:      "SUPERAPP",
-		Password:      "123456",
-		ColumnName:    "CUS.ID",
-		CriteriaValue: "1024275098",
-		// ColumnName:    "ACCT.ID",
-		// CriteriaValue: "1000517052152",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// ColumnName:    "CUS.ID",
+		// CriteriaValue: "1024275098",
+		ColumnName:    "ACCT.ID",
+		CriteriaValue: "1000517052152",
 	}
 
 	xmlRequest := NewAccountList(params)

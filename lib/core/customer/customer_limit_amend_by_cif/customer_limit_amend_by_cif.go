@@ -161,10 +161,15 @@ func ParseCustomerLimitAmendByCIFSOAP(xmlData string) (*CustomerLimitAmendResult
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+			messages := make([]string, 0, len(resp.Status.Messages))
+			for _, v := range resp.Status.Messages {
+				messages = append(messages, v)
+			}
+
 			return &CustomerLimitAmendResult{
 				Success:  false,
 				Detail:   resp.CustomerLimitType,
-				Messages: []string{resp.Status.Application},
+				Messages: messages,
 			}, nil
 		}
 
