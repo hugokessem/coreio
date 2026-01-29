@@ -164,7 +164,7 @@ lib/{category}/{service_name}/
    ```go
    // utils/http_lib.go:27
    TLSClientConfig: &tls.Config{
-       InsecureSkipVerify: true,  // ⚠️ SECURITY RISK
+       InsecureSkipVerify: false,  // ⚠️ SECURITY RISK
        MinVersion:         tls.VersionTLS13,
    }
    ```
@@ -245,7 +245,7 @@ lib/{category}/{service_name}/
 - ✅ TLS configuration
 
 **Issues:**
-- ⚠️ `InsecureSkipVerify: true` - Security risk
+- ⚠️ `InsecureSkipVerify: false` - Security risk
 - ⚠️ Timeout calculation bug (line 24)
 - ⚠️ No request context support
 - ⚠️ Hardcoded `DisableKeepAlives: true` (may impact performance)
@@ -399,7 +399,7 @@ func (c *CBECoreAPI) ServiceName(param ServiceParam) (*ServiceResult, error) {
 - ✅ Credentials not logged (generally)
 
 #### **Network Security**
-- ⚠️ TLS verification disabled (`InsecureSkipVerify: true`)
+- ⚠️ TLS verification disabled (`InsecureSkipVerify: false`)
 - ✅ HTTPS URLs used
 - ⚠️ No certificate pinning
 

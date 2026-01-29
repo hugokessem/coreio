@@ -21,7 +21,7 @@ func TestIntegrationCardRequest(t *testing.T) {
 	}
 
 	xmlRequest := NewCardRequest(params)
-	endpoint := "https://devopscbe.eaglelionsystems.com/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
+	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
 	assert.NoError(t, err)
@@ -63,4 +63,3 @@ func TestIntegrationCardRequest(t *testing.T) {
 		t.Error("Expected Detail to be non-nil")
 	}
 }
-

@@ -30,7 +30,7 @@ func TestIntegrationBillPayment(t *testing.T) {
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
 		PaymentDetail:       "EEU BILL PAYMENT",
-		ClientReference:    "852369741456123",
+		ClientReference:     "852369741456123",
 	}
 
 	xmlRequest := NewBillPayment(params)
@@ -59,7 +59,7 @@ func TestIntegrationBillPayment(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 		Timeout: 60 * time.Second,
 	}
@@ -209,7 +209,7 @@ func TestIntegrationBillPayment_InvalidCredentials(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 		Timeout: 60 * time.Second,
 	}

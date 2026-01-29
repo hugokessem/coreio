@@ -48,7 +48,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 		Timeout: 60 * time.Second,
 	}
@@ -211,7 +211,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 
 // 	client := &http.Client{
 // 		Transport: &http.Transport{
-// 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+// 			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 // 		},
 // 		Timeout: 60 * time.Second,
 // 	}
