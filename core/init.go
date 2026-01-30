@@ -134,6 +134,8 @@ type CBECoreAPIInterface interface {
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
 
+	ExchangeRates() (*ExchangeRatesResult, error)
+
 	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
 }
 
