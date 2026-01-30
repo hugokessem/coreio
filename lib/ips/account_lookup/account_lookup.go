@@ -93,13 +93,14 @@ func NewAccountLookup(param Params) string {
 </soapenv:Envelope>`, param.DebitBankBIC, "FP", param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.MessageIdentifier, param.CreditAccountNumber)
 }
 
+// ----------------- SOAP Envelope -----------------
 type Envelope struct {
 	XMLName xml.Name `xml:"Envelope"`
 	Body    Body     `xml:"Body"`
 }
 
 type Body struct {
-	AccountVerficationResponse AccountVerficationResponse `xml:"AccountVerficationResponse"`
+	AccountVerficationResponse *AccountVerficationResponse `xml:"AccountVerficationResponse"`
 }
 
 type AccountVerficationResponse struct {
@@ -110,13 +111,14 @@ type Output struct {
 	AppHeader *AppHeader `xml:"AppHdr"`
 	Document  *Document  `xml:"Document"`
 }
+
 type AppHeader struct {
 	From struct {
 		FIID struct {
 			FinInstnId struct {
 				Other struct {
 					Identifier string `xml:"Id"`
-				} `xml:"Other"`
+				} `xml:"Othr"`
 			} `xml:"FinInstnId"`
 		} `xml:"FIId"`
 	} `xml:"Fr"`
@@ -125,13 +127,38 @@ type AppHeader struct {
 			FinInstnId struct {
 				Other struct {
 					Identifier string `xml:"Id"`
-				} `xml:"Other"`
+				} `xml:"Othr"`
 			} `xml:"FinInstnId"`
 		} `xml:"FIId"`
 	} `xml:"To"`
 	BizMessageIdentifier string `xml:"BizMsgIdr"`
+	MsgDefIdr            string `xml:"MsgDefIdr"`
 	CreditDate           string `xml:"CreDt"`
+	Rltd                 *struct {
+		Fr struct {
+			FIID struct {
+				FinInstnId struct {
+					Other struct {
+						Identifier string `xml:"Id"`
+					} `xml:"Othr"`
+				} `xml:"FinInstnId"`
+			} `xml:"FIId"`
+		} `xml:"Fr"`
+		To struct {
+			FIID struct {
+				FinInstnId struct {
+					Other struct {
+						Identifier string `xml:"Id"`
+					} `xml:"Othr"`
+				} `xml:"FinInstnId"`
+			} `xml:"FIId"`
+		} `xml:"To"`
+		BizMessageIdentifier string `xml:"BizMsgIdr"`
+		MsgDefIdr            string `xml:"MsgDefIdr"`
+		CreditDate           string `xml:"CreDt"`
+	} `xml:"Rltd"`
 }
+
 type Document struct {
 	IdVrfctnRpt *struct {
 		Assignment *struct {
@@ -142,7 +169,7 @@ type Document struct {
 					FinInstnId struct {
 						Other struct {
 							Identifier string `xml:"Id"`
-						} `xml:"Other"`
+						} `xml:"Othr"`
 					} `xml:"FinInstnId"`
 				} `xml:"Agt"`
 			} `xml:"Assgnr"`
@@ -151,7 +178,7 @@ type Document struct {
 					FinInstnId struct {
 						Other struct {
 							Identifier string `xml:"Id"`
-						} `xml:"Other"`
+						} `xml:"Othr"`
 					} `xml:"FinInstnId"`
 				} `xml:"Agt"`
 			} `xml:"Assgne"`
@@ -216,61 +243,69 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 		return nil, err
 	}
 
-	if env.Body.AccountVerficationResponse.Output.AppHeader != nil && env.Body.AccountVerficationResponse.Output.Document != nil {
-		resp := env.Body.AccountVerficationResponse.Output
-
-		// Check for nil pointers before accessing nested fields
-		if resp.Document.IdVrfctnRpt == nil || resp.Document.IdVrfctnRpt.Rpt == nil {
-			return &AccountLookupResult{
-				Success:  false,
-				Messages: []string{"Invalid Response: Missing report data"},
-			}, nil
-		}
-
-		if strings.ToLower(resp.Document.IdVrfctnRpt.Rpt.Verification) != "true" {
-			return &AccountLookupResult{
-				Success:  false,
-				Messages: []string{"Account Not Found!"},
-			}, nil
-		}
-
-		// Safely extract account details with nil checks
-		detail := &AccountVerficationDetail{
-			OriginalIdentifier: resp.Document.IdVrfctnRpt.Rpt.OriginalIdentifier,
-		}
-
-		// Extract CreditBankBIC from AppHeader (To field contains the destination/credit bank)
-		// CreditBankBIC should be the bank where the credit account is located
-		if resp.AppHeader.To.FIID.FinInstnId.Other.Identifier != "" {
-			detail.CreditBankBIC = resp.AppHeader.To.FIID.FinInstnId.Other.Identifier
-		} else if resp.AppHeader.From.FIID.FinInstnId.Other.Identifier != "" {
-			// Fallback to From field if To is empty
-			detail.CreditBankBIC = resp.AppHeader.From.FIID.FinInstnId.Other.Identifier
-		}
-
-		// Extract account holder name
-		if resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId != nil &&
-			resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty != nil {
-			detail.CreditAccountHolderName = resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm
-		}
-
-		// Extract account number
-		if resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId != nil &&
-			resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct != nil &&
-			resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id != nil &&
-			resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id.Othr != nil {
-			detail.CreditAccountNumber = resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id.Othr.Id
-		}
-
+	if env.Body.AccountVerficationResponse == nil ||
+		env.Body.AccountVerficationResponse.Output.AppHeader == nil ||
+		env.Body.AccountVerficationResponse.Output.Document == nil {
 		return &AccountLookupResult{
-			Success: true,
-			Detail:  detail,
+			Success:  false,
+			Messages: []string{"Invalid Response!"},
 		}, nil
 	}
 
-	return &AccountLookupResult{
-		Success:  false,
-		Messages: []string{"Invalid Response!"},
-	}, nil
+	resp := env.Body.AccountVerficationResponse.Output
 
+	if resp.Document.IdVrfctnRpt == nil || resp.Document.IdVrfctnRpt.Rpt == nil {
+		return &AccountLookupResult{
+			Success:  false,
+			Messages: []string{"Invalid Response: Missing report data"},
+		}, nil
+	}
+
+	verification := strings.ToLower(strings.TrimSpace(resp.Document.IdVrfctnRpt.Rpt.Verification))
+	if verification != "true" {
+		message := "Account Not Found!"
+		if resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry != "" {
+			if strings.EqualFold(resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry, "SUCC") {
+				message = "Account Not Found!"
+			} else {
+				message = resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry
+			}
+		}
+		if resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId != nil &&
+			resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty != nil &&
+			strings.TrimSpace(resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm) != "" {
+			message = resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm
+		}
+		return &AccountLookupResult{
+			Success:  false,
+			Messages: []string{message},
+		}, nil
+	}
+
+	detail := &AccountVerficationDetail{
+		OriginalIdentifier: resp.Document.IdVrfctnRpt.Rpt.OriginalIdentifier,
+	}
+
+	if resp.AppHeader.To.FIID.FinInstnId.Other.Identifier != "" {
+		detail.CreditBankBIC = resp.AppHeader.To.FIID.FinInstnId.Other.Identifier
+	} else if resp.AppHeader.From.FIID.FinInstnId.Other.Identifier != "" {
+		detail.CreditBankBIC = resp.AppHeader.From.FIID.FinInstnId.Other.Identifier
+	}
+
+	if resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId != nil &&
+		resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty != nil {
+		detail.CreditAccountHolderName = resp.Document.IdVrfctnRpt.Rpt.UpdtdPtyAndAcctId.Pty.Nm
+	}
+
+	if resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId != nil &&
+		resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct != nil &&
+		resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id != nil &&
+		resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id.Othr != nil {
+		detail.CreditAccountNumber = resp.Document.IdVrfctnRpt.Rpt.OrgnlPtyAndAcctId.Acct.Id.Othr.Id
+	}
+
+	return &AccountLookupResult{
+		Success: true,
+		Detail:  detail,
+	}, nil
 }
