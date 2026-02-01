@@ -17,7 +17,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 		AccountNumber: "1000000006924",
 		Description:   "3 Click Payment",
 		From:          "20251109",
-		To:            "20251111",
+		To:            "20261111",
 		LockedAmount:  "250",
 	}
 
@@ -31,7 +31,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 	}
 

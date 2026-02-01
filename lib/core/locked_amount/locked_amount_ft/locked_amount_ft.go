@@ -126,7 +126,7 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 		return nil, err
 	}
 
-	if env.Body.AccountTransferResponse != nil && env.Body.AccountTransferResponse.FundTransferResponse != nil {
+	if env.Body.AccountTransferResponse != nil {
 		resp := env.Body.AccountTransferResponse
 		if resp.Status == nil {
 			return &LockedAmountFTResult{
@@ -145,7 +145,7 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 		if resp.FundTransferResponse == nil {
 			return &LockedAmountFTResult{
 				Success:  false,
-				Messages: []string{},
+				Messages: []string{"Missing FundTransferResponse"},
 			}, nil
 		}
 

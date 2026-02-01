@@ -17,13 +17,13 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		CreditCurrent:       "ETB",
 		CreditAccountNumber: "1000382499388",
 		CrediterReference:   "Credit reference",
-		DebitAmount:         "251.00",
+		DebitAmount:         "240.00",
 		DebitAccountNumber:  "1000000006924",
 		DebitCurrency:       "ETB",
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
 		ServiceCode:         "GLOBAL",
-		LockID:              "ACLK21343GC93J",
+		LockID:              "ACLK213432CP16",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
@@ -37,7 +37,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 	}
 
@@ -51,6 +51,8 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParseLockedAmountFTSOAP(string(responseData))
+	t.Logf("--result: %+v", result)
+
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 	t.Log("details", result.Detail)

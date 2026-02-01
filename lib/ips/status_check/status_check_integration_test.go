@@ -64,7 +64,7 @@ func TestIntegrationPaymentStatus(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 		Timeout: 60 * time.Second,
 	}
@@ -218,7 +218,7 @@ func TestIntegrationPaymentStatus_InvalidTransactionId(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		},
 		Timeout: 60 * time.Second,
 	}
