@@ -64,6 +64,7 @@ type FundTransferType struct {
 	CreditValuedate         string                    `xml:"CREDITVALUEDATE"`
 	ProcessingDate          string                    `xml:"PROCESSINGDATE"`
 	ChargeCommissionDisplay []ChargeCommissionDisplay `xml:"gCOMMISSIONTYPE"`
+	CurrentRate             string                    `xml:"CUSTOMERRATE"`
 	CommissionCode          string                    `xml:"COMMISSIONCODE"`
 	ChargeCode              string                    `xml:"CHARGECODE"`
 	ProfitCenterCustomer    string                    `xml:"PROFITCENTRECUST"`
@@ -221,6 +222,7 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				LmtssSendNo:             resp.FundTransferType.LmtssSendNo,
 				GlobalTaxType:           resp.FundTransferType.GlobalTaxType,
 				PaymentDetail:           resp.FundTransferType.PaymentDetail,
+				CurrentRate:             resp.FundTransferType.CurrentRate,
 			},
 		}, nil
 	}
