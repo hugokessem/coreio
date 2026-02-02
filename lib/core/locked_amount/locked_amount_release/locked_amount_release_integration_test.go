@@ -14,7 +14,7 @@ func TestIntegrationReleaseLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		TransactionID: "ACLK21343KYKNS",
+		TransactionID: "ACLK213439PN1J",
 	}
 
 	xmlRequest := NewReleaseLockedAmount(params)

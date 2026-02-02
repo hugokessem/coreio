@@ -21,6 +21,7 @@ import (
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
+	fundtransferverify "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_verify"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
@@ -56,6 +57,8 @@ type FundTransferParam = fundtransfer.FundTransferParam
 type FundTransferResult = fundtransfer.FundTransferResult
 type FundTransferCheckParam = fundtransfercheck.FundTransferCheckParams
 type FundTransferCheckResult = fundtransfercheck.FundTransferCheckResult
+type FundTransferVerifyParam = fundtransferverify.FundTransferVerifyParams
+type FundTransferVerifyResult = fundtransferverify.FundTransferVerifyResult
 type RevertFundTransferParam = revertfundtransfer.RevertFundTransferParams
 type RevertFundTransferResult = revertfundtransfer.RevertFundTransferResult
 
@@ -107,6 +110,7 @@ type CBECoreAPIInterface interface {
 	CustomerLimitFetchByService(param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error)
 
 	ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error)
+	FundTransferVerify(param FundTransferVerifyParam) (*FundTransferVerifyResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
 	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
@@ -154,6 +158,52 @@ type FraudAPICredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTransferVerifyResult, error) {
+	params := fundtransferverify.Params{
+		Username:            c.config.Username,
+		Password:            c.config.Password,
+		DebitAccountNumber:  param.DebitAccountNumber,
+		DebitCurrency:       param.DebitCurrency,
+		DebitAmount:         param.DebitAmount,
+		DebitReference:      param.DebitReference,
+		CreditReference:     param.CreditReference,
+		CreditAccountNumber: param.CreditAccountNumber,
+		PaymentDetails:      param.PaymentDetails,
+		ClientReference:     param.ClientReference,
+		ServiceCode:         param.ServiceCode,
+		CustomerSegment:     param.CustomerSegment,
+		ChannelType:         param.ChannelType,
+	}
+
+	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := fundtransferverify.ParseFundTransferVerifySOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {

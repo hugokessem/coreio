@@ -14,11 +14,11 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000000006924",
+		AccountNumber: "1000468418828",
 		Description:   "3 Click Payment",
 		From:          "20251109",
 		To:            "20261111",
-		LockedAmount:  "250",
+		LockedAmount:  "100000",
 	}
 
 	xmlRequest := NewCreateLockedAmount(params)
