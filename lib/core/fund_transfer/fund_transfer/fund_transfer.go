@@ -25,7 +25,7 @@ type Params struct {
 	PaymentDetail       string
 	ServiceCode         string
 	CustomerSegment     string
-	TransactionType     string
+	ChannelType         string
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -42,7 +42,7 @@ type FundTransferParam struct {
 	PaymentDetail       string
 	ServiceCode         string
 	CustomerSegment     string
-	TransactionType     string
+	ChannelType         string
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -72,11 +72,13 @@ func NewFundTransfer(param Params) string {
 					</fun:gPAYMENTDETAILS>
 					<fun:ClientReference>%s</fun:ClientReference>
 					<fun:ServiceCode>%s</fun:ServiceCode>
+					<fun:CustomerRole>%s</fun:CustomerRole>
+					<fun:ChannelType>%s</fun:ChannelType>
 				</FUNDSTRANSFERFTTXNSUPERAPPType>
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.PaymentDetail, param.TransactionID, param.ServiceCode)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
 }
 
 type Envelope struct {

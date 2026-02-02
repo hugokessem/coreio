@@ -582,6 +582,8 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		DebitAmount:         param.DebitAmount,
 		TransactionID:       param.TransactionID,
 		PaymentDetail:       param.PaymentDetail,
+		CustomerSegment:     param.CustomerSegment,
+		ChannelType:         param.ChannelType,
 		Meta:                param.Meta,
 	}
 
