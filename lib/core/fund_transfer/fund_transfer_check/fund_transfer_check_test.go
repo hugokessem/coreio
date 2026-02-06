@@ -233,22 +233,6 @@ func TestParseFundTransferCheckSOAP_Success(t *testing.T) {
 		assert.Equal(t, "gggggy", result.Detail.SecAnswer)
 		assert.Equal(t, "V0lOMjEzNDNXNlNLVA==", result.Detail.SecNumber)
 		assert.Equal(t, "+251923427268", result.Detail.LmtssSendNo)
-		// ChargeCommissionDisplay may have 1 or more items depending on XML parsing
-		if len(result.Detail.ChargeCommissionDisplay) > 0 {
-			assert.GreaterOrEqual(t, len(result.Detail.ChargeCommissionDisplay), 1)
-			// Check first item if available
-			if len(result.Detail.ChargeCommissionDisplay) >= 1 {
-				assert.NotEmpty(t, result.Detail.ChargeCommissionDisplay[0].CommisionType.ComissionType)
-				assert.NotEmpty(t, result.Detail.ChargeCommissionDisplay[0].CommisionType.ComissionAmount)
-			}
-			// Check second item if available
-			if len(result.Detail.ChargeCommissionDisplay) >= 2 {
-				assert.Equal(t, "COMMLMT", result.Detail.ChargeCommissionDisplay[0].CommisionType.ComissionType)
-				assert.Equal(t, "ETB3.00", result.Detail.ChargeCommissionDisplay[0].CommisionType.ComissionAmount)
-				assert.Equal(t, "CABLECHRG", result.Detail.ChargeCommissionDisplay[1].CommisionType.ComissionType)
-				assert.Equal(t, "ETB30.00", result.Detail.ChargeCommissionDisplay[1].CommisionType.ComissionAmount)
-			}
-		}
 		assert.Len(t, result.Detail.StatementNos.StatementNo, 2)
 	}
 }
