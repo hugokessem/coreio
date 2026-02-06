@@ -14,7 +14,7 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
-		FTNumber: "FT213438F2QZ",
+		FTNumber: "FT21343TV9MV",
 	}
 
 	xmlRequest := NewFundTransferCheck(params)
@@ -54,6 +54,9 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	if result.Status {
 		assert.NotNil(t, result.Detail)
 		if result.Detail != nil {
+			t.Log("-----------------------------")
+			t.Logf("ChargeCommissionDisplay: %s", result.Detail.ChargeCommissionDisplay)
+			t.Log("-----------------------------")
 			t.Logf("Transaction Type: %s", result.Detail.TransactionType)
 			t.Logf("Debit Account: %s", result.Detail.DebitAccountNumber)
 			t.Logf("Credit Account: %s", result.Detail.CreditAccountNumber)
