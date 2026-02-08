@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hugokessem/coreio/core"
+	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 )
 
 type CoreAPI struct {
@@ -75,50 +76,50 @@ func main() {
 		"nguat.cbe.com.et",
 	)
 
-	fethchByService, err := calls.CustomerLimitFetchByService(context.Background(), core.CustomerLimitFetchByServiceParam{
-		ServiceCode: "GLOBAL-MASS",
-	})
+	// fethchByService, err := calls.CustomerLimitFetchByService(context.Background(), core.CustomerLimitFetchByServiceParam{
+	// 	ServiceCode: "GLOBAL-MASS",
+	// })
 
-	if err != nil {
-		fmt.Println("failed to fetch by service", err)
-		return
-	}
-	fmt.Println("fetch by service", fethchByService)
-
-	// ft := core.FundTransferParam{
-	// 	DebitAccountNumber:  "1000517052152",
-	// 	CreditAccountNumber: "1000000006924",
-
-	// 	// CreditAccountNumber: "1000517052152",
-	// 	// DebitAccountNumber: "1000319950331", // usd account
-	// 	// DebitCurrency: "ETB",
-	// 	// DebitAmount:         "2.00",
-	// 	CreditAmount:    "12",
-	// 	CreditCurrency:  "ETB",
-	// 	TransactionID:   "TXN123458889",
-	// 	DebitReference:  "Payment",
-	// 	CreditReference: "Received payment",
-	// 	PaymentDetail:   "Fund transfer",
-	// 	ServiceCode:     "GLOBAL",
-	// 	Meta: frauddetection.FraudAPIPayload{
-	// 		TranasctionID:              "FT24330T1NSA3",
-	// 		AccountID:                  "1000517052152",
-	// 		CustomerName:               "YOHHANES TESHOME SHIFERAW",
-	// 		CustomerPhoneMobileSMS:     "+251911706628",
-	// 		BeneficiaryAccountID:       "1000000006924",
-	// 		BeneficiaryName:            "ABIY HAILEYESUS MENGISTU",
-	// 		AccountCategory:            "6502",
-	// 		AccountCurrency:            "ETB",
-	// 		TransactionConvertedAmount: "180",
-	// 		TransactionType:            "Mobile Transfer",
-	// 		SourceUser:                 "104723KIK",
-	// 		ChangeInPhoneEmail:         "Y",
-	// 		TransactionTimestamp:       "2025-10-28 09:27:20",
-	// 		ChangeInPIN:                "Y",
-	// 		ChangeInPassword:           "N",
-	// 		ChangeInDevice:             "N",
-	// 	},
+	// if err != nil {
+	// 	fmt.Println("failed to fetch by service", err)
+	// 	return
 	// }
+	// fmt.Println("fetch by service", fethchByService)
+
+	ft := core.FundTransferParam{
+		DebitAccountNumber:  "1000517052152",
+		CreditAccountNumber: "1000000006924",
+
+		// CreditAccountNumber: "1000517052152",
+		// DebitAccountNumber: "1000319950331", // usd account
+		// DebitCurrency: "ETB",
+		// DebitAmount:         "2.00",
+		CreditAmount:    "12",
+		CreditCurrency:  "ETB",
+		TransactionID:   "TXN123458889",
+		DebitReference:  "Payment",
+		CreditReference: "Received payment",
+		PaymentDetail:   "Fund transfer",
+		ServiceCode:     "CBE",
+		Meta: frauddetection.FraudAPIPayload{
+			TranasctionID:              "FT24330T1NSA3",
+			AccountID:                  "1000517052152",
+			CustomerName:               "YOHHANES TESHOME SHIFERAW",
+			CustomerPhoneMobileSMS:     "+251911706628",
+			BeneficiaryAccountID:       "1000000006924",
+			BeneficiaryName:            "ABIY HAILEYESUS MENGISTU",
+			AccountCategory:            "6502",
+			AccountCurrency:            "ETB",
+			TransactionConvertedAmount: "180",
+			TransactionType:            "Mobile Transfer",
+			SourceUser:                 "104723KIK",
+			ChangeInPhoneEmail:         "Y",
+			TransactionTimestamp:       "2025-10-28 09:27:20",
+			ChangeInPIN:                "Y",
+			ChangeInPassword:           "N",
+			ChangeInDevice:             "N",
+		},
+	}
 
 	// ft := core.MiniStatementByDateRangeParam{
 	// 	AccountNumber: "1000184349713",
@@ -133,19 +134,17 @@ func main() {
 	// 	return
 	// }
 
-	// fmt.Println("result", result)
-	// if result.Success {
-	// 	fmt.Println("amount", result)
-	// 	fmt.Println("detai;", result.Detail)
-	// 	fmt.Println("TransctionID", result.Detail.TransactionID)
-	// 	fmt.Println("ft", result.Detail.FTNumber)
-	// 	return
-	// } else {
-	// 	// fmt.Println("error", result.Message)
-	// 	fmt.Println("error", result.Messages)
-	// }
+	result, _ := calls.FT(ft)
+	fmt.Println("result", result)
+	if result.Success {
+		fmt.Println("amount", result)
+		fmt.Println("detai;", result.Detail)
+		fmt.Println("TransctionID", result.Detail.TransactionID)
+		fmt.Println("ft", result.Detail.FTNumber)
+		return
+	} else {
+		// fmt.Println("error", result.Message)
+		fmt.Println("error", result.Messages)
+	}
 
-	// fetch, err := call
-
-	fmt.Println("failed to make ft")
 }

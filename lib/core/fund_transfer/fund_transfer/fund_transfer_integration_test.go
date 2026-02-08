@@ -27,7 +27,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",
-		ServiceCode:         "GLOBAL",
+		ServiceCode:         "CBE",
 	}
 
 	xmlRequest := NewFundTransfer(params)
