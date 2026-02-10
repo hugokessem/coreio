@@ -1040,7 +1040,6 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	}
 
 	xmlRequest := ministatementbydaterange.NewMiniStatementByDateRange(params)
-	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
 		"Content-Type": "text/xml; charset=utf-8",
 	}
@@ -1061,7 +1060,6 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	}
 
 	result, err := ministatementbydaterange.ParseMiniStatementByDateRangeSOAP(string(responseData))
-	fmt.Println("result", result)
 	if err != nil {
 		return nil, err
 	}
@@ -1075,7 +1073,6 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 		CustomerIdentifier: param.CustomerIdentifier,
 	}
 	xmlRequest := customerlookup.NewCustomerLookup(params)
-	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
 		"Content-Type": "text/xml; charset=utf-8",
 	}
@@ -1096,7 +1093,6 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 	}
 
 	result, err := customerlookup.ParseCustomerLookupSOAP(string(responseData))
-	fmt.Println("result", result)
 	if err != nil {
 		return nil, err
 	}
