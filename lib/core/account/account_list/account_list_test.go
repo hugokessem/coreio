@@ -1,6 +1,7 @@
 package accountlist
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,13 +37,13 @@ func TestNewAccountList(t *testing.T) {
 			param: Params{
 				Username:      "TESTUSER",
 				Password:      "PASSWORD123",
-				ColumnName:    "ACCOUNT",
+				ColumnName:    "ACCT.ID",
 				CriteriaValue: "1000000006924",
 			},
 			expect: []string{
 				`<password>PASSWORD123</password>`,
 				`<userName>TESTUSER</userName>`,
-				`<columnName>ACCOUNT</columnName>`,
+				`<columnName>ACCT.ID</columnName>`,
 				`<criteriaValue>1000000006924</criteriaValue>`,
 			},
 		},
@@ -66,14 +67,15 @@ func TestNewAccountList(t *testing.T) {
 			assert.NotEmpty(t, xmlRequest)
 
 			// Validate that CUS.ID enquiryInputCollection is always present
-			assert.Contains(t, xmlRequest, `<columnName>CUS.ID</columnName>`)
+			expectedColumnName := fmt.Sprintf("`<columnName>%s</columnName>`", tc.param.ColumnName)
+			assert.Contains(t, xmlRequest, expectedColumnName)
 		})
 	}
 }
 
 func TestParseAccountListSOAP(t *testing.T) {
 	tests := []struct {
-		name            string
+		name             string
 		xmlData          string
 		expectedSuccess  bool
 		expectedError    bool
@@ -412,4 +414,3 @@ func TestParseAccountListSOAP_CaseInsensitiveSuccess(t *testing.T) {
 	assert.NotNil(t, result.Details)
 	assert.Equal(t, 1, len(result.Details))
 }
-
