@@ -18,9 +18,9 @@ func TestIPSAccountLookup(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	n := r.Intn(100078546981)
 	params := Params{
-		CreditAccountNumber:  "1234567890",
+		CreditAccountNumber:  "12341234",
 		DebitBankBIC:         "CBETETAA",
-		CreditBankBIC:        "ETSETAA",
+		CreditBankBIC:        "YITBETAA",
 		BizMessageIdentifier: fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
 		MessageIdentifier:    fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
 		CreditDateTime:       "2023-06-24T00:00:00.000+03:00",
@@ -28,7 +28,6 @@ func TestIPSAccountLookup(t *testing.T) {
 	}
 
 	xmlRequest := NewAccountLookup(params)
-	t.Logf("XML Request: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/mb_ips_soap?target=https://api-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -40,7 +39,7 @@ func TestIPSAccountLookup(t *testing.T) {
 	req.Header.Set("password", "cbe1")
 	req.Header.Set("grant_type", "password")
 	req.Header.Set("Jwt_Assertion", "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJDQkVURVRBQSIsImNlcnRfaXNzIjoiQ049VEVTVCBFVFMgSVBTIElzc3VpbmcgQ0EsIE89RXRoU3dpdGNoLCBDPUVUIiwiY2VydF9zbiI6IjQyMzcxNDE1OTEwNjI1MzI5NjM5NDAzNTQxMTM0NDcwNjU1Njk4MDYyNTQ3MiIsImp0aSI6IjExMjIzMzEyNDEyMzIxIiwiZXhwIjo0NjgzNDc2NjU3MDR9.HhTOwliC86XOhpXhNUwD0t_-S7tcSvAoJrs5fLnzQ7jjJHu3GrjZKyqjhzjg5E5DydsOiht8BONlYeuSjou9QD7ZMayzq1DATdo26TVsSzLrp4Ao_8c12xbCYV8yvGjI1xXOGTNF08ylxcznGj-Jiyp9QmywTQFIGPceJYEsi83TJePbO2dWiHIyQexT45dNivp1DAvxk8CD7W63q_R4bRgKW-F8thy9ER5NC-V5l_xWSxvPl0Iu_JyD1ig59Mpc5UjQ92fpe1D0vXBsRrDMmqCVWL5Axj9ZTKY9HZziu0kNQxgpxKB1ZXFs_Btoqni6LWE4sO_i9JV9uyPOFmy7vw")
-	req.Header.Set("Authorization", "Bearer AAIgNTljMjFmZThhMDdhN2NiNmYzNjM2ZjZmMzExMjQ2NTP4YtpRxCB7BT0i52U0PVwAVeLMjeDHRSaJkDRZyTQo75AcpnhvLD288DWH5Qct-I7ljWn7rbJr09V3CgBd_rx0o96Vjvz5KKhmXvK0HrzaQORwIBADA-YR64rVwTOJwzQBb9y2RZDEjEjsjhF1O0qS")
+	req.Header.Set("Authorization", "Bearer 	AAIgNTljMjFmZThhMDdhN2NiNmYzNjM2ZjZmMzExMjQ2NTNypJMtlc-w0rSGcdrL7vrHV8vSEZaph_dkm0nusKrSUrV4XVEJxKcoI3tAqCWGvkQYRBMsm8HB-F4-q50rGtlpHFPOdPugnOYDl7yY8902MfpiVnCsqL-7lL-JYy3ERQa4yYIVEVnsMqk4QvisbPRj")
 
 	client := &http.Client{
 		Timeout: 30 * time.Second,
@@ -75,8 +74,8 @@ func TestIPSAccountLookup(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, "0010803846201001", result.Detail.CreditAccountNumber)
-		assert.Equal(t, "TAt technlogy", result.Detail.CreditAccountHolderName)
+		assert.Equal(t, "251960844084", result.Detail.CreditAccountNumber)
+		assert.Equal(t, "Yitbarek Wondatir", result.Detail.CreditAccountHolderName)
 	} else {
 		t.Error("Expected Detail to be non-nil")
 	}

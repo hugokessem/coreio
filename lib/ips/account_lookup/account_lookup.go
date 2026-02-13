@@ -263,9 +263,11 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 
 	verification := strings.ToLower(strings.TrimSpace(resp.Document.IdVrfctnRpt.Rpt.Verification))
 	if verification != "true" {
-		message := "Account Not Found!"
+		var message string
 		if resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry != "" {
-			if strings.EqualFold(resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry, "SUCC") {
+			if strings.EqualFold(resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry, "BLCK") {
+				message = "Account Is Blocked!"
+			} else if strings.EqualFold(resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry, "UNFN") {
 				message = "Account Not Found!"
 			} else {
 				message = resp.Document.IdVrfctnRpt.Rpt.Reason.Prtry
