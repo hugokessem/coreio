@@ -18,7 +18,7 @@ func TestIPSAccountLookup(t *testing.T) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	n := r.Intn(100078546981)
 	params := Params{
-		CreditAccountNumber:  "12341234",
+		CreditAccountNumber:  "251960844084",
 		DebitBankBIC:         "CBETETAA",
 		CreditBankBIC:        "YITBETAA",
 		BizMessageIdentifier: fmt.Sprintf("CBETETAA%s", strconv.Itoa(n)),
@@ -58,7 +58,6 @@ func TestIPSAccountLookup(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	result, err := ParseAccountLookupSOAP(string(responseData))
-	t.Logf("Response Data: %s", string(responseData))
 
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
