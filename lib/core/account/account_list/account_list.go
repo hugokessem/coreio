@@ -82,6 +82,7 @@ type AccountListByCIFDetail struct {
 	Gender          string `xml:"Gender"`
 	BirthOfDate     string `xml:"BirthOfDate"`
 	Email           string `xml:"Email"`
+	RestrictionType string `xml:"RestrictionType"`
 }
 
 type AccountListResult struct {
@@ -143,6 +144,7 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 				Gender:          detail.Gender,
 				BirthOfDate:     detail.BirthOfDate,
 				Email:           detail.Email,
+				RestrictionType: detail.RestrictionType,
 			}
 		}
 		return &AccountListResult{
