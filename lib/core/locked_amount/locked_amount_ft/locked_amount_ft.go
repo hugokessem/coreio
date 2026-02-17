@@ -174,8 +174,6 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 				ChargeCode:                  resp.FundTransferResponse.ChargeCode,
 				CreditAmountWithCurrency:    resp.FundTransferResponse.CreditAmountWithCurrency,
 				DebitAmountWithCurrency:     resp.FundTransferResponse.DebitAmountWithCurrency,
-				DebitedLockedAmount:         resp.FundTransferResponse.DebitedLockedAmount,
-				CreditLockedAmount:          resp.FundTransferResponse.CreditLockedAmount,
 				LockId:                      resp.FundTransferResponse.LockId,
 				LocalAmountDebited:          resp.FundTransferResponse.LocalAmountDebited,
 				LocalAmountCredited:         resp.FundTransferResponse.LocalAmountCredited,
