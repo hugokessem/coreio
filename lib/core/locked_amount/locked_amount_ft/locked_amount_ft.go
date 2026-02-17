@@ -114,6 +114,11 @@ type FundTransferResponse struct {
 	DebitedLockedAmount         string `xml:"LOCAMTDEBITED"`
 	CreditLockedAmount          string `xml:"LOCAMTCREDITED"`
 	LockId                      string `xml:"ACLOCKID"`
+	LocalAmountDebited          string `xml:"LOCAMTDEBITED"`
+	LocalAmountCredited         string `xml:"LOCAMTCREDITED"`
+	LocalTotalTaxAmount         string `xml:"LOCTOTTAXAMT"`
+	LocalChargeAmount           string `xml:"LOCALCHARGEAMT"`
+	LocalPositionChargesAmount  string `xml:"LOCPOSCHGSAMT"`
 }
 
 type LockedAmountFTResult struct {
@@ -174,6 +179,11 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 				DebitedLockedAmount:         resp.FundTransferResponse.DebitedLockedAmount,
 				CreditLockedAmount:          resp.FundTransferResponse.CreditLockedAmount,
 				LockId:                      resp.FundTransferResponse.LockId,
+				LocalAmountDebited:          resp.FundTransferResponse.LocalAmountDebited,
+				LocalAmountCredited:         resp.FundTransferResponse.LocalAmountCredited,
+				LocalTotalTaxAmount:         resp.FundTransferResponse.LocalTotalTaxAmount,
+				LocalChargeAmount:           resp.FundTransferResponse.LocalChargeAmount,
+				LocalPositionChargesAmount:  resp.FundTransferResponse.LocalPositionChargesAmount,
 			},
 		}, nil
 	}
