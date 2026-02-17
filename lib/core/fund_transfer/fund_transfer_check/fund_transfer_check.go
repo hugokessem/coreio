@@ -84,6 +84,7 @@ type FundTransferType struct {
 	LocAmtDebited        string        `xml:"LOCAMTDEBITED"`
 	LocAmtCredited       string        `xml:"LOCAMTCREDITED"`
 	LocalChargeAmount    string        `xml:"LOCALCHARGEAMT"`
+	LocalTotalTaxAmount  string        `xml:"LOCTOTTAXAMT"`
 	LocalPosChgsAmount   string        `xml:"LOCPOSCHGSAMT"`
 	CustGroupLevel       string        `xml:"CUSTGROUPLEVEL"`
 	DebitCustomer        string        `xml:"SENDERNAME"`
