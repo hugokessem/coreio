@@ -22,7 +22,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		DebitCurrency:       "ETB",
 		DebiterReference:    "Debit reference",
 		ClientReference:     "CLIENT123456",
-		ServiceCode:         "GLOBAL",
+		ServiceCode:         "CPE",
 		LockID:              "ACLK213432CP16",
 	}
 
@@ -47,6 +47,7 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	defer resp.Body.Close()
 
 	responseData, err := io.ReadAll(resp.Body)
+	t.Logf("---resp: %+v", resp.Body)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 

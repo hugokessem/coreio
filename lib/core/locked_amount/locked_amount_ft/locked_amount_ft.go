@@ -111,8 +111,6 @@ type FundTransferResponse struct {
 	ChargeCode                  string `xml:"CHARGECODE"`
 	CreditAmountWithCurrency    string `xml:"AMOUNTCREDITED"`
 	DebitAmountWithCurrency     string `xml:"AMOUNTDEBITED"`
-	DebitedLockedAmount         string `xml:"LOCAMTDEBITED"`
-	CreditLockedAmount          string `xml:"LOCAMTCREDITED"`
 	LockId                      string `xml:"ACLOCKID"`
 	LocalAmountDebited          string `xml:"LOCAMTDEBITED"`
 	LocalAmountCredited         string `xml:"LOCAMTCREDITED"`
