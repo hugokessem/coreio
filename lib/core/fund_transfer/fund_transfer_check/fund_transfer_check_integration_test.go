@@ -68,6 +68,6 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 			t.Logf("Total Charge Amount: %s", result.Detail.TotalChargeAmount)
 		}
 	} else {
-		t.Logf("Fund transfer check failed with message: %s", result.Message)
+		t.Logf("Fund transfer check failed with message: %s", result.Messages)
 	}
 }

@@ -44,10 +44,10 @@ type Body struct {
 
 type TransferViewDetailsResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
-		TransactionId    string `xml:"transactionId"`
-		Application      string `xml:"application"`
-		MessageId        string `xml:"messageId"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		TransactionId    string   `xml:"transactionId"`
+		Application      string   `xml:"application"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	FundTransferType *FundTransferType `xml:"FUNDSTRANSFERType"`
 }
@@ -139,9 +139,9 @@ type ChargeCommissionDisplay struct {
 }
 
 type FundTransferCheckResult struct {
-	Status  bool
-	Detail  *FundTransferType
-	Message []string
+	Status   bool
+	Detail   *FundTransferType
+	Messages []string
 }
 
 func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error) {
@@ -155,20 +155,20 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 		resp := env.Body.TransferViewDetailsResponse
 		if resp.Status == nil {
 			return &FundTransferCheckResult{
-				Status:  false,
-				Message: []string{"Missing Status!"},
+				Status:   false,
+				Messages: []string{"Missing Status!"},
 			}, nil
 		}
 		if resp.Status.SuccessIndicator != "Success" {
 			return &FundTransferCheckResult{
-				Status:  false,
-				Message: []string{"API return failur!"},
+				Status:   false,
+				Messages: []string{"API return failur!"},
 			}, nil
 		}
 		if resp.FundTransferType == nil {
 			return &FundTransferCheckResult{
-				Status:  true,
-				Message: []string{},
+				Status:   true,
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 		return &FundTransferCheckResult{
@@ -235,7 +235,7 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 	}
 
 	return &FundTransferCheckResult{
-		Status:  false,
-		Message: []string{},
+		Status:   false,
+		Messages: []string{},
 	}, nil
 }

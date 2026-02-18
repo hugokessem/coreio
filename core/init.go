@@ -587,6 +587,28 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		Meta:                param.Meta,
 	}
 
+	// type transactionType string
+	// const (
+	// 	topup transactionType = "topup"
+	// 	c2c   transactionType = "c2c"
+	// 	c2o   transactionType = "c2o"
+	// 	c2w   transactionType = "c2w"
+	// 	other transactionType = "other"
+	// )
+
+	// type transaction map[string]string
+	// const (
+	// 	transactionTypeKey   = "transaction_type"
+	// 	transactionDetailKey = "transaction_detail"
+	// )
+
+	// threshold := map[string]uint64{
+	// 	"c2c":   94000,
+	// 	"c2o":   18000,
+	// 	"c2w":   4000,
+	// 	"other": 47000,
+	// }
+
 	fraud := frauddetection.NewFraudAPI(
 		c.config.FraudAPIConfig.Authorization,
 		c.config.FraudAPIConfig.ForwardHost,
