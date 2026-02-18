@@ -94,29 +94,34 @@ type AccountTransferResponse struct {
 }
 
 type FundTransferResponse struct {
-	TransactionId               string
-	TransactionType             string `xml:"TRANSACTIONTYPE"`
-	DebitAccountNumber          string `xml:"DEBITACCTNO"`
-	DebitAccountCustomerNumber  string `xml:"DEBITCUSTOMER"`
-	DebitCurrency               string `xml:"DEBITCURRENCY"`
-	DebitAmount                 string `xml:"DEBITAMOUNT"`
-	DebitedDate                 string `xml:"DEBITVALUEDATE"`
-	DebiterReference            string `xml:"DEBITTHEIRREF"`
-	CreditAccountNumber         string `xml:"CREDITACCTNO"`
-	CreidtAccountCustomerNumber string `xml:"CREDITCUSTOMER"`
-	CreditCurrenct              string `xml:"CREDITCURRENCY"`
-	CreditedDate                string `xml:"CREDITVALUEDATE"`
-	CrediterReference           string `xml:"CREDITTHEIRREF"`
-	ComissionCode               string `xml:"COMMISSIONCODE"`
-	ChargeCode                  string `xml:"CHARGECODE"`
-	CreditAmountWithCurrency    string `xml:"AMOUNTCREDITED"`
-	DebitAmountWithCurrency     string `xml:"AMOUNTDEBITED"`
-	LockId                      string `xml:"ACLOCKID"`
-	LocalAmountDebited          string `xml:"LOCAMTDEBITED"`
-	LocalAmountCredited         string `xml:"LOCAMTCREDITED"`
-	LocalTotalTaxAmount         string `xml:"LOCTOTTAXAMT"`
-	LocalChargeAmount           string `xml:"LOCALCHARGEAMT"`
-	LocalPositionChargesAmount  string `xml:"LOCPOSCHGSAMT"`
+	TransactionId                      string
+	TransactionType                    string `xml:"TRANSACTIONTYPE"`
+	DebitAccountNumber                 string `xml:"DEBITACCTNO"`
+	DebitAccountCustomerNumber         string `xml:"DEBITCUSTOMER"`
+	DebitCurrency                      string `xml:"DEBITCURRENCY"`
+	DebitAmount                        string `xml:"DEBITAMOUNT"`
+	DebitedDate                        string `xml:"DEBITVALUEDATE"`
+	DebiterReference                   string `xml:"DEBITTHEIRREF"`
+	CreditAccountNumber                string `xml:"CREDITACCTNO"`
+	CreidtAccountCustomerNumber        string `xml:"CREDITCUSTOMER"`
+	CreditCurrenct                     string `xml:"CREDITCURRENCY"`
+	CreditedDate                       string `xml:"CREDITVALUEDATE"`
+	CrediterReference                  string `xml:"CREDITTHEIRREF"`
+	ComissionCode                      string `xml:"COMMISSIONCODE"`
+	ChargeCode                         string `xml:"CHARGECODE"`
+	CreditAmountWithCurrency           string `xml:"AMOUNTCREDITED"`
+	DebitAmountWithCurrency            string `xml:"AMOUNTDEBITED"`
+	LockId                             string `xml:"ACLOCKID"`
+	LocalAmountDebited                 string `xml:"LOCAMTDEBITED"`
+	LocalAmountCredited                string `xml:"LOCAMTCREDITED"`
+	LocalTotalTaxAmount                string `xml:"LOCTOTTAXAMT"`
+	LocalChargeAmount                  string `xml:"LOCALCHARGEAMT"`
+	LocalPositionChargesAmount         string `xml:"LOCPOSCHGSAMT"`
+	DebitAccountHolderName             string `xml:"SENDERNAME"`
+	ReceiverName                       string `xml:"RECEIVERNAME"`
+	ServiceCode                        string `xml:"SERVICECODE"`
+	DebitAccountCurrentWorkingBalance  string `xml:"CEKCS"`
+	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
 }
 
 type LockedAmountFTResult struct {
@@ -157,29 +162,34 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 		return &LockedAmountFTResult{
 			Success: true,
 			Detail: FundTransferResponse{
-				TransactionId:               resp.Status.TransactionId,
-				TransactionType:             resp.FundTransferResponse.TransactionType,
-				DebitAccountNumber:          resp.FundTransferResponse.DebitAccountNumber,
-				DebitAccountCustomerNumber:  resp.FundTransferResponse.DebitAccountCustomerNumber,
-				DebitCurrency:               resp.FundTransferResponse.DebitCurrency,
-				DebitAmount:                 resp.FundTransferResponse.DebitAmount,
-				DebitedDate:                 resp.FundTransferResponse.DebitedDate,
-				DebiterReference:            resp.FundTransferResponse.DebiterReference,
-				CreditAccountNumber:         resp.FundTransferResponse.CreditAccountNumber,
-				CreidtAccountCustomerNumber: resp.FundTransferResponse.CreidtAccountCustomerNumber,
-				CreditCurrenct:              resp.FundTransferResponse.CreditCurrenct,
-				CreditedDate:                resp.FundTransferResponse.CreditedDate,
-				CrediterReference:           resp.FundTransferResponse.CrediterReference,
-				ComissionCode:               resp.FundTransferResponse.ComissionCode,
-				ChargeCode:                  resp.FundTransferResponse.ChargeCode,
-				CreditAmountWithCurrency:    resp.FundTransferResponse.CreditAmountWithCurrency,
-				DebitAmountWithCurrency:     resp.FundTransferResponse.DebitAmountWithCurrency,
-				LockId:                      resp.FundTransferResponse.LockId,
-				LocalAmountDebited:          resp.FundTransferResponse.LocalAmountDebited,
-				LocalAmountCredited:         resp.FundTransferResponse.LocalAmountCredited,
-				LocalTotalTaxAmount:         resp.FundTransferResponse.LocalTotalTaxAmount,
-				LocalChargeAmount:           resp.FundTransferResponse.LocalChargeAmount,
-				LocalPositionChargesAmount:  resp.FundTransferResponse.LocalPositionChargesAmount,
+				TransactionId:                      resp.Status.TransactionId,
+				TransactionType:                    resp.FundTransferResponse.TransactionType,
+				DebitAccountNumber:                 resp.FundTransferResponse.DebitAccountNumber,
+				DebitAccountCustomerNumber:         resp.FundTransferResponse.DebitAccountCustomerNumber,
+				DebitCurrency:                      resp.FundTransferResponse.DebitCurrency,
+				DebitAmount:                        resp.FundTransferResponse.DebitAmount,
+				DebitedDate:                        resp.FundTransferResponse.DebitedDate,
+				DebiterReference:                   resp.FundTransferResponse.DebiterReference,
+				CreditAccountNumber:                resp.FundTransferResponse.CreditAccountNumber,
+				CreidtAccountCustomerNumber:        resp.FundTransferResponse.CreidtAccountCustomerNumber,
+				CreditCurrenct:                     resp.FundTransferResponse.CreditCurrenct,
+				CreditedDate:                       resp.FundTransferResponse.CreditedDate,
+				CrediterReference:                  resp.FundTransferResponse.CrediterReference,
+				ComissionCode:                      resp.FundTransferResponse.ComissionCode,
+				ChargeCode:                         resp.FundTransferResponse.ChargeCode,
+				CreditAmountWithCurrency:           resp.FundTransferResponse.CreditAmountWithCurrency,
+				DebitAmountWithCurrency:            resp.FundTransferResponse.DebitAmountWithCurrency,
+				LockId:                             resp.FundTransferResponse.LockId,
+				LocalAmountDebited:                 resp.FundTransferResponse.LocalAmountDebited,
+				LocalAmountCredited:                resp.FundTransferResponse.LocalAmountCredited,
+				LocalTotalTaxAmount:                resp.FundTransferResponse.LocalTotalTaxAmount,
+				LocalChargeAmount:                  resp.FundTransferResponse.LocalChargeAmount,
+				LocalPositionChargesAmount:         resp.FundTransferResponse.LocalPositionChargesAmount,
+				DebitAccountHolderName:             resp.FundTransferResponse.DebitAccountHolderName,
+				ReceiverName:                       resp.FundTransferResponse.ReceiverName,
+				ServiceCode:                        resp.FundTransferResponse.ServiceCode,
+				DebitAccountCurrentWorkingBalance:  resp.FundTransferResponse.DebitAccountCurrentWorkingBalance,
+				CreditAccountCurrentWorkingBalance: resp.FundTransferResponse.CreditAccountCurrentWorkingBalance,
 			},
 		}, nil
 	}
