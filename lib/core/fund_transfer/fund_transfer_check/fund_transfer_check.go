@@ -229,6 +229,7 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				GlobalTaxType:           resp.FundTransferType.GlobalTaxType,
 				PaymentDetail:           resp.FundTransferType.PaymentDetail,
 				CurrentRate:             resp.FundTransferType.CurrentRate,
+				LocalTotalTaxAmount:     resp.FundTransferType.LocalTotalTaxAmount,
 			},
 		}, nil
 	}
