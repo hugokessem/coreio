@@ -40,13 +40,14 @@ type FundTransferParam struct {
 	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
-	ServiceCode         string
-	CustomerSegment     string
-	ChannelType         string
+	ServiceCode         string // service type
+	CustomerSegment     string // role
+	ChannelType         string // ussd, app, internet_banking
 	Meta                frauddetection.FraudAPIPayload
 }
 
 func NewFundTransfer(param Params) string {
+
 	return fmt.Sprintf(
 		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
 		<soapenv:Header/>

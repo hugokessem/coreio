@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"io"
+	"strings"
 	"time"
 
 	"github.com/hugokessem/coreio/core/internal"
@@ -568,6 +569,23 @@ func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, er
 }
 
 func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
+	if strings.TrimSpace(param.ServiceCode) == "" || strings.TrimSpace(param.CustomerSegment) == "" || strings.TrimSpace(param.ChannelType) == "" {
+		var messages []string
+		if strings.TrimSpace(param.ServiceCode) == "" {
+			messages = append(messages, "Service Code Not Found!")
+		}
+		if strings.TrimSpace(param.CustomerSegment) == "" {
+			messages = append(messages, "Customer Segnment Not Found!")
+		}
+		if strings.TrimSpace(param.ChannelType) == "" {
+			messages = append(messages, "Channele Type Not Found!")
+		}
+		return &FundTransferResult{
+			Success:  false,
+			Messages: messages,
+		}, nil
+	}
+
 	params := fundtransfer.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
