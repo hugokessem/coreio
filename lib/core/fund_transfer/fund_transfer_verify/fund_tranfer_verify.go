@@ -11,6 +11,7 @@ type Params struct {
 	Password            string
 	DebitAccountNumber  string
 	DebitCurrency       string
+	CreditCurrency      string
 	DebitAmount         string
 	DebitReference      string
 	CreditReference     string
@@ -30,6 +31,7 @@ type FundTransferVerifyParams struct {
 	DebitAmount         string
 	DebitReference      string
 	CreditReference     string
+	CreditCurrency      string
 	CreditAccountNumber string
 	PaymentDetails      string
 	ClientReference     string
@@ -57,6 +59,7 @@ func NewFundTransferVerify(params Params) string {
             <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
             <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
             <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+            <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
             <fun:gPAYMENTDETAILS g="1">
                <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
             </fun:gPAYMENTDETAILS>
@@ -68,7 +71,7 @@ func NewFundTransferVerify(params Params) string {
       </cbes:AccountTransfer_Validate>
    </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, params.DebitAccountNumber, params.DebitCurrency, params.DebitAmount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType)
+	`, params.Password, params.Username, params.DebitAccountNumber, params.DebitCurrency, params.DebitAmount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency, params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType)
 }
 
 type Envelope struct {
