@@ -26,6 +26,7 @@ type Params struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
+	IsFraudCheckEnabled bool
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -43,10 +44,21 @@ type FundTransferParam struct {
 	ServiceCode         string // service type
 	CustomerSegment     string // role
 	ChannelType         string // ussd, app, internet_banking
+	IsFraudCheckEnabled bool
 	Meta                frauddetection.FraudAPIPayload
 }
 
 func NewFundTransfer(param Params) string {
+	var amount []string
+	if param.DebitAmount != "" {
+		amount = append(amount, fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", param.DebitAmount))
+		amount = append(amount, "<fun:CREDITTAMOUNT/>")
+	}
+
+	if param.CreditAmount != "" {
+		amount = append(amount, fmt.Sprintf("<fun:CREDITTAMOUNT>%s</fun:CREDITTAMOUNT>", param.CreditAmount))
+		amount = append(amount, "<fun:DEBITAMOUNT/>")
+	}
 
 	return fmt.Sprintf(
 		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
@@ -62,12 +74,11 @@ func NewFundTransfer(param Params) string {
 				<FUNDSTRANSFERFTTXNSUPERAPPType id="">
 					<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
 					<fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
-					<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+					%s
 					<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
 					<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
 					<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
 					<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
-					<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
 					<fun:gPAYMENTDETAILS g="1">
 						<fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
 					</fun:gPAYMENTDETAILS>
@@ -79,7 +90,7 @@ func NewFundTransfer(param Params) string {
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, amount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
 }
 
 type Envelope struct {

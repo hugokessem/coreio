@@ -569,17 +569,17 @@ func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, er
 }
 
 func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
-	if strings.TrimSpace(param.ServiceCode) == "" || strings.TrimSpace(param.CustomerSegment) == "" || strings.TrimSpace(param.ChannelType) == "" {
-		var messages []string
-		if strings.TrimSpace(param.ServiceCode) == "" {
-			messages = append(messages, "Service Code Not Found!")
-		}
-		if strings.TrimSpace(param.CustomerSegment) == "" {
-			messages = append(messages, "Customer Segnment Not Found!")
-		}
-		if strings.TrimSpace(param.ChannelType) == "" {
-			messages = append(messages, "Channele Type Not Found!")
-		}
+	var messages []string
+	if strings.TrimSpace(param.ServiceCode) == "" {
+		messages = append(messages, "Service Code Not Found!")
+	}
+	if strings.TrimSpace(param.CustomerSegment) == "" {
+		messages = append(messages, "Customer Segnment Not Found!")
+	}
+	if strings.TrimSpace(param.ChannelType) == "" {
+		messages = append(messages, "Channele Type Not Found!")
+	}
+	if len(messages) > 0 {
 		return &FundTransferResult{
 			Success:  false,
 			Messages: messages,
@@ -605,44 +605,24 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		Meta:                param.Meta,
 	}
 
-	// type transactionType string
-	// const (
-	// 	topup transactionType = "topup"
-	// 	c2c   transactionType = "c2c"
-	// 	c2o   transactionType = "c2o"
-	// 	c2w   transactionType = "c2w"
-	// 	other transactionType = "other"
-	// )
+	if param.IsFraudCheckEnabled {
+		fraud := frauddetection.NewFraudAPI(
+			c.config.FraudAPIConfig.Authorization,
+			c.config.FraudAPIConfig.ForwardHost,
+			c.config.FraudAPIConfig.Url,
+		)
 
-	// type transaction map[string]string
-	// const (
-	// 	transactionTypeKey   = "transaction_type"
-	// 	transactionDetailKey = "transaction_detail"
-	// )
+		response, err := fraud.Call(param.Meta)
+		if err != nil {
+			return nil, fmt.Errorf("fraud detection call failed: %w", err)
+		}
 
-	// threshold := map[string]uint64{
-	// 	"c2c":   94000,
-	// 	"c2o":   18000,
-	// 	"c2w":   4000,
-	// 	"other": 47000,
-	// }
-
-	fraud := frauddetection.NewFraudAPI(
-		c.config.FraudAPIConfig.Authorization,
-		c.config.FraudAPIConfig.ForwardHost,
-		c.config.FraudAPIConfig.Url,
-	)
-	response, err := fraud.Call(param.Meta)
-	if err != nil {
-		return nil, fmt.Errorf("fraud detection call failed: %w", err)
-	}
-
-	if response.Result != "approved" {
-		// return nil, errors.New("transaction blocked by fraud detection")
-		return &fundtransfer.FundTransferResult{
-			Success:  false,
-			Messages: []string{"transaction blocked by fraud detection"},
-		}, nil
+		if response.Result != "approved" {
+			return &fundtransfer.FundTransferResult{
+				Success:  false,
+				Messages: []string{"transaction blocked by fraud detection"},
+			}, nil
+		}
 	}
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
