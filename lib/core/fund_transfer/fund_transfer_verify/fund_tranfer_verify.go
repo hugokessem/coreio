@@ -43,15 +43,13 @@ type FundTransferVerifyParams struct {
 }
 
 func NewFundTransferVerify(params Params) string {
-	var amount []string
+	var amount string
 	if params.DebitAmount != "" {
-		amount = append(amount, fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", params.DebitAmount))
-		amount = append(amount, "<fun:CREDITTAMOUNT/>")
+		amount = fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", params.DebitAmount)
 	}
 
 	if params.CreditAmount != "" {
-		amount = append(amount, fmt.Sprintf("<fun:CREDITTAMOUNT>%s</fun:CREDITTAMOUNT>", params.CreditAmount))
-		amount = append(amount, "<fun:DEBITAMOUNT/>")
+		amount = fmt.Sprintf("<fun:CREDITTAMOUNT>%s</fun:CREDITTAMOUNT>", params.CreditAmount)
 	}
 
 	return fmt.Sprintf(`

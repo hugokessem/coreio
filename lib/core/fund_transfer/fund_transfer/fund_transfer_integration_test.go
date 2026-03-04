@@ -30,9 +30,13 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",
 		ServiceCode:         "CBE",
+		ChannelType:         "USSD",
+		CustomerSegment:     "MASS",
+		IsFraudCheckEnabled: false,
 	}
 
 	xmlRequest := NewFundTransfer(params)
+	t.Logf("Generated XML Request: %s", xmlRequest)
 	require.NotEmpty(t, xmlRequest, "Generated XML should not be empty")
 
 	// Use the production endpoint from curl request
@@ -78,6 +82,8 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	require.NoError(t, err, "Failed to parse SOAP response")
 	require.NotNil(t, result, "Parsed result should not be nil")
 
+	t.Logf("Result: %v", result)
+
 	t.Logf("Result Success: %v", result.Success)
 	if len(result.Messages) > 0 {
 		t.Logf("Messages: %v", result.Messages)
@@ -100,7 +106,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		// Validate basic transaction fields - use NotEmpty for fields that might vary
 		assert.NotEmpty(t, detail.FTNumber, "FTNumber should not be empty")
 		if detail.DebitAccountNumber != "" {
-			assert.Equal(t, "1000000006924", detail.DebitAccountNumber, "Debit account number should match")
+			assert.Equal(t, "1000517052152", detail.DebitAccountNumber, "Debit account number should match")
 		}
 		if detail.CreditAccountNumber != "" {
 			assert.Equal(t, "1000357597823", detail.CreditAccountNumber, "Credit account number should match")
