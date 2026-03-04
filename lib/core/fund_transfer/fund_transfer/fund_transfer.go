@@ -55,7 +55,7 @@ func NewFundTransfer(param Params) string {
 	}
 
 	if param.CreditAmount != "" {
-		amount = fmt.Sprintf("%s<fun:CREDITTAMOUNT>%s</fun:CREDITTAMOUNT>", amount, param.CreditAmount)
+		amount = fmt.Sprintf("%s<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", amount, param.CreditAmount)
 	}
 
 	return fmt.Sprintf(

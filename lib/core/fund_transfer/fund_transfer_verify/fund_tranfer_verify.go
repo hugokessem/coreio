@@ -49,7 +49,7 @@ func NewFundTransferVerify(params Params) string {
 	}
 
 	if params.CreditAmount != "" {
-		amount = fmt.Sprintf("<fun:CREDITTAMOUNT>%s</fun:CREDITTAMOUNT>", params.CreditAmount)
+		amount = fmt.Sprintf("<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", params.CreditAmount)
 	}
 
 	return fmt.Sprintf(`
