@@ -239,7 +239,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		if resp.Status == nil {
 			return &FundTransferVerifyResult{
 				Success:  false,
-				Messages: []string{"Missing Status"},
+				Messages: []string{"Missing Status!"},
 			}, nil
 		}
 
