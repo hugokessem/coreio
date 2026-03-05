@@ -30,15 +30,24 @@ type Params struct {
 	Meta                frauddetection.FraudAPIPayload
 }
 
+type Currency string
+
+const (
+	ETB Currency = "ETB"
+	USD Currency = "USD"
+	EUR Currency = "EUR"
+	GPB Currency = "GBP"
+)
+
 type FundTransferParam struct {
 	DebitAccountNumber  string
+	DebitAmount         string
 	DebitCurrency       string
 	CreditAccountNumber string
 	CreditAmount        string
 	CreditCurrency      string
 	DebitReference      string
 	CreditReference     string
-	DebitAmount         string
 	TransactionID       string
 	PaymentDetail       string
 	ServiceCode         string // service type
@@ -49,13 +58,15 @@ type FundTransferParam struct {
 }
 
 func NewFundTransfer(param Params) string {
-	var amount string
-	if param.DebitAmount != "" {
-		amount = fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", param.DebitAmount)
+	var amount []string
+	if param.CreditCurrency == "" || param.DebitCurrency == "" {
+		return "Both CreditCurrency and DebitCurrency are Requried!"
 	}
 
-	if param.CreditAmount != "" {
-		amount = fmt.Sprintf("%s<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", amount, param.CreditAmount)
+	if param.CreditCurrency == param.DebitCurrency {
+		amount = append(amount, fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", param.DebitAmount))
+	} else {
+		amount = append(amount, fmt.Sprintf("<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", param.CreditAmount))
 	}
 
 	return fmt.Sprintf(
@@ -88,7 +99,7 @@ func NewFundTransfer(param Params) string {
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, amount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
+`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, strings.Join(amount, "\n"), param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
 }
 
 type Envelope struct {

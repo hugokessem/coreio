@@ -43,46 +43,59 @@ type FundTransferVerifyParams struct {
 }
 
 func NewFundTransferVerify(params Params) string {
-	var amount string
-	if params.DebitAmount != "" {
-		amount = fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", params.DebitAmount)
+	var details []string
+	if params.CreditCurrency == "" || params.DebitCurrency == "" {
+		return "Both CreditCurrency and DebitCurrency are Requried!"
 	}
 
-	if params.CreditAmount != "" {
-		amount = fmt.Sprintf("<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", params.CreditAmount)
+	if params.CreditCurrency == params.DebitCurrency {
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitAmount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency))
+
+	} else {
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency, params.CreditAmount))
 	}
 
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <cbes:AccountTransfer_Validate>
-         <WebRequestCommon>
-            <company/>
-            <password>%s</password>
-            <userName>%s</userName>
-         </WebRequestCommon>
-         <OfsFunction/>
-         <FUNDSTRANSFERFTTXNSUPERAPPType id="">
-            <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
-            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
-			%s
-            <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
-            <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
-            <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
-            <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
-            <fun:gPAYMENTDETAILS g="1">
-               <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
-            </fun:gPAYMENTDETAILS>
-            <fun:ClientReference>%s</fun:ClientReference>
-            <fun:ServiceCode>%s</fun:ServiceCode>
-            <fun:CustomerRole>%s</fun:CustomerRole>
-            <fun:ChannelType>%s</fun:ChannelType>
-         </FUNDSTRANSFERFTTXNSUPERAPPType>
-      </cbes:AccountTransfer_Validate>
-   </soapenv:Body>
+    <soapenv:Header/>
+    <soapenv:Body>
+        <cbes:AccountTransfer_Validate>
+            <WebRequestCommon>
+                <company/>
+                <password>%s</password>
+                <userName>%s</userName>
+            </WebRequestCommon>
+            <OfsFunction/>
+            <FUNDSTRANSFERFTTXNSUPERAPPType id="">
+				%s
+                <fun:gPAYMENTDETAILS g="1">
+                    <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
+                </fun:gPAYMENTDETAILS>
+                <fun:ClientReference>%s</fun:ClientReference>
+                <fun:ServiceCode>%s</fun:ServiceCode>
+                <fun:CustomerRole>%s</fun:CustomerRole>
+                <fun:ChannelType>%s</fun:ChannelType>
+            </FUNDSTRANSFERFTTXNSUPERAPPType>
+        </cbes:AccountTransfer_Validate>
+    </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, params.DebitAccountNumber, params.DebitCurrency, amount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency, params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType)
 }
 
 type Envelope struct {

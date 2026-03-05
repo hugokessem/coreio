@@ -16,11 +16,16 @@ import (
 func TestIntegrationFundTransferVerify(t *testing.T) {
 	// Test parameters matching the curl request
 	params := Params{
-		Username:            "SUPERAPP",
-		Password:            "123456",
-		DebitAccountNumber:  "1000000006924",
-		DebitCurrency:       "ETB",
-		DebitAmount:         "50",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// DebitAccountNumber: "1000000006924",
+		// DebitCurrency:      "ETB",
+		// DebitAmount:         "50",
+		DebitAccountNumber: "1000446113608",
+		DebitCurrency:      "USD",
+		CreditAmount:       "50",
+		CreditCurrency:     "ETB",
+
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		CreditAccountNumber: "1000357597823",
@@ -79,7 +84,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, "APPROVED", result.Detail)
+		assert.Equal(t, "USSD", result.Detail.TransactionChannel)
 		assert.Equal(t, "50.00", result.Detail.DebitAmount)
 		assert.Equal(t, "ETB", result.Detail.DebitCurrency)
 	} else {
