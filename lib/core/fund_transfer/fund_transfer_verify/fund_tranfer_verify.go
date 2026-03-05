@@ -218,6 +218,8 @@ type FundTransferDetail struct {
 	CustomerRole                       string `xml:"CUSTOMERROLE"`
 	TransactionChannel                 string `xml:"TXNCHANNEL"`
 	BudgetType                         string `xml:"BUDGETTYPE"`
+	CreditPhoneNumner                  string `xml:"PHONENUM"`
+	DebitPhoneNumner                   string `xml:"PHONE"`
 }
 
 type FundTransferVerifyResult struct {

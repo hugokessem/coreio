@@ -217,8 +217,6 @@ type FundTransferDetail struct {
 	ServiceCode                        string `xml:"SERVICECODE"`
 	DebitAccountCurrentWorkingBalance  string `xml:"CEKCS"`
 	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
-	CreditPhoneNumner                  string `xml:"PHONENUM"`
-	DebitPhoneNumner                   string `xml:"PHONE"`
 }
 
 type FundTransferResponse struct {
