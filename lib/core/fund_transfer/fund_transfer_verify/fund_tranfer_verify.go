@@ -48,6 +48,10 @@ func NewFundTransferVerify(params Params) string {
 		return "Both CreditCurrency and DebitCurrency are Requried!"
 	}
 
+	if params.CreditAmount != "" && params.DebitAmount != "" {
+		return "Both CreditAmount and DebitAmount cannot be provided together!"
+	}
+
 	if params.CreditCurrency == params.DebitCurrency {
 		details = append(details, fmt.Sprintf(`
 			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
