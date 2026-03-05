@@ -176,6 +176,8 @@ func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTra
 		ServiceCode:         param.ServiceCode,
 		CustomerSegment:     param.CustomerSegment,
 		ChannelType:         param.ChannelType,
+		CreditCurrency:      param.CreditCurrency,
+		CreditAmount:        param.CreditAmount,
 	}
 
 	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
@@ -603,6 +605,7 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		CustomerSegment:     param.CustomerSegment,
 		ChannelType:         param.ChannelType,
 		Meta:                param.Meta,
+		IsFraudCheckEnabled: param.IsFraudCheckEnabled,
 	}
 
 	if param.IsFraudCheckEnabled {
