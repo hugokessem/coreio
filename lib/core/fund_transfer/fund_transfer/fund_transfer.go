@@ -57,16 +57,33 @@ type FundTransferParam struct {
 	Meta                frauddetection.FraudAPIPayload
 }
 
-func NewFundTransfer(param Params) string {
-	var amount []string
-	if param.CreditCurrency == "" || param.DebitCurrency == "" {
+func NewFundTransfer(params Params) string {
+	var details []string
+	if params.CreditCurrency == "" || params.DebitCurrency == "" {
 		return "Both CreditCurrency and DebitCurrency are Requried!"
 	}
 
-	if param.CreditCurrency == param.DebitCurrency {
-		amount = append(amount, fmt.Sprintf("<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>", param.DebitAmount))
+	if params.CreditCurrency == params.DebitCurrency {
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitAmount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency))
+
 	} else {
-		amount = append(amount, fmt.Sprintf("<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>", param.CreditAmount))
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency, params.CreditAmount))
 	}
 
 	return fmt.Sprintf(
@@ -81,13 +98,7 @@ func NewFundTransfer(param Params) string {
 				</WebRequestCommon>
 				<OfsFunction></OfsFunction>
 				<FUNDSTRANSFERFTTXNSUPERAPPType id="">
-					<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
-					<fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
 					%s
-					<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
-					<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
-					<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
-					<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
 					<fun:gPAYMENTDETAILS g="1">
 						<fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
 					</fun:gPAYMENTDETAILS>
@@ -99,7 +110,7 @@ func NewFundTransfer(param Params) string {
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, strings.Join(amount, "\n"), param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.TransactionID, param.ServiceCode, param.CustomerSegment, param.ChannelType)
+`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType)
 }
 
 type Envelope struct {
