@@ -18,22 +18,22 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
-		// DebitAccountNumber: "1000000006924",
+		// DebitAccountNumber: "1000259276504",
 		// DebitCurrency:      "ETB",
-		// DebitAmount:         "50",
-		DebitAccountNumber: "1000446113608",
-		DebitCurrency:      "USD",
-		CreditAmount:       "50",
-		CreditCurrency:     "ETB",
-
-		DebitReference:      "DEBIT NARRATIVE",
-		CreditReference:     "CREDIT NARRATIVE",
+		// DebitAmount:        "10000",
+		DebitAccountNumber:  "1000446113608",
+		DebitCurrency:       "USD",
+		CreditAmount:        "50",
 		CreditAccountNumber: "1000357597823",
-		PaymentDetails:      "TEST PAYMENT",
-		ClientReference:     "12385824578895",
-		ServiceCode:         "CBE",
-		CustomerSegment:     "MASS",
-		ChannelType:         "USSD",
+		CreditCurrency:      "ETB",
+
+		DebitReference:  "DEBIT NARRATIVE",
+		CreditReference: "CREDIT NARRATIVE",
+		PaymentDetails:  "TEST PAYMENT",
+		ClientReference: "12385824578895",
+		ServiceCode:     "CBE",
+		CustomerSegment: "MASS",
+		ChannelType:     "USSD",
 	}
 
 	xmlRequest := NewFundTransferVerify(params)
