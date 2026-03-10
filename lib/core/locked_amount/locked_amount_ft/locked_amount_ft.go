@@ -9,13 +9,14 @@ import (
 type Params struct {
 	Username            string
 	Password            string
-	CreditCurrent       string
 	CreditAccountNumber string
-	CrediterReference   string
+	CreditCurrency      string
+	CreditAmount        string
+	CreditReference     string
 	DebitAmount         string
 	DebitAccountNumber  string
 	DebitCurrency       string
-	DebiterReference    string
+	DebitReference      string
 	ClientReference     string
 	ServiceCode         string
 	LockID              string
@@ -23,20 +24,53 @@ type Params struct {
 }
 
 type LockedAmountFTParams struct {
-	CreditCurrent       string
 	CreditAccountNumber string
-	CrediterReference   string
+	CreditReference     string
 	DebitAmount         string
 	DebitAccountNumber  string
 	DebitCurrency       string
-	DebiterReference    string
+	DebitReference      string
 	ClientReference     string
 	ServiceCode         string
 	LockID              string
+	CreditCurrency      string
+	CreditAmount        string
 	PaymentDetails      string
 }
 
-func NewLockedAmountFt(param Params) string {
+func NewLockedAmountFt(params Params) string {
+	var details []string
+	if params.CreditCurrency == "" || params.DebitCurrency == "" {
+		return "Both CreditCurrency and DebitCurrency are Requried!"
+	}
+
+	if params.CreditAmount != "" && params.DebitAmount != "" {
+		return "Both CreditAmount and DebitAmount cannot be provided together!"
+	}
+
+	if params.CreditCurrency == params.DebitCurrency || params.DebitAmount != "" {
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitAmount, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency))
+
+	} else {
+		details = append(details, fmt.Sprintf(`
+			<fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+            <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+			<fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+			<fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+			<fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+			<fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+			<fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
+			`, params.DebitAccountNumber, params.DebitCurrency, params.DebitReference, params.CreditReference, params.CreditAccountNumber, params.CreditCurrency, params.CreditAmount))
+	}
+
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
 xmlns:cbes="http://temenos.com/CBESUPERAPP"
@@ -51,14 +85,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
             </WebRequestCommon>
             <OfsFunction/>
             <FUNDSTRANSFERFTTXNSUPERAPPType id="">
-                <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
-                <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
-                <fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
-                <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
-                <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
-                <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
-                <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
-                <fun:CREDITAMOUNT/>
+				%s
                 <fun:gPAYMENTDETAILS g="1">
                     <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
                 </fun:gPAYMENTDETAILS>
@@ -71,7 +98,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebiterReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrent, param.PaymentDetails, param.ClientReference, param.LockID, param.ServiceCode)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode)
 }
 
 type Envelope struct {

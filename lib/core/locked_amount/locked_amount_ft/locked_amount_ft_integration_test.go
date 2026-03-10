@@ -12,18 +12,23 @@ import (
 
 func TestIntegrationLockedAmountFt(t *testing.T) {
 	params := Params{
-		Username:            "SUPERAPP",
-		Password:            "123456",
-		CreditCurrent:       "ETB",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// DebitAccountNumber:  "1000000006924",
+		// DebitCurrency:       "ETB",
+		// DebitAmount:         "240.00",
+		DebitAccountNumber: "1000446113608",
+		DebitCurrency:      "USD",
+
+		CreditCurrency:      "ETB",
+		CreditAmount:        "200",
 		CreditAccountNumber: "1000382499388",
-		CrediterReference:   "Credit reference",
-		DebitAmount:         "240.00",
-		DebitAccountNumber:  "1000000006924",
-		DebitCurrency:       "ETB",
-		DebiterReference:    "Debit reference",
+		CreditReference:     "Credit reference",
+		DebitReference:      "Debit reference",
 		ClientReference:     "CLIENT123456",
-		ServiceCode:         "CPE",
+		ServiceCode:         "CBE",
 		LockID:              "ACLK213432CP16",
+		PaymentDetails:      "Apple",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
