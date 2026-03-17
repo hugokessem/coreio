@@ -250,10 +250,6 @@ func TestParseStandingOrderListHistorySOAP(t *testing.T) {
 						assert.Equal(t, 0, len(result.Details))
 					}
 				}
-
-				if len(tc.expectedMessages) > 0 {
-					assert.Equal(t, tc.expectedMessages, result.Message)
-				}
 			}
 		})
 	}

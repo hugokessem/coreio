@@ -51,6 +51,7 @@ type Body struct {
 type StandingOrderHistorylistbyAcResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
+		Messages         string `xml:"messageId"`
 	} `xml:"Status"`
 	ACCTSTOLISTHISSUPERAPPType *struct {
 		Group *struct {
@@ -76,9 +77,9 @@ type StandingOrderHistorylistbyAcDetail struct {
 }
 
 type StandingOrderListHistoryResult struct {
-	Success bool
-	Details []StandingOrderHistorylistbyAcDetail
-	Message []string
+	Success  bool
+	Details  []StandingOrderHistorylistbyAcDetail
+	Messages []string
 }
 
 func ParseStandingOrderListHistorySOAP(xmlData string) (*StandingOrderListHistoryResult, error) {
@@ -91,20 +92,20 @@ func ParseStandingOrderListHistorySOAP(xmlData string) (*StandingOrderListHistor
 		resp := env.Body.StandingOrderHistorylistbyAcResponse
 		if resp.Status == nil {
 			return &StandingOrderListHistoryResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &StandingOrderListHistoryResult{
-				Success: false,
-				Message: []string{"API returned failure"},
+				Success:  false,
+				Messages: []string{resp.Status.Messages},
 			}, nil
 		}
 		if resp.ACCTSTOLISTHISSUPERAPPType == nil || resp.ACCTSTOLISTHISSUPERAPPType.Group == nil || len(resp.ACCTSTOLISTHISSUPERAPPType.Group.Details) == 0 {
 			return &StandingOrderListHistoryResult{
-				Success: true,
-				Message: []string{"No Standing Order History Found!"},
+				Success:  true,
+				Messages: []string{"No Standing Order History Found!"},
 			}, nil
 		}
 		details := resp.ACCTSTOLISTHISSUPERAPPType.Group.Details
@@ -133,7 +134,7 @@ func ParseStandingOrderListHistorySOAP(xmlData string) (*StandingOrderListHistor
 	}
 
 	return &StandingOrderListHistoryResult{
-		Success: false,
-		Message: []string{"Invalid response type"},
+		Success:  false,
+		Messages: []string{"Invalid response type"},
 	}, nil
 }

@@ -16,12 +16,12 @@ import (
 func TestIntegrationFundTransfer(t *testing.T) {
 	// Test parameters matching the curl request
 	params := Params{
-		Username: "SUPERAPP",
-		Password: "123456",
-		// DebitAccountNumber:  "1000446114291",
-		// DebitCurrency:       "USD",
-		DebitAccountNumber:  "1000173071349",
-		DebitCurrency:       "ETB",
+		Username:           "SUPERAPP",
+		Password:           "123456",
+		DebitAccountNumber: "1000446114291",
+		DebitCurrency:      "USD",
+		// DebitAccountNumber:  "1000173071349",
+		// DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10000",

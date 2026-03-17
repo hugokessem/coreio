@@ -79,7 +79,7 @@ type UpdateStandingOrderDetail struct {
 type UpdateStandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		MessageId        string `xml:"messageId"`
+		Messages         string `xml:"messageId"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`
@@ -87,9 +87,9 @@ type UpdateStandingOrderResponse struct {
 }
 
 type UpdateStandingOrderResult struct {
-	Success bool
-	Detail  *UpdateStandingOrderDetail
-	Message []string
+	Success  bool
+	Detail   *UpdateStandingOrderDetail
+	Messages []string
 }
 
 func ParseUpdateStandingOrderSOAP(xmlData string) (*UpdateStandingOrderResult, error) {
@@ -102,15 +102,15 @@ func ParseUpdateStandingOrderSOAP(xmlData string) (*UpdateStandingOrderResult, e
 		resp := env.Body.UpdateStandingOrderResponse
 		if resp.Status == nil {
 			return &UpdateStandingOrderResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &UpdateStandingOrderResult{
 				Success: false,
-				Message: []string{"API returned failure"},
+				Message: []string{resp.Status.Messages},
 			}, nil
 		}
 

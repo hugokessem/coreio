@@ -51,6 +51,7 @@ type Body struct {
 type ListStandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
+		Messages         string `xml:"messageId"`
 	} `xml:"Status"`
 	ListStandingOrderType *struct {
 		Group *struct {
@@ -76,9 +77,9 @@ type ListStandingOrderDetail struct {
 }
 
 type ListStandingOrderResult struct {
-	Success bool
-	Details []ListStandingOrderDetail
-	Message []string
+	Success  bool
+	Details  []ListStandingOrderDetail
+	Messages []string
 }
 
 func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error) {
@@ -91,15 +92,15 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 		resp := env.Body.ListStandingOrderResponse
 		if resp.Status == nil {
 			return &ListStandingOrderResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &ListStandingOrderResult{
-				Success: false,
-				Message: []string{"API returned failure"},
+				Success:  false,
+				Messages: []string{resp.Status.Messages},
 			}, nil
 		}
 
@@ -107,8 +108,8 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 			resp.ListStandingOrderType.Group == nil ||
 			len(resp.ListStandingOrderType.Group.Details) == 0 {
 			return &ListStandingOrderResult{
-				Success: true,
-				Message: []string{"No Standing Order Found!"},
+				Success:  true,
+				Messages: []string{"No Standing Order Found!"},
 			}, nil
 		}
 
@@ -139,7 +140,7 @@ func ParseListStandingOrderSOAP(xmlData string) (*ListStandingOrderResult, error
 	}
 
 	return &ListStandingOrderResult{
-		Success: false,
-		Message: []string{"Invalid response format"},
+		Success:  false,
+		Messages: []string{"Invalid response format"},
 	}, nil
 }

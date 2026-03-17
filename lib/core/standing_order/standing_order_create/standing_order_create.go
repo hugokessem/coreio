@@ -79,7 +79,7 @@ type StandingOrderDetail struct {
 type StandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		MessageId        string `xml:"messageId"`
+		Messages         string `xml:"messageId"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`
@@ -87,9 +87,9 @@ type StandingOrderResponse struct {
 }
 
 type StandingOrderResult struct {
-	Success bool
-	Detail  *StandingOrderDetail
-	Message []string
+	Success  bool
+	Detail   *StandingOrderDetail
+	Messages []string
 }
 
 func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) {
@@ -102,30 +102,30 @@ func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) 
 		resp := env.Body.StandingOrderResponse
 		if resp.Status == nil {
 			return &StandingOrderResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &StandingOrderResult{
-				Success: false,
-				Message: []string{"API returned failure"},
+				Success:  false,
+				Messages: []string{resp.Status.Messages},
 			}, nil
 		}
 
 		if resp.StandingOrderType == nil {
 			return &StandingOrderResult{
-				Success: false,
-				Message: []string{},
+				Success:  false,
+				Messages: []string{},
 			}, nil
 		}
 
 		debicAccountNumber, orderId, found := strings.Cut(resp.Status.TransactionId, ".")
 		if !found {
 			return &StandingOrderResult{
-				Success: false,
-				Message: []string{"Failed to find Order ID!"},
+				Success:  false,
+				Messages: []string{"Failed to find Order ID!"},
 			}, nil
 		}
 		return &StandingOrderResult{
@@ -146,7 +146,7 @@ func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) 
 	}
 
 	return &StandingOrderResult{
-		Success: false,
-		Message: []string{"Invalid response type"},
+		Success:  false,
+		Messages: []string{"Invalid response type"},
 	}, nil
 }

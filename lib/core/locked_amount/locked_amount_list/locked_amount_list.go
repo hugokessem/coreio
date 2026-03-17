@@ -50,7 +50,8 @@ type Body struct {
 
 type ListLockedAmountInquiryResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		Messages         []string `xml:"message"`
 	} `xml:"Status"`
 	AccountLockedAmountsSuperappType *struct {
 		Group *struct {
@@ -70,14 +71,14 @@ type ListLockedAmountDetail struct {
 type ListLockedAmountResponse struct {
 	Status *struct {
 		SuccessIndicator string   `xml:"successIndicator"`
-		Message          []string `xml:"message"`
+		Messages         []string `xml:"message"`
 	} `xml:"Status"`
 }
 
 type ListLockedAmountResult struct {
-	Success bool
-	Details []ListLockedAmountDetail
-	Message []string
+	Success  bool
+	Details  []ListLockedAmountDetail
+	Messages []string
 }
 
 func ParseListLockedAmountSOAP(xmlData string) (*ListLockedAmountResult, error) {
@@ -92,15 +93,19 @@ func ParseListLockedAmountSOAP(xmlData string) (*ListLockedAmountResult, error) 
 		resp := env.Body.ListLockedAmountInquiryResponse
 		if resp.Status == nil {
 			return &ListLockedAmountResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+			messages := make([]string, 0, len(resp.Status.Messages))
+			for _, msg := range resp.Status.Messages {
+				messages = append(messages, msg)
+			}
 			return &ListLockedAmountResult{
-				Success: false,
-				Message: []string{"API returned failure"},
+				Success:  false,
+				Messages: messages,
 			}, nil
 		}
 
@@ -108,8 +113,8 @@ func ParseListLockedAmountSOAP(xmlData string) (*ListLockedAmountResult, error) 
 			resp.AccountLockedAmountsSuperappType.Group == nil ||
 			len(resp.AccountLockedAmountsSuperappType.Group.Details) == 0 {
 			return &ListLockedAmountResult{
-				Success: true,
-				Message: []string{"No Locked Amount Found!"},
+				Success:  true,
+				Messages: []string{"No Locked Amount Found!"},
 			}, nil
 		}
 
@@ -134,21 +139,21 @@ func ParseListLockedAmountSOAP(xmlData string) (*ListLockedAmountResult, error) 
 	if env.Body.LockedAmounResponse != nil {
 		resp := env.Body.LockedAmounResponse
 		messages := []string{}
-		if resp.Status != nil && len(resp.Status.Message) > 0 {
-			messages = resp.Status.Message
+		if resp.Status != nil && len(resp.Status.Messages) > 0 {
+			messages = resp.Status.Messages
 		}
 		success := false
 		if resp.Status != nil && strings.ToLower(resp.Status.SuccessIndicator) == "success" {
 			success = true
 		}
 		return &ListLockedAmountResult{
-			Success: success,
-			Message: messages,
+			Success:  success,
+			Messages: messages,
 		}, nil
 	}
 
 	return &ListLockedAmountResult{
-		Success: false,
-		Message: []string{"Invalid response format"},
+		Success:  false,
+		Messages: []string{"Invalid response format"},
 	}, nil
 }
