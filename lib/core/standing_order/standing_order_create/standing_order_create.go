@@ -79,7 +79,7 @@ type StandingOrderDetail struct {
 type StandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		Messages         string `xml:"messageId"`
+		Messages         string `xml:"messages"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`

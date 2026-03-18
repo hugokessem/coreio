@@ -51,7 +51,7 @@ type Body struct {
 type StandingOrderHistorylistbyAcResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		Messages         string `xml:"messageId"`
+		Messages         string `xml:"messages"`
 	} `xml:"Status"`
 	ACCTSTOLISTHISSUPERAPPType *struct {
 		Group *struct {

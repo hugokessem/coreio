@@ -79,7 +79,7 @@ type UpdateStandingOrderDetail struct {
 type UpdateStandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		Messages         string `xml:"messageId"`
+		Messages         string `xml:"messages"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`
@@ -109,15 +109,15 @@ func ParseUpdateStandingOrderSOAP(xmlData string) (*UpdateStandingOrderResult, e
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &UpdateStandingOrderResult{
-				Success: false,
-				Message: []string{resp.Status.Messages},
+				Success:  false,
+				Messages: []string{resp.Status.Messages},
 			}, nil
 		}
 
 		if resp.StandingOrderType == nil {
 			return &UpdateStandingOrderResult{
-				Success: false,
-				Message: []string{},
+				Success:  false,
+				Messages: []string{},
 			}, nil
 		}
 
@@ -137,7 +137,7 @@ func ParseUpdateStandingOrderSOAP(xmlData string) (*UpdateStandingOrderResult, e
 	}
 
 	return &UpdateStandingOrderResult{
-		Success: false,
-		Message: []string{"Invalid response type"},
+		Success:  false,
+		Messages: []string{"Invalid response type"},
 	}, nil
 }

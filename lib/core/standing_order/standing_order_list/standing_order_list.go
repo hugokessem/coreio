@@ -51,7 +51,7 @@ type Body struct {
 type ListStandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		Messages         string `xml:"messageId"`
+		Messages         string `xml:"messages"`
 	} `xml:"Status"`
 	ListStandingOrderType *struct {
 		Group *struct {

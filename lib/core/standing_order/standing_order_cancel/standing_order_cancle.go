@@ -61,7 +61,7 @@ type CancelStandingOrderDetail struct {
 type CancelStandingOrderResponse struct {
 	Status *struct {
 		SuccessIndicator string `xml:"successIndicator"`
-		MessageId        string `xml:"messageId"`
+		MessageId        string `xml:"messages"`
 		Application      string `xml:"application"`
 		TransactionId    string `xml:"transactionId"`
 	} `xml:"Status"`
