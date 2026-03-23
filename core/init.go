@@ -23,6 +23,7 @@ import (
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
 	fundtransferverify "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_verify"
+	statuscheck "github.com/hugokessem/coreio/lib/core/fund_transfer/status_check"
 	lockedamountcreate "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_create"
 	lockedamountft "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_ft"
 	lockedamountlist "github.com/hugokessem/coreio/lib/core/locked_amount/locked_amount_list"
@@ -105,6 +106,10 @@ type CustomerLimitFetchByServiceResult = customerlimitfetchbyservice.CustomerLim
 type CustomerLimitFetchByServiceParam = customerlimitfetchbyservice.CustomerLimitFetchByServiceParam
 type CustomerLimitAmendByCIFResult = customerlimitamendbycif.CustomerLimitAmendResult
 type CustomerLimitAmendByCIFParam = customerlimitamendbycif.CustomerLimitAmendByCIFParam
+
+type StatusCheckParam = statuscheck.StatusCheckParam
+type StatusCheckResult = statuscheck.StatusCheckResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -139,6 +144,7 @@ type CBECoreAPIInterface interface {
 	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(param CardRequestParam) (*CardRequestResult, error)
 
+	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
 	ExchangeRates() (*ExchangeRatesResult, error)
 
 	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
@@ -159,6 +165,42 @@ type FraudAPICredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {
+	params := statuscheck.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		TransactionID: param.TransactionID,
+	}
+
+	xmlRequest := statuscheck.NewStatusCheck(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := statuscheck.ParseStatusCheckSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTransferVerifyResult, error) {
