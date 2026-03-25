@@ -14,11 +14,12 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000259276504",
+		AccountNumber: "1000419162624",
 		// AccountNumber: "1000200300134",
 	}
 
 	xmlRequest := NewAccountLookup(params)
+	t.Logf("xmlRequest %v", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
