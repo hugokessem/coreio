@@ -29,7 +29,9 @@ func TestIntegrationAccountLookup(t *testing.T) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: false,
+			},
 		},
 	}
 

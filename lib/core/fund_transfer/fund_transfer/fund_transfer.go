@@ -26,6 +26,7 @@ type Params struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
+	SuperappUserCode    string
 	IsFraudCheckEnabled bool
 	Meta                frauddetection.FraudAPIPayload
 }
@@ -53,6 +54,7 @@ type FundTransferParam struct {
 	ServiceCode         string // service type
 	CustomerSegment     string // role
 	ChannelType         string // ussd, app, internet_banking
+	SuperappUserCode    string
 	IsFraudCheckEnabled bool
 	Meta                frauddetection.FraudAPIPayload
 }
@@ -110,11 +112,12 @@ func NewFundTransfer(params Params) string {
 					<fun:ServiceCode>%s</fun:ServiceCode>
 					<fun:CustomerRole>%s</fun:CustomerRole>
 					<fun:ChannelType>%s</fun:ChannelType>
+	            <fun:UserID>%s</fun:UserID>
 				</FUNDSTRANSFERFTTXNSUPERAPPType>
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType)
+`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType, params.SuperappUserCode)
 }
 
 type Envelope struct {
