@@ -21,6 +21,8 @@ type Params struct {
 	ServiceCode         string
 	LockID              string
 	PaymentDetails      string
+	CustomerRole        string
+	ChannelType         string
 }
 
 type LockedAmountFTParams struct {
@@ -36,6 +38,8 @@ type LockedAmountFTParams struct {
 	CreditCurrency      string
 	CreditAmount        string
 	PaymentDetails      string
+	CustomerRole        string
+	ChannelType         string
 }
 
 func NewLockedAmountFt(params Params) string {
@@ -94,11 +98,13 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
                 <fun:ClientReference>%s</fun:ClientReference>
                 <fun:LockID>%s</fun:LockID>
 				<fun:ServiceCode>%s</fun:ServiceCode>
+                <fun:CustomerRole>%s</fun:CustomerRole>
+                 <fun:ChannelType>%s</fun:ChannelType>
             </FUNDSTRANSFERFTTXNSUPERAPPType>
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode, params.CustomerRole, params.ChannelType)
 }
 
 type Envelope struct {
