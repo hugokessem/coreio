@@ -32,6 +32,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		ServiceCode:         "CBE",
 		ChannelType:         "APP",
 		CustomerSegment:     "MASS",
+		// SuperappUserCode:    "user-code",
 		IsFraudCheckEnabled: false,
 	}
 

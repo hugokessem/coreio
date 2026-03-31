@@ -47,10 +47,10 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	}
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
+	t.Logf("result: %+v", result)
 	t.Log("detail", result.Detail)
 
 	// Check that the lookup succeeded
-	t.Logf("result: %+v", result)
 	if result.Status {
 		assert.NotNil(t, result.Detail)
 		if result.Detail != nil {

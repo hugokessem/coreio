@@ -45,56 +45,74 @@ type Envelope struct {
 }
 
 type Body struct {
-	SuperAppTxnStatusResponse *SuperAppTxnStatusResponse `xml:"SuperAppTxnStatusResponse"`
+	SuperAppTxnStatusResponse *StatusCheckResponse `xml:"SuperAppTxnStatusResponse"`
 }
 
-type SuperAppTxnStatusResponse struct {
-	Status *Status `xml:"Status"`
+type StatusCheckResponse struct {
+	Status *struct {
+		SuccessIndicator string   `xml:"successIndicator"`
+		Messages         []string `xml:"messages"`
+	} `xml:"Status"`
+	FundTransferStatusCheck *struct {
+		OuterSuperappDetailType struct {
+			InnerSuperappDetailType StatusCheckDetail `xml:"mTXNSTATUSSUPERAPPDetailType"`
+		} `xml:"gTXNSTATUSSUPERAPPDetailType"`
+	} `xml:"TXNSTATUSSUPERAPPType"`
 }
 
-type Status struct {
-	SuccessIndicator string   `xml:"successIndicator"`
-	Messages         []string `xml:"messages"`
+type StatusCheckDetail struct {
+	ServiceCode   string `xml:"SERVICECODE"`
+	DebitAccount  string `xml:"DEBITACCOUNT"`
+	CreditAccount string `xml:"CREDITACCOUNT"`
+	DebitCurrency string `xml:"TXNCURRENCY"`
+	DebitAmount   string `xml:"TXNAMOUNT"`
+	Channel       string `xml:"CHANNEL"`
+	FTReference   string `xml:"CBEREFERENCE"`
 }
 
 type StatusCheckResult struct {
 	Success  bool
+	Detail   *StatusCheckDetail
 	Messages []string
 }
 
-func ParseStatusCheckSOAP(xmlData string) (*StatusCheckResult, error) {
+func ParseStatusCheckSOAP(response string) (*StatusCheckResult, error) {
 	var env Envelope
-	if err := xml.Unmarshal([]byte(xmlData), &env); err != nil {
+	if err := xml.Unmarshal([]byte(response), &env); err != nil {
 		return nil, err
 	}
 
-	if env.Body.SuperAppTxnStatusResponse == nil {
-		return &StatusCheckResult{
-			Success:  false,
-			Messages: []string{"Invalid response type"},
-		}, nil
-	}
+	if env.Body.SuperAppTxnStatusResponse != nil {
+		resp := env.Body.SuperAppTxnStatusResponse
+		if resp.Status == nil {
+			return &StatusCheckResult{
+				Success:  false,
+				Messages: []string{"Missing Status"},
+			}, nil
+		}
+		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+			return &StatusCheckResult{
+				Success:  false,
+				Messages: resp.Status.Messages,
+			}, nil
+		}
 
-	resp := env.Body.SuperAppTxnStatusResponse
-	if resp.Status == nil {
-		return &StatusCheckResult{
-			Success:  false,
-			Messages: []string{"Missing Status"},
-		}, nil
-	}
-
-	success := strings.EqualFold(resp.Status.SuccessIndicator, "success")
-	messages := resp.Status.Messages
-	if len(messages) == 0 {
-		if success {
-			messages = []string{}
-		} else {
-			messages = []string{"API returned failure"}
+		if resp.FundTransferStatusCheck != nil {
+			detail := resp.FundTransferStatusCheck.OuterSuperappDetailType.InnerSuperappDetailType
+			return &StatusCheckResult{
+				Success: true,
+				Detail: &StatusCheckDetail{
+					ServiceCode:   detail.ServiceCode,
+					DebitAccount:  detail.DebitAccount,
+					CreditAccount: detail.CreditAccount,
+					DebitCurrency: detail.DebitCurrency,
+					DebitAmount:   detail.DebitAmount,
+					Channel:       detail.Channel,
+					FTReference:   detail.FTReference,
+				},
+			}, nil
 		}
 	}
 
-	return &StatusCheckResult{
-		Success:  success,
-		Messages: messages,
-	}, nil
+	return &StatusCheckResult{}, nil
 }
