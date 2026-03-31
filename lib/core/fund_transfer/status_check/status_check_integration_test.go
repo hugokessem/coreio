@@ -17,7 +17,7 @@ func TestIntegrationStatusCheck(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		TransactionID: "12385824578895",
+		TransactionID: "1238582457889",
 	}
 
 	xmlRequest := NewStatusCheck(params)

@@ -254,6 +254,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+
 			return &FundTransferResult{
 				Success:  false,
 				Messages: resp.Status.Messages,
