@@ -823,6 +823,7 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 		PaymentDetails:      param.PaymentDetails,
 		CustomerRole:        param.CustomerRole,
 		ChannelType:         param.ChannelType,
+		SuperappUserCode:    param.SuperappUserCode,
 	}
 
 	xmlRequest := lockedamountft.NewLockedAmountFt(params)
