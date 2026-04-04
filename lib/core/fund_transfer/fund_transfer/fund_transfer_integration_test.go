@@ -9,12 +9,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestIntegrationFundTransfer(t *testing.T) {
 	// Test parameters matching the curl request
+
 	params := Params{
 		Username:           "SUPERAPP",
 		Password:           "123456",
@@ -22,10 +24,10 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		DebitCurrency:      "USD",
 		// DebitAccountNumber:  "1000173071349",
 		// DebitCurrency:       "ETB",
-		CreditAccountNumber: "1000357597823",
+		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10000",
-		TransactionID:       "12385824578895",
+		TransactionID:       uuid.New().String(),
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",

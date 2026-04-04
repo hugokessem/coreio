@@ -84,6 +84,7 @@ type AccountLookupDetail struct {
 	Target          string `xml:"Target"`
 	TinNO           string `xml:"TinNO"`
 	RestrictionType string `xml:"RestrictionType"`
+	AccountName     string `xml:"AccountName"`
 	SubSegment      string `xml:"SubSegment"`
 	CustomerGroup   string `xml:"CustomerGroup"`
 }
@@ -157,6 +158,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 				Target:          resp.AccountEnquirySuperappType.Group.Details.Target,
 				TinNO:           resp.AccountEnquirySuperappType.Group.Details.TinNO,
 				Category:        resp.AccountEnquirySuperappType.Group.Details.Category,
+				AccountName:     resp.AccountEnquirySuperappType.Group.Details.AccountName,
 				SubSegment:      resp.AccountEnquirySuperappType.Group.Details.SubSegment,
 				CustomerGroup:   resp.AccountEnquirySuperappType.Group.Details.CustomerGroup,
 			},
