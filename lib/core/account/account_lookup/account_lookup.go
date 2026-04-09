@@ -87,6 +87,7 @@ type AccountLookupDetail struct {
 	AccountName     string `xml:"AccountName"`
 	SubSegment      string `xml:"SubSegment"`
 	CustomerGroup   string `xml:"CustomerGroup"`
+	AccountInactive string `xml:"InactiveFlag"`
 }
 
 // ----------------- Failure or no records -----------------
@@ -161,6 +162,7 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 				AccountName:     resp.AccountEnquirySuperappType.Group.Details.AccountName,
 				SubSegment:      resp.AccountEnquirySuperappType.Group.Details.SubSegment,
 				CustomerGroup:   resp.AccountEnquirySuperappType.Group.Details.CustomerGroup,
+				AccountInactive: resp.AccountEnquirySuperappType.Group.Details.AccountInactive,
 			},
 		}, nil
 	}

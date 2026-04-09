@@ -14,7 +14,7 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "111111",
+		CustomerNumber: "1036095547",
 		ChannelLimit: []ChannelLimit{
 			{
 				Channel: "APP",
