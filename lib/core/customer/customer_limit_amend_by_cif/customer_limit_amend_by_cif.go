@@ -50,6 +50,7 @@ func NewCustomerLimitAmendByCIF(param Params) string {
 				</cus:SERVICETYPE>
 			`, strconv.Itoa(serviceIndex+1), serviceLimit.ServiceType, serviceLimit.ServiceMaximumAmount, serviceLimit.UserMaximumDebitCount))
 		}
+
 		limit = append(limit, fmt.Sprintf(`
                <cus:mUSERCHANNELTYPE m="%s">
                   <cus:USERCHANNELTYPE>%s</cus:USERCHANNELTYPE>

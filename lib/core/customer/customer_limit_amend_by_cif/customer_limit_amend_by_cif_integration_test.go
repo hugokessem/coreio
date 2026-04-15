@@ -14,20 +14,25 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1036095547",
+		CustomerNumber: "1036559081",
 		ChannelLimit: []ChannelLimit{
 			{
 				Channel: "APP",
 				ServiceLimits: []ServiceLimit{
 					{
 						ServiceType:           "AAPARKING",
-						ServiceMaximumAmount:  "23000",
+						ServiceMaximumAmount:  "100000",
 						UserMaximumDebitCount: "5",
 					},
 					{
 						ServiceType:           "TELEBIRR",
-						ServiceMaximumAmount:  "25000",
+						ServiceMaximumAmount:  "100000",
 						UserMaximumDebitCount: "5",
+					},
+					{
+						ServiceType:           "CBE",
+						ServiceMaximumAmount:  "100000000",
+						UserMaximumDebitCount: "1000000",
 					},
 				},
 			},
@@ -36,7 +41,7 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 				ServiceLimits: []ServiceLimit{
 					{
 						ServiceType:           "AAPARKING",
-						ServiceMaximumAmount:  "50100",
+						ServiceMaximumAmount:  "100000",
 						UserMaximumDebitCount: "10",
 					},
 				},
