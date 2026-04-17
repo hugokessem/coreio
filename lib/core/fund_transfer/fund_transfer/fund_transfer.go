@@ -5,6 +5,7 @@ package fundtransfer
 import (
 	"encoding/xml"
 	"fmt"
+	"strconv"
 	"strings"
 
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
@@ -220,6 +221,9 @@ type FundTransferDetail struct {
 	ServiceCode                        string `xml:"SERVICECODE"`
 	DebitAccountCurrentWorkingBalance  string `xml:"CEKCS"`
 	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
+	DesasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
+	OriginalPaidAmount                 string `xml:"ORIGPAIDAMT"`
+	TotalCommisionWithComission        string `xml:"TOTALCOMISSON"`
 }
 
 type FundTransferResponse struct {
@@ -268,9 +272,116 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			}, nil
 		}
 
+		var dr string
+		var totalComission float64
+		debitCurrency := resp.FundTransferType.DebitCurrency
+		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
+			amount, _ := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, v.CommissionAmount), 64)
+			totalComission += amount
+			if v.CommissionType == "CBECOMSPDIS" {
+				if v.CommissionAmount != "" {
+					dr = v.CommissionAmount
+					amount, _ := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, v.CommissionAmount), 64)
+					totalComission -= amount
+				}
+				dr = fmt.Sprintf("%s0", resp.FundTransferType.DebitCurrency)
+			}
+		}
+
+		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, resp.FundTransferType.DebitAmountWithCurrency), 64)
+		if err != nil {
+			return &FundTransferResult{
+				Success:  true,
+				Messages: []string{"invalid debit amount with currency response!"},
+			}, nil
+		}
+
+		originalTotalChargeAmountWithoutCurrency, err := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, resp.FundTransferType.TotalChargeAmount), 64)
+		if err != nil {
+			return &FundTransferResult{
+				Success:  true,
+				Messages: []string{"invalid debit amount with total charged amount response!"},
+			}, nil
+		}
+		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
+		originalPaidAmountWithCurrency := fmt.Sprintf("%s%f", debitCurrency, originalPaidAmount)
+		totalServiceChargeWithCurrency := fmt.Sprintf("%s%f", debitCurrency, totalComission)
+
 		return &FundTransferResult{
 			Success: true,
-			Detail:  resp.FundTransferType,
+			Detail: &FundTransferDetail{
+				FTNumber:                           resp.FundTransferType.FTNumber,
+				TransactionType:                    resp.FundTransferType.TransactionType,
+				DebitAccountNumber:                 resp.FundTransferType.DebitAccountNumber,
+				CurrencyMarketDebit:                resp.FundTransferType.CurrencyMarketDebit,
+				DebitCurrency:                      resp.FundTransferType.DebitCurrency,
+				DebitAmount:                        resp.FundTransferType.DebitAmount,
+				DebitValueDate:                     resp.FundTransferType.DebitValueDate,
+				DebitReference:                     resp.FundTransferType.DebitReference,
+				CreditReference:                    resp.FundTransferType.CreditReference,
+				CreditAccountNumber:                resp.FundTransferType.CreditAccountNumber,
+				CurrencyMarketCredit:               resp.FundTransferType.CurrencyMarketCredit,
+				CreditCurrency:                     resp.FundTransferType.CreditCurrency,
+				CreditValidationDare:               resp.FundTransferType.CreditValidationDare,
+				ProcessingDate:                     resp.FundTransferType.ProcessingDate,
+				PaymentDetails:                     resp.FundTransferType.PaymentDetails,
+				ChargeCommisionDisplay:             resp.FundTransferType.ChargeCommisionDisplay,
+				CommissionCode:                     resp.FundTransferType.CommissionCode,
+				GlobalCommissionType:               resp.FundTransferType.GlobalCommissionType,
+				ChargeCode:                         resp.FundTransferType.ChargeCode,
+				ProfitCentreCustomer:               resp.FundTransferType.ProfitCentreCustomer,
+				ReturnToDept:                       resp.FundTransferType.ReturnToDept,
+				FedFunds:                           resp.FundTransferType.FedFunds,
+				PositionType:                       resp.FundTransferType.PositionType,
+				GlobalTaxType:                      resp.FundTransferType.GlobalTaxType,
+				DebitAmountWithCurrency:            resp.FundTransferType.DebitAmountWithCurrency,
+				CreditAmountWithCurrency:           resp.FundTransferType.CreditAmountWithCurrency,
+				TotalChargeAmount:                  resp.FundTransferType.TotalChargeAmount,
+				TotalTaxAmount:                     resp.FundTransferType.TotalTaxAmount,
+				DeliveryOutRef:                     resp.FundTransferType.DeliveryOutRef,
+				CreditCompanyCode:                  resp.FundTransferType.CreditCompanyCode,
+				DebitCompanyCode:                   resp.FundTransferType.DebitCompanyCode,
+				LocalAmountDebited:                 resp.FundTransferType.LocalAmountDebited,
+				LocalAmountCredited:                resp.FundTransferType.LocalAmountCredited,
+				LocalTotalTaxAmount:                resp.FundTransferType.LocalTotalTaxAmount,
+				LocalChargeAmount:                  resp.FundTransferType.LocalChargeAmount,
+				LocalPositionChargesAmount:         resp.FundTransferType.LocalPositionChargesAmount,
+				CustomerGroupLevel:                 resp.FundTransferType.CustomerGroupLevel,
+				DebitCustomer:                      resp.FundTransferType.DebitCustomer,
+				CreditCustomer:                     resp.FundTransferType.CreditCustomer,
+				DebitAdviceRequired:                resp.FundTransferType.DebitAdviceRequired,
+				CreditAdviceRequired:               resp.FundTransferType.CreditAdviceRequired,
+				ChargedCustomer:                    resp.FundTransferType.ChargedCustomer,
+				TotalReceivedCommission:            resp.FundTransferType.TotalReceivedCommission,
+				TotalReceivedCommissionLocal:       resp.FundTransferType.TotalReceivedCommissionLocal,
+				TotalReceivedCharge:                resp.FundTransferType.TotalReceivedCharge,
+				TotalReceivedChargeLocal:           resp.FundTransferType.TotalReceivedChargeLocal,
+				RateFixing:                         resp.FundTransferType.RateFixing,
+				TotalReceivedChargeCurrency:        resp.FundTransferType.TotalReceivedChargeCurrency,
+				TotalSentChargeCurrency:            resp.FundTransferType.TotalSentChargeCurrency,
+				AuthDate:                           resp.FundTransferType.AuthDate,
+				RoundType:                          resp.FundTransferType.RoundType,
+				GlobalStatementNumbers:             resp.FundTransferType.GlobalStatementNumbers,
+				GlobalOverride:                     resp.FundTransferType.GlobalOverride,
+				CurrentNumber:                      resp.FundTransferType.CurrentNumber,
+				GlobalInputter:                     resp.FundTransferType.GlobalInputter,
+				GlobalDateTime:                     resp.FundTransferType.GlobalDateTime,
+				Authoriser:                         resp.FundTransferType.Authoriser,
+				CompanyCode:                        resp.FundTransferType.CompanyCode,
+				DepartmentCode:                     resp.FundTransferType.DepartmentCode,
+				InputVersion:                       resp.FundTransferType.InputVersion,
+				AuthVersion:                        resp.FundTransferType.AuthVersion,
+				TransactionID:                      resp.FundTransferType.TransactionID,
+				DebitAccountHolderName:             resp.FundTransferType.DebitAccountHolderName,
+				ReceiverName:                       resp.FundTransferType.ReceiverName,
+				ServiceCode:                        resp.FundTransferType.ServiceCode,
+				DebitAccountCurrentWorkingBalance:  resp.FundTransferType.DebitAccountCurrentWorkingBalance,
+				CreditAccountCurrentWorkingBalance: resp.FundTransferType.CreditAccountCurrentWorkingBalance,
+				DesasterReservedFund:               dr,
+				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
+				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
+			},
+			Messages: resp.Status.Messages,
 		}, nil
 	}
 
