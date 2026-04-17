@@ -271,19 +271,23 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		var totalComission float64
 		debitCurrency := resp.FundTransferType.DebitCurrency
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
-			amount, _ := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, v.CommissionAmount), 64)
+			amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
 			totalComission += amount
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
-					amount, _ := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, v.CommissionAmount), 64)
+					amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
 					totalComission -= amount
 				}
-				dr = fmt.Sprintf("%s0", resp.FundTransferType.DebitCurrency)
+				dr = fmt.Sprintf("%s0", debitCurrency)
 			}
 		}
 
-		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, resp.FundTransferType.DebitAmountWithCurrency), 64)
+		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
+		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
+		if err != nil && strings.TrimSpace(resp.FundTransferType.DebitAmount) != "" {
+			originalDebitAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(resp.FundTransferType.DebitAmount), 64)
+		}
 		if err != nil {
 			return &FundTransferVerifyResult{
 				Success:  true,
@@ -291,16 +295,20 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			}, nil
 		}
 
-		originalTotalChargeAmountWithoutCurrency, err := strconv.ParseFloat(strings.TrimPrefix(debitCurrency, resp.FundTransferType.TotalChargeAmount), 64)
-		if err != nil {
-			return &FundTransferVerifyResult{
-				Success:  true,
-				Messages: []string{"invalid debit amount with total charged amount response!"},
-			}, nil
+		originalTotalChargeAmountWithoutCurrency := float64(0)
+		trimmedTotalChargeAmount := strings.TrimSpace(resp.FundTransferType.TotalChargeAmount)
+		if trimmedTotalChargeAmount != "" {
+			originalTotalChargeAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(strings.TrimPrefix(trimmedTotalChargeAmount, debitCurrency)), 64)
+			if err != nil {
+				originalTotalChargeAmountWithoutCurrency, err = strconv.ParseFloat(trimmedTotalChargeAmount, 64)
+				if err != nil {
+					originalTotalChargeAmountWithoutCurrency = 0
+				}
+			}
 		}
 		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
-		originalPaidAmountWithCurrency := fmt.Sprintf("%s%f", debitCurrency, originalPaidAmount)
-		totalServiceChargeWithCurrency := fmt.Sprintf("%s%f", debitCurrency, totalComission)
+		originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
+		totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
 
 		return &FundTransferVerifyResult{
 			Success: true,
