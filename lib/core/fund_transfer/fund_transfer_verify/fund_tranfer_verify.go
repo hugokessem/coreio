@@ -222,7 +222,6 @@ type FundTransferDetail struct {
 	CreditPhoneNumner                  string `xml:"PHONENUM"`
 	DebitPhoneNumner                   string `xml:"PHONE"`
 	DisasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
-	DesasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
 	OriginalPaidAmount                 string `xml:"ORIGPAIDAMT"`
 	TotalCommisionWithComission        string `xml:"TOTALCOMISSON"`
 }
