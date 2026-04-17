@@ -267,9 +267,16 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			}, nil
 		}
 
-		var dr string
 		var totalComission float64
 		debitCurrency := resp.FundTransferType.DebitCurrency
+		creditCurrency := resp.FundTransferType.CreditCurrency
+		var currency string
+		if debitCurrency == creditCurrency {
+			currency = debitCurrency
+		} else {
+			currency = creditCurrency
+		}
+		dr := fmt.Sprintf("%s0", currency)
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
 			amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
 			totalComission += amount
@@ -279,7 +286,6 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 					amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
 					totalComission -= amount
 				}
-				dr = fmt.Sprintf("%s0", debitCurrency)
 			}
 		}
 
@@ -287,15 +293,12 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
 		if err != nil && strings.TrimSpace(resp.FundTransferType.DebitAmount) != "" {
 			originalDebitAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(resp.FundTransferType.DebitAmount), 64)
-		}
-		if err != nil {
-			return &FundTransferVerifyResult{
-				Success:  true,
-				Messages: []string{"invalid debit amount with currency response!"},
-			}, nil
+			if err != nil {
+				originalDebitAmountWithoutCurrency = 0
+			}
 		}
 
-		originalTotalChargeAmountWithoutCurrency := float64(0)
+		var originalTotalChargeAmountWithoutCurrency float64
 		trimmedTotalChargeAmount := strings.TrimSpace(resp.FundTransferType.TotalChargeAmount)
 		if trimmedTotalChargeAmount != "" {
 			originalTotalChargeAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(strings.TrimPrefix(trimmedTotalChargeAmount, debitCurrency)), 64)
