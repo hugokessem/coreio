@@ -287,12 +287,14 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
+					break
 				}
 			}
 
 			if v.CommissionType == "CARDDRT" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
+					break
 				}
 			}
 		}
