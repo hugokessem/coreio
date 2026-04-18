@@ -175,6 +175,7 @@ type FundTransferDetail struct {
 	DeliveryOutRef           struct {
 		MultipleDeliveryOutRef []string `xml:"DELIVERYOUTREF"`
 	} `xml:"gDELIVERYOUTREF"`
+	TreasuryRate                 string `xml:"TREASURYRATE"`
 	CreditCompanyCode            string `xml:"CREDITCOMPCODE"`
 	DebitCompanyCode             string `xml:"DEBITCOMPCODE"`
 	LocalAmountDebited           string `xml:"LOCAMTDEBITED"`
@@ -388,6 +389,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 				ServiceCode:                        resp.FundTransferType.ServiceCode,
 				DebitAccountCurrentWorkingBalance:  resp.FundTransferType.DebitAccountCurrentWorkingBalance,
 				CreditAccountCurrentWorkingBalance: resp.FundTransferType.CreditAccountCurrentWorkingBalance,
+				TreasuryRate:                       resp.FundTransferType.TreasuryRate,
 				DesasterReservedFund:               dr,
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,

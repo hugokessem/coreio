@@ -195,6 +195,52 @@ func ParseLockedAmountFTSOAP(xmlData string) (*LockedAmountFTResult, error) {
 			}, nil
 		}
 
+		// var totalComission float64
+		// debitCurrency := resp.FundTransferResponse.DebitCurrency
+		// creditCurrency := resp.FundTransferResponse.CreditCurrency
+		// var currency string
+		// if debitCurrency == creditCurrency {
+		// 	currency = debitCurrency
+		// } else {
+		// 	currency = creditCurrency
+		// }
+		// dr := fmt.Sprintf("%s0", currency)
+		// for _, v := range resp.FundTransferResponse.GlobalCommissionType.MultipleCommissionType {
+		// 	amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
+		// 	totalComission += amount
+		// 	if v.CommissionType == "CBECOMSPDIS" {
+		// 		if v.CommissionAmount != "" {
+		// 			dr = v.CommissionAmount
+		// 			amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
+		// 			totalComission -= amount
+		// 		}
+		// 	}
+		// }
+
+		// originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferResponse.DebitAmountWithCurrency, debitCurrency))
+		// originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
+		// if err != nil && strings.TrimSpace(resp.FundTransferResponse.DebitAmount) != "" {
+		// 	originalDebitAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(resp.FundTransferResponse.DebitAmount), 64)
+		// 	if err != nil {
+		// 		originalDebitAmountWithoutCurrency = 0
+		// 	}
+		// }
+
+		// var originalTotalChargeAmountWithoutCurrency float64
+		// trimmedTotalChargeAmount := strings.TrimSpace(resp.FundTransferResponse.TotalChargeAmount)
+		// if trimmedTotalChargeAmount != "" {
+		// 	originalTotalChargeAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(strings.TrimPrefix(trimmedTotalChargeAmount, debitCurrency)), 64)
+		// 	if err != nil {
+		// 		originalTotalChargeAmountWithoutCurrency, err = strconv.ParseFloat(trimmedTotalChargeAmount, 64)
+		// 		if err != nil {
+		// 			originalTotalChargeAmountWithoutCurrency = 0
+		// 		}
+		// 	}
+		// }
+		// originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
+		// originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
+		// totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
+
 		return &LockedAmountFTResult{
 			Success: true,
 			Detail: FundTransferResponse{

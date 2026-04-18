@@ -86,6 +86,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	require.NotNil(t, result, "Parsed result should not be nil")
 
 	t.Logf("Result: %v", result)
+	t.Logf("TreasuryRate: %v", result.Detail.TreasuryRate)
 
 	t.Logf("Result Success: %v", result.Success)
 	if len(result.Messages) > 0 {

@@ -192,6 +192,7 @@ type FundTransferDetail struct {
 	TotalSentChargeCurrency      string `xml:"TOTSNDCHGCRCCY"`
 	AuthDate                     string `xml:"AUTHDATE"`
 	RoundType                    string `xml:"ROUNDTYPE"`
+	TreasuryRate                 string `xml:"TREASURYRATE"`
 	GlobalStatementNumbers       struct {
 		MultipleStatementNumbers []string `xml:"STMTNOS"`
 	} `xml:"gSTMTNOS"`
@@ -388,6 +389,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				BudgetType:                         resp.FundTransferType.BudgetType,
 				CreditPhoneNumner:                  resp.FundTransferType.CreditPhoneNumner,
 				DebitPhoneNumner:                   resp.FundTransferType.DebitPhoneNumner,
+				TreasuryRate:                       resp.FundTransferType.TreasuryRate,
 				DisasterReservedFund:               dr,
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
