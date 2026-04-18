@@ -179,7 +179,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		t.Logf("Debit Amount With Currency: %s", detail.DebitAmountWithCurrency)
 		t.Logf("Credit Amount With Currency: %s", detail.CreditAmountWithCurrency)
 		t.Logf("Total Charge Amount: %s", detail.TotalChargeAmount)
-		t.Logf("Total Tax Amount: %s", detail.TotalTaxAmount)
+		t.Logf("Total Commision With Comission: %s", detail.TotalCommisionWithComission)
 		t.Logf("Desaster Recovery Fund: %s", detail.DisasterReservedFund)
 		t.Logf("Processing Date: %s", detail.ProcessingDate)
 		t.Logf("Debit Account Holder: %s", detail.DebitAccountHolderName)
