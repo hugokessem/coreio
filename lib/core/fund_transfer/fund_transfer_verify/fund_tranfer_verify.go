@@ -282,9 +282,15 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
-					// dr = "ETB11"
 				}
 			}
+
+			if v.CommissionType == "CARDDRT" {
+				if v.CommissionAmount != "" {
+					dr = v.CommissionAmount
+				}
+			}
+
 		}
 		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
 		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)

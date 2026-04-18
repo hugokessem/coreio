@@ -289,6 +289,12 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 					dr = v.CommissionAmount
 				}
 			}
+
+			if v.CommissionType == "CARDDRT" {
+				if v.CommissionAmount != "" {
+					dr = v.CommissionAmount
+				}
+			}
 		}
 
 		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
