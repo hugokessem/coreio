@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -18,17 +19,22 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	// Test parameters matching the curl request
 	clientReference, _ := uuid.NewV7()
 	params := Params{
-		Username:           "SUPERAPP",
-		Password:           "123456",
-		DebitAccountNumber: "1000446113608",
-		DebitCurrency:      "USD",
-		DebitAmount:        "1000",
+		Username:            "SUPERAPP",
+		Password:            "123456",
+		DebitAccountNumber:  "1000173071349",
+		DebitCurrency:       "ETB",
+		CreditAccountNumber: "1000298095649",
+		CreditCurrency:      "ETB",
+		DebitAmount:         "10000",
+		// DebitAccountNumber: "1000446113608",
+		// DebitCurrency:      "USD",
+		// DebitAmount:        "1000",
+		// CreditAccountNumber: "1000446116286",
+		// CreditCurrency:      "GBP",
 		// DebitAccountNumber:  "1000446113608",
 		// DebitCurrency:       "USD",
 		// CreditAmount:        "50",
 
-		CreditAccountNumber: "1000446116286",
-		CreditCurrency:      "GBP",
 		// CreditAccountNumber: "1000446115875",
 		// CreditCurrency:      "USD",
 		// CreditAccountNumber: "1000357597823",
@@ -37,7 +43,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 		CreditReference: "CREDIT NARRATIVE",
 		PaymentDetails:  "TEST PAYMENT",
 		ClientReference: clientReference.String(),
-		ServiceCode:     "CBE",
+		ServiceCode:     "IPS",
 		CustomerSegment: "MASS",
 		ChannelType:     "USSD",
 	}
@@ -91,6 +97,29 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 
+	detail := result.Detail
+	amount, _ := strconv.ParseFloat(strings.TrimPrefix(detail.DisasterReservedFund, "ETB"), 64) // 0.10
+	totalTaxAmount, _ := strconv.ParseFloat(detail.TotalTaxAmount, 64)                          // 11.10
+	totalChargedAmount, _ := strconv.ParseFloat(detail.LocalChargeAmount, 64)
+
+	ccx := totalChargedAmount - totalTaxAmount - amount
+
+	t.Logf("amount: %f", amount)
+	t.Logf("totalTaxAmount: %f", totalTaxAmount)
+	t.Logf("totalChargedAmount: %f", totalChargedAmount)
+	t.Logf("---ctx %f", ccx)
+	t.Logf("FT Number: %s", detail.FTNumber)
+	t.Logf("Transaction ID: %s", detail.TransactionID)
+	t.Logf("Debit Amount: %s", detail.DebitAmount)
+	t.Logf("Debit Amount With Currency: %s", detail.DebitAmountWithCurrency)
+	t.Logf("Credit Amount With Currency: %s", detail.CreditAmountWithCurrency)
+	t.Logf("Total Commision With Comission: %s", detail.TotalCommisionWithComission)
+	t.Logf("Total Tax Amount: %s", detail.TotalTaxAmount)
+	t.Logf("Desaster Recovery Fund: %s", detail.DisasterReservedFund)
+	t.Logf("Processing Date: %s", detail.ProcessingDate)
+	t.Logf("Debit Account Holder: %s", detail.DebitAccountHolderName)
+	t.Logf("Receiver Name: %s", detail.ReceiverName)
+	t.Logf("Service Code: %s", detail.ServiceCode)
 	if result.Detail != nil {
 		assert.Equal(t, "USSD", result.Detail.TransactionChannel)
 		assert.Equal(t, "50.00", result.Detail.DebitAmount)

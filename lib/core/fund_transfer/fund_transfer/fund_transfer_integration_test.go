@@ -18,12 +18,12 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	// Test parameters matching the curl request
 
 	params := Params{
-		Username:           "SUPERAPP",
-		Password:           "123456",
-		DebitAccountNumber: "1000446114291",
-		DebitCurrency:      "USD",
-		// DebitAccountNumber:  "1000173071349",
-		// DebitCurrency:       "ETB",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// DebitAccountNumber: "1000446114291",
+		// DebitCurrency:      "USD",
+		DebitAccountNumber:  "1000173071349",
+		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10000",
@@ -31,7 +31,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",
-		ServiceCode:         "CBE",
+		ServiceCode:         "IPS",
 		ChannelType:         "APP",
 		CustomerSegment:     "MASS",
 		// SuperappUserCode:    "user-code",
@@ -180,6 +180,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		t.Logf("Credit Amount With Currency: %s", detail.CreditAmountWithCurrency)
 		t.Logf("Total Charge Amount: %s", detail.TotalChargeAmount)
 		t.Logf("Total Tax Amount: %s", detail.TotalTaxAmount)
+		t.Logf("Desaster Recovery Fund: %s", detail.DisasterReservedFund)
 		t.Logf("Processing Date: %s", detail.ProcessingDate)
 		t.Logf("Debit Account Holder: %s", detail.DebitAccountHolderName)
 		t.Logf("Receiver Name: %s", detail.ReceiverName)

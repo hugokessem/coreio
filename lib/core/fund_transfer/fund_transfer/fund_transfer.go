@@ -222,7 +222,7 @@ type FundTransferDetail struct {
 	ServiceCode                        string `xml:"SERVICECODE"`
 	DebitAccountCurrentWorkingBalance  string `xml:"CEKCS"`
 	CreditAccountCurrentWorkingBalance string `xml:"GPONU"`
-	DesasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
+	DisasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
 	OriginalPaidAmount                 string `xml:"ORIGPAIDAMT"`
 	TotalCommisionWithComission        string `xml:"TOTALCOMISSON"`
 }
@@ -284,16 +284,17 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		}
 		dr := fmt.Sprintf("%s0", currency)
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
-			amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
-			totalComission += amount
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
-					amount, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, debitCurrency), 64)
-					totalComission -= amount
 				}
 			}
 		}
+
+		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
+		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
+		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
+		totalComission = totalChargedAmount - totalTaxAmount - amount
 
 		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
@@ -390,7 +391,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 				DebitAccountCurrentWorkingBalance:  resp.FundTransferType.DebitAccountCurrentWorkingBalance,
 				CreditAccountCurrentWorkingBalance: resp.FundTransferType.CreditAccountCurrentWorkingBalance,
 				TreasuryRate:                       resp.FundTransferType.TreasuryRate,
-				DesasterReservedFund:               dr,
+				DisasterReservedFund:               dr,
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
 			},
