@@ -88,6 +88,8 @@ type AccountLookupDetail struct {
 	SubSegment      string `xml:"SubSegment"`
 	CustomerGroup   string `xml:"CustomerGroup"`
 	AccountInactive string `xml:"InactiveFlag"`
+	DAOCode         string `xml:"DAOCode"`
+	DAOName         string `xml:"DAOName"`
 }
 
 // ----------------- Failure or no records -----------------
@@ -163,6 +165,8 @@ func ParseAccountLookupSOAP(xmlData string) (*AccountLookupResult, error) {
 				SubSegment:      resp.AccountEnquirySuperappType.Group.Details.SubSegment,
 				CustomerGroup:   resp.AccountEnquirySuperappType.Group.Details.CustomerGroup,
 				AccountInactive: resp.AccountEnquirySuperappType.Group.Details.AccountInactive,
+				DAOName:         resp.AccountEnquirySuperappType.Group.Details.DAOName,
+				DAOCode:         resp.AccountEnquirySuperappType.Group.Details.DAOCode,
 			},
 		}, nil
 	}

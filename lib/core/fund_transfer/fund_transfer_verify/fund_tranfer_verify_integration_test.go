@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -25,27 +24,31 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
-		DebitAmount:         "10000",
+		DebitAmount:         "10",
 		// DebitAccountNumber: "1000446113608",
 		// DebitCurrency:      "USD",
 		// DebitAmount:        "1000",
+
 		// CreditAccountNumber: "1000446116286",
 		// CreditCurrency:      "GBP",
+		// CreditAmount:        "50",
+
 		// DebitAccountNumber:  "1000446113608",
 		// DebitCurrency:       "USD",
-		// CreditAmount:        "50",
 
 		// CreditAccountNumber: "1000446115875",
 		// CreditCurrency:      "USD",
+		// CreditAmount:        "50",
+
 		// CreditAccountNumber: "1000357597823",
 		// CreditCurrency:      "ETB",
 		DebitReference:  "DEBIT NARRATIVE",
 		CreditReference: "CREDIT NARRATIVE",
 		PaymentDetails:  "TEST PAYMENT",
 		ClientReference: clientReference.String(),
-		ServiceCode:     "IPS",
+		ServiceCode:     "CBE",
 		CustomerSegment: "MASS",
-		ChannelType:     "USSD",
+		ChannelType:     "APP",
 	}
 
 	xmlRequest := NewFundTransferVerify(params)
@@ -98,16 +101,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	detail := result.Detail
-	amount, _ := strconv.ParseFloat(strings.TrimPrefix(detail.DisasterReservedFund, "ETB"), 64) // 0.10
-	totalTaxAmount, _ := strconv.ParseFloat(detail.TotalTaxAmount, 64)                          // 11.10
-	totalChargedAmount, _ := strconv.ParseFloat(detail.LocalChargeAmount, 64)
 
-	ccx := totalChargedAmount - totalTaxAmount - amount
-
-	t.Logf("amount: %f", amount)
-	t.Logf("totalTaxAmount: %f", totalTaxAmount)
-	t.Logf("totalChargedAmount: %f", totalChargedAmount)
-	t.Logf("---ctx %f", ccx)
 	t.Logf("FT Number: %s", detail.FTNumber)
 	t.Logf("Transaction ID: %s", detail.TransactionID)
 	t.Logf("Debit Amount: %s", detail.DebitAmount)

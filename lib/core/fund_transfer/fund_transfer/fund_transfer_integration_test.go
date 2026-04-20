@@ -26,12 +26,12 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
-		DebitAmount:         "10000",
+		DebitAmount:         "10",
 		TransactionID:       uuid.New().String(),
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",
-		ServiceCode:         "IPS",
+		ServiceCode:         "CBE",
 		ChannelType:         "APP",
 		CustomerSegment:     "MASS",
 		// SuperappUserCode:    "user-code",
@@ -178,10 +178,11 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		t.Logf("Debit Amount: %s", detail.DebitAmount)
 		t.Logf("Debit Amount With Currency: %s", detail.DebitAmountWithCurrency)
 		t.Logf("Credit Amount With Currency: %s", detail.CreditAmountWithCurrency)
-		t.Logf("Total Charge Amount: %s", detail.TotalChargeAmount)
 		t.Logf("Total Commision With Comission: %s", detail.TotalCommisionWithComission)
+		t.Logf("Total Tax Amount: %s", detail.TotalTaxAmount)
 		t.Logf("Desaster Recovery Fund: %s", detail.DisasterReservedFund)
 		t.Logf("Processing Date: %s", detail.ProcessingDate)
+		t.Logf("Original Paid Amount: %s", detail.OriginalPaidAmount)
 		t.Logf("Debit Account Holder: %s", detail.DebitAccountHolderName)
 		t.Logf("Receiver Name: %s", detail.ReceiverName)
 		t.Logf("Service Code: %s", detail.ServiceCode)
