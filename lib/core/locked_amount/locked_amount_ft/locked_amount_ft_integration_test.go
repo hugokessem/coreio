@@ -7,28 +7,36 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIntegrationLockedAmountFt(t *testing.T) {
+	uuid, _ := uuid.NewV7()
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
 		// DebitAccountNumber:  "1000000006924",
 		// DebitCurrency:       "ETB",
 		// DebitAmount:         "240.00",
-		DebitAccountNumber: "1000446113608",
-		DebitCurrency:      "USD",
-
+		// DebitAccountNumber: "1000446113608",
+		// DebitCurrency:      "USD",
+		// CreditCurrency:      "ETB",
+		// CreditAmount:        "200",
+		DebitAccountNumber:  "1000259876854",
+		DebitCurrency:       "ETB",
+		DebitAmount:         "1000",
 		CreditCurrency:      "ETB",
-		CreditAmount:        "200",
 		CreditAccountNumber: "1000382499388",
 		CreditReference:     "Credit reference",
 		DebitReference:      "Debit reference",
-		ClientReference:     "CLIENT123456",
-		ServiceCode:         "CBE",
-		LockID:              "ACLK213432CP16",
+		ClientReference:     uuid.String(),
+		ServiceCode:         "IPS",
+		LockID:              "ACLK2134368NJV",
 		PaymentDetails:      "Apple",
+		CustomerRole:        "MASS",
+		ChannelType:         "APP",
+		SuperappUserCode:    "8a9s08d0f9a98sdf0as80d9f80a9sd8f00",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)

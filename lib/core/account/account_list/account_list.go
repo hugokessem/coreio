@@ -63,26 +63,27 @@ type AccountListByCIFResponse struct {
 }
 
 type AccountListByCIFDetail struct {
-	AccountNumber   string `xml:"AccountNumber"`
-	CustomerName    string `xml:"CustomerName"`
-	Restriction     string `xml:"Restriction"`
-	Currency        string `xml:"Currency"`
-	CustomerID      string `xml:"CustomerID"`
-	Category        string `xml:"Category"`
-	AccountType     string `xml:"AccountType"`
-	BranchCode      string `xml:"BranchCode"`
-	BranchName      string `xml:"BranchName"`
-	DistrictName    string `xml:"DistrictName"`
-	PhoneNo         string `xml:"PhoneNo"`
-	Industry        string `xml:"Industry"`
-	Sector          string `xml:"Sector"`
-	Ownership       string `xml:"Ownership"`
-	CustomerSegment string `xml:"CustomerSegment"`
-	Target          string `xml:"Target"`
-	Gender          string `xml:"Gender"`
-	BirthOfDate     string `xml:"BirthOfDate"`
-	Email           string `xml:"Email"`
-	RestrictionType string `xml:"RestrictionType"`
+	AccountNumber           string `xml:"AccountNumber"`
+	CustomerName            string `xml:"CustomerName"`
+	Restriction             string `xml:"Restriction"`
+	Currency                string `xml:"Currency"`
+	CustomerID              string `xml:"CustomerID"`
+	Category                string `xml:"Category"`
+	AccountType             string `xml:"AccountType"`
+	BranchCode              string `xml:"BranchCode"`
+	BranchName              string `xml:"BranchName"`
+	DistrictName            string `xml:"DistrictName"`
+	PhoneNo                 string `xml:"PhoneNo"`
+	Industry                string `xml:"Industry"`
+	Sector                  string `xml:"Sector"`
+	Ownership               string `xml:"Ownership"`
+	CustomerSegment         string `xml:"CustomerSegment"`
+	Target                  string `xml:"Target"`
+	Gender                  string `xml:"Gender"`
+	BirthOfDate             string `xml:"BirthOfDate"`
+	Email                   string `xml:"Email"`
+	RestrictionType         string `xml:"RestrictionType"`
+	RestricttionDescription string `xml:"RestrictionDesc"`
 }
 
 type AccountListResult struct {
@@ -125,26 +126,27 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 		detailsList := make([]AccountListByCIFDetail, len(details))
 		for i, detail := range details {
 			detailsList[i] = AccountListByCIFDetail{
-				AccountNumber:   detail.AccountNumber,
-				CustomerName:    detail.CustomerName,
-				Restriction:     detail.Restriction,
-				Currency:        detail.Currency,
-				CustomerID:      detail.CustomerID,
-				Category:        detail.Category,
-				AccountType:     detail.AccountType,
-				BranchCode:      detail.BranchCode,
-				BranchName:      detail.BranchName,
-				DistrictName:    detail.DistrictName,
-				PhoneNo:         detail.PhoneNo,
-				Industry:        detail.Industry,
-				Sector:          detail.Sector,
-				Ownership:       detail.Ownership,
-				CustomerSegment: detail.CustomerSegment,
-				Target:          detail.Target,
-				Gender:          detail.Gender,
-				BirthOfDate:     detail.BirthOfDate,
-				Email:           detail.Email,
-				RestrictionType: detail.RestrictionType,
+				AccountNumber:           detail.AccountNumber,
+				CustomerName:            detail.CustomerName,
+				Restriction:             detail.Restriction,
+				Currency:                detail.Currency,
+				CustomerID:              detail.CustomerID,
+				Category:                detail.Category,
+				AccountType:             detail.AccountType,
+				BranchCode:              detail.BranchCode,
+				BranchName:              detail.BranchName,
+				DistrictName:            detail.DistrictName,
+				PhoneNo:                 detail.PhoneNo,
+				Industry:                detail.Industry,
+				Sector:                  detail.Sector,
+				Ownership:               detail.Ownership,
+				CustomerSegment:         detail.CustomerSegment,
+				Target:                  detail.Target,
+				Gender:                  detail.Gender,
+				BirthOfDate:             detail.BirthOfDate,
+				Email:                   detail.Email,
+				RestrictionType:         detail.RestrictionType,
+				RestricttionDescription: detail.RestricttionDescription,
 			}
 		}
 		return &AccountListResult{

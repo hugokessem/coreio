@@ -14,14 +14,15 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000468418828",
+		AccountNumber: "1000259876854",
 		Description:   "3 Click Payment",
 		From:          "20251109",
 		To:            "20261111",
-		LockedAmount:  "100000",
+		LockedAmount:  "1000",
 	}
 
 	xmlRequest := NewCreateLockedAmount(params)
+	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
