@@ -15,6 +15,7 @@ import (
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
+	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
 	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
 	customerlimitfetchbyservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_service"
@@ -110,6 +111,8 @@ type CustomerLimitAmendByCIFParam = customerlimitamendbycif.CustomerLimitAmendBy
 type StatusCheckParam = statuscheck.StatusCheckParam
 type StatusCheckResult = statuscheck.StatusCheckResult
 
+type CustomerDetailParam = customerdetail.CustomerDetailParam
+type CustomerDetailResult = customerdetail.CustomerDetailResult
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -146,6 +149,7 @@ type CBECoreAPIInterface interface {
 
 	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
 	ExchangeRates() (*ExchangeRatesResult, error)
+	CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error)
 
 	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
 }
@@ -165,6 +169,42 @@ type FraudAPICredential struct {
 
 type CBECoreAPI struct {
 	config *internal.Config
+}
+
+func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error) {
+	params := customerdetail.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+
+	xmlRequest := customerdetail.NewCustomerDetail(params)
+	headers := map[string]string{
+		"Content-Type": "text/xml; charset=utf-8",
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := customerdetail.ParseCustomerDetailSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {
