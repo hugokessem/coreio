@@ -269,6 +269,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		}
 
 		var totalComission float64
+		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
 		debitCurrency := resp.FundTransferType.DebitCurrency
 		creditCurrency := resp.FundTransferType.CreditCurrency
 		var currency string
@@ -291,9 +292,14 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				}
 			}
 
+			if v.CommissionType == "COMFTATM" {
+				if v.CommissionAmount != "" {
+					totalTaxAmount, _ = strconv.ParseFloat(v.CommissionAmount, 64)
+				}
+			}
+
 		}
 		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
-		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
 		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
 		totalComission = totalChargedAmount - totalTaxAmount - amount
 
