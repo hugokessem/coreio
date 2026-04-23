@@ -326,6 +326,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
 		originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
 		totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
+		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalTaxAmount)
 
 		return &FundTransferVerifyResult{
 			Success: true,
@@ -363,7 +364,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				DebitCompanyCode:                   resp.FundTransferType.DebitCompanyCode,
 				LocalAmountDebited:                 resp.FundTransferType.LocalAmountDebited,
 				LocalAmountCredited:                resp.FundTransferType.LocalAmountCredited,
-				LocalTotalTaxAmount:                resp.FundTransferType.LocalTotalTaxAmount,
+				LocalTotalTaxAmount:                totalTaxAmountWithCurrency,
 				LocalChargeAmount:                  resp.FundTransferType.LocalChargeAmount,
 				LocalPositionChargesAmount:         resp.FundTransferType.LocalPositionChargesAmount,
 				CustomerGroupLevel:                 resp.FundTransferType.CustomerGroupLevel,
