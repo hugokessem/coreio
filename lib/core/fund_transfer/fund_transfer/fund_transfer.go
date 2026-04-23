@@ -274,6 +274,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		}
 
 		var totalComission float64
+		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
 		debitCurrency := resp.FundTransferType.DebitCurrency
 		creditCurrency := resp.FundTransferType.CreditCurrency
 		var currency string
@@ -287,20 +288,23 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
-					break
 				}
 			}
 
 			if v.CommissionType == "CARDDRT" {
 				if v.CommissionAmount != "" {
 					dr = v.CommissionAmount
-					break
 				}
 			}
-		}
 
+			if v.CommissionType == "COMFTATM" {
+				if v.CommissionAmount != "" {
+					totalTaxAmount, _ = strconv.ParseFloat(v.CommissionAmount, 64)
+				}
+			}
+
+		}
 		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
-		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
 		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
 		totalComission = totalChargedAmount - totalTaxAmount - amount
 
@@ -327,6 +331,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
 		originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
 		totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
+		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalTaxAmount)
 
 		return &FundTransferResult{
 			Success: true,
@@ -358,13 +363,13 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 				DebitAmountWithCurrency:            resp.FundTransferType.DebitAmountWithCurrency,
 				CreditAmountWithCurrency:           resp.FundTransferType.CreditAmountWithCurrency,
 				TotalChargeAmount:                  resp.FundTransferType.TotalChargeAmount,
-				TotalTaxAmount:                     resp.FundTransferType.TotalTaxAmount,
+				TotalTaxAmount:                     fmt.Sprintf("%s", totalTaxAmount),
 				DeliveryOutRef:                     resp.FundTransferType.DeliveryOutRef,
 				CreditCompanyCode:                  resp.FundTransferType.CreditCompanyCode,
 				DebitCompanyCode:                   resp.FundTransferType.DebitCompanyCode,
 				LocalAmountDebited:                 resp.FundTransferType.LocalAmountDebited,
 				LocalAmountCredited:                resp.FundTransferType.LocalAmountCredited,
-				LocalTotalTaxAmount:                resp.FundTransferType.LocalTotalTaxAmount,
+				LocalTotalTaxAmount:                totalTaxAmountWithCurrency,
 				LocalChargeAmount:                  resp.FundTransferType.LocalChargeAmount,
 				LocalPositionChargesAmount:         resp.FundTransferType.LocalPositionChargesAmount,
 				CustomerGroupLevel:                 resp.FundTransferType.CustomerGroupLevel,

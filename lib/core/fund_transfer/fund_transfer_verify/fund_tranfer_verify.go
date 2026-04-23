@@ -358,7 +358,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				DebitAmountWithCurrency:            resp.FundTransferType.DebitAmountWithCurrency,
 				CreditAmountWithCurrency:           resp.FundTransferType.CreditAmountWithCurrency,
 				TotalChargeAmount:                  resp.FundTransferType.TotalChargeAmount,
-				TotalTaxAmount:                     resp.FundTransferType.TotalTaxAmount,
+				TotalTaxAmount:                     fmt.Sprintf("%s", totalTaxAmount),
 				DeliveryOutRef:                     resp.FundTransferType.DeliveryOutRef,
 				CreditCompanyCode:                  resp.FundTransferType.CreditCompanyCode,
 				DebitCompanyCode:                   resp.FundTransferType.DebitCompanyCode,
