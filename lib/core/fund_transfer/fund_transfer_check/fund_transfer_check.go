@@ -130,6 +130,9 @@ type FundTransferType struct {
 	DisasterReservedFund        string `xml:"DISASTERRESERVEFUND"`
 	OriginalPaidAmount          string `xml:"ORIGPAIDAMT"`
 	TotalCommisionWithComission string `xml:"TOTALCOMISSON"`
+	DebitReference              string `xml:"DEBITTHEIRREF"`
+	CreditReference             string `xml:"CREDITTHEIRREF"`
+	ServiceCode                 string `xml:"SERVICECODE"`
 }
 
 type PaymentDetail struct {
@@ -298,6 +301,9 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				DisasterReservedFund:        dr,
 				OriginalPaidAmount:          originalPaidAmountWithCurrency,
 				TotalCommisionWithComission: totalServiceChargeWithCurrency,
+				DebitReference:              resp.FundTransferType.DebitReference,
+				CreditReference:             resp.FundTransferType.CreditReference,
+				ServiceCode:                 resp.FundTransferType.ServiceCode,
 			},
 		}, nil
 	}
