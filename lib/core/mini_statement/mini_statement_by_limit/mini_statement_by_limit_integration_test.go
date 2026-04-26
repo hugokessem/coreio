@@ -14,11 +14,12 @@ func TestIntegrationMiniStatementByRange(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		AccountNumber:       "1000304523267",
+		AccountNumber:       "1000445483684",
 		NumberOfTransaction: "3",
 	}
 
 	xmlRequest := NewMiniStatementByLimit(params)
+	t.Logf("Generated XML Request: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))

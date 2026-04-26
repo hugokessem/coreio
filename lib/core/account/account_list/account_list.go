@@ -84,6 +84,7 @@ type AccountListByCIFDetail struct {
 	Email                   string `xml:"Email"`
 	RestrictionType         string `xml:"RestrictionType"`
 	RestricttionDescription string `xml:"RestrictionDesc"`
+	InactiveFlag            string `xml:"InactiveFlag"`
 }
 
 type AccountListResult struct {
@@ -147,6 +148,7 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 				Email:                   detail.Email,
 				RestrictionType:         detail.RestrictionType,
 				RestricttionDescription: detail.RestricttionDescription,
+				InactiveFlag:            detail.InactiveFlag,
 			}
 		}
 		return &AccountListResult{
