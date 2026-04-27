@@ -267,7 +267,6 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				Messages: []string{},
 			}, nil
 		}
-
 		var totalComission float64
 		var disasterRecoveryFund float64
 		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
@@ -279,12 +278,11 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		} else {
 			currency = creditCurrency
 		}
-		dr := fmt.Sprintf("%s0", currency)
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
 			// REMAINIG
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -292,7 +290,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			// VCARD, PMCARD, LOCAL CARD
 			if v.CommissionType == "CARDDRT" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -307,7 +305,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			// TELEBURR, MPESA, EBIRR
 			if v.CommissionType == "DRFWALLETSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -315,7 +313,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			// ECOMMERCE
 			if v.CommissionType == "ECOMDRFSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -323,22 +321,20 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			// IPS
 			if v.CommissionType == "IPSDRFLATSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
 
 			if v.CommissionType == "IPSPDRPCSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
-
 		}
-		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
 		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
-		totalComission = totalChargedAmount - totalTaxAmount - amount
+		totalComission = totalChargedAmount - totalTaxAmount - disasterRecoveryFund
 
 		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)

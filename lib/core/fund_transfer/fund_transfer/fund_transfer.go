@@ -284,12 +284,11 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		} else {
 			currency = creditCurrency
 		}
-		dr := fmt.Sprintf("%s0", currency)
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
 			// REMAINIG
 			if v.CommissionType == "CBECOMSPDIS" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -297,7 +296,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			// VCARD, PMCARD, LOCAL CARD
 			if v.CommissionType == "CARDDRT" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -312,7 +311,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			// TELEBURR, MPESA, EBIRR
 			if v.CommissionType == "DRFWALLETSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -320,7 +319,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			// ECOMMERCE
 			if v.CommissionType == "ECOMDRFSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
@@ -328,22 +327,20 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			// IPS
 			if v.CommissionType == "IPSDRFLATSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
 
 			if v.CommissionType == "IPSPDRPCSP" {
 				if v.CommissionAmount != "" {
-					dr, _ := strconv.ParseFloat(v.CommissionAmount, 64)
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
 					disasterRecoveryFund += dr
 				}
 			}
-
 		}
-		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
 		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
-		totalComission = totalChargedAmount - totalTaxAmount - amount
+		totalComission = totalChargedAmount - totalTaxAmount - disasterRecoveryFund
 
 		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
