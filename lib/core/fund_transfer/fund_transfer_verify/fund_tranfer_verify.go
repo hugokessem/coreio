@@ -299,7 +299,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 			// CARD
 			if v.CommissionType == "COMFTATM" {
 				if v.CommissionAmount != "" {
-					totalTaxAmount, _ = strconv.ParseFloat(v.CommissionAmount, 64)
+					totalTaxAmount, _ = strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64) // vat
 				}
 			}
 
@@ -360,7 +360,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
 		originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
 		totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
-		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalTaxAmount)
+		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", currency, totalTaxAmount)
 		disasterRecoveryFundWithCurrency := fmt.Sprintf("%s%.4f", currency, disasterRecoveryFund)
 
 		return &FundTransferVerifyResult{
