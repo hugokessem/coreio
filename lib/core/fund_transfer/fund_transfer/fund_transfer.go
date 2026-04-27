@@ -304,7 +304,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 			// CARD
 			if v.CommissionType == "COMFTATM" {
 				if v.CommissionAmount != "" {
-					totalTaxAmount, _ = strconv.ParseFloat(v.CommissionAmount, 64)
+					totalTaxAmount, _ = strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64) // vat
 				}
 			}
 
