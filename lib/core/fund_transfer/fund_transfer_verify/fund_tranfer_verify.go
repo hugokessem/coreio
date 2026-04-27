@@ -267,6 +267,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				Messages: []string{},
 			}, nil
 		}
+
 		var totalComission float64
 		var disasterRecoveryFund float64
 		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)

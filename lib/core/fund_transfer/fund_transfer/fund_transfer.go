@@ -341,7 +341,6 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		}
 		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
 		totalComission = totalChargedAmount - totalTaxAmount - disasterRecoveryFund
-
 		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
 		if err != nil && strings.TrimSpace(resp.FundTransferType.DebitAmount) != "" {

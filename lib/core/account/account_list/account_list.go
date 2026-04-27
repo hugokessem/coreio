@@ -53,7 +53,8 @@ type Body struct {
 
 type AccountListByCIFResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
+		SuccessIndicator string   `xml:"successIndicat"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	AccountListByCIFType *struct {
 		Group *struct {
@@ -111,7 +112,7 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &AccountListResult{
 				Success: false,
-				Message: []string{"API returned failure"},
+				Message: resp.Status.Messages,
 			}, nil
 		}
 		if resp.AccountListByCIFType == nil ||
@@ -119,7 +120,7 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 			len(resp.AccountListByCIFType.Group.Details) == 0 {
 			return &AccountListResult{
 				Success: true,
-				Message: []string{"No account details found"},
+				Message: resp.Status.Messages,
 			}, nil
 		}
 
