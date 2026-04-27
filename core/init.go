@@ -171,6 +171,11 @@ type CBECoreAPI struct {
 	config *internal.Config
 }
 
+const (
+	Key   = "Content-Type"
+	Value = "text/xml; charset=utf-8"
+)
+
 func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error) {
 	params := customerdetail.Params{
 		Username:       c.config.Username,
@@ -180,7 +185,7 @@ func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailR
 
 	xmlRequest := customerdetail.NewCustomerDetail(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -216,7 +221,7 @@ func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 
 	xmlRequest := statuscheck.NewStatusCheck(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -264,7 +269,7 @@ func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTra
 
 	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -300,7 +305,7 @@ func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetch
 
 	xmlRequest := customerlimitfetchbycif.NewCustomerLimitFetchByCIF(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -334,7 +339,7 @@ func (c *CBECoreAPI) CustomerLimitFetchByService(param CustomerLimitFetchByServi
 	}
 	xmlRequest := customerlimitfetchbyservice.NewCustomerLimitFetchByService(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -368,7 +373,7 @@ func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(param CustomerLimitAmend
 	}
 	xmlRequest := customerlimitamendbycif.NewCustomerLimitAmendByCIF(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -407,7 +412,7 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 
 	xmlRequest := splitpayment.NewSplitPayment(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -440,7 +445,7 @@ func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreati
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -468,7 +473,7 @@ func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult,
 	}
 	xmlRequest := servicelimit.NewServiceLimit(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -497,7 +502,7 @@ func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
 	}
 	xmlRequest := exchangerate.NewExchangeRate(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -527,7 +532,7 @@ func (c *CBECoreAPI) PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, er
 	}
 	xmlRequest := phonelookup.NewPhoneLookup(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -558,7 +563,7 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 
 	xmlRequest := revertfundtransfer.NewRevertFundTransfer(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -592,7 +597,7 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 
 	xmlRequest := accountlookup.NewAccountLookup(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -627,7 +632,7 @@ func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, er
 
 	xmlRequest := accountlist.NewAccountList(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -713,7 +718,7 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -748,7 +753,7 @@ func (c *CBECoreAPI) FundTransferCheck(param FundTransferCheckParam) (*FundTrans
 
 	xmlRequest := fundtransfercheck.NewFundTransferCheck(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -782,7 +787,7 @@ func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedA
 
 	xmlRequest := lockedamountlist.NewListLockedAmount(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -820,7 +825,7 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 
 	xmlRequest := lockedamountcreate.NewCreateLockedAmount(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -868,7 +873,7 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 
 	xmlRequest := lockedamountft.NewLockedAmountFt(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -902,7 +907,7 @@ func (c *CBECoreAPI) ReleaseLockedAmount(param ReleaseLockedAmountParam) (*Relea
 
 	xmlRequest := lockedamountrelease.NewReleaseLockedAmount(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -937,7 +942,7 @@ func (c *CBECoreAPI) CancleStandingOrder(param CancleStandingOrderParam) (*Cance
 
 	xmlRequest := standingordercancel.NewCancleStandingOrder(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -978,7 +983,7 @@ func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*Updat
 
 	xmlRequest := standingorderupdate.NewUpdateStandingOrder(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1011,7 +1016,7 @@ func (c *CBECoreAPI) ListStandingOrderHistory(param ListStandingOrderHistoryPara
 	}
 	xmlRequest := standingorderlisthistory.NewListStandingOrderHistory(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1047,7 +1052,7 @@ func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*Creat
 
 	xmlRequest := standingordercreate.NewCreateStandingOrder(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1081,7 +1086,7 @@ func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStand
 
 	xmlRequest := standingorderlist.NewListStandingOrder(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1116,7 +1121,7 @@ func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*Mi
 
 	xmlRequest := ministatementbylimit.NewMiniStatementByLimit(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1151,7 +1156,7 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 
 	xmlRequest := ministatementbydaterange.NewMiniStatementByDateRange(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -1184,7 +1189,7 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 	}
 	xmlRequest := customerlookup.NewCustomerLookup(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
@@ -1217,7 +1222,7 @@ func (c *CBECoreAPI) CardReplace(param CardReplaceParam) (*CardReplaceResult, er
 	}
 	xmlRequest := cardreplace.NewCardReplace(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1252,7 +1257,7 @@ func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, er
 
 	xmlRequest := cardrequest.NewCardRequest(params)
 	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
+		Key: Value,
 	}
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
@@ -1275,7 +1280,7 @@ func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, er
 	return result, nil
 }
 
-func NewCBECoreAPI(param CBECoreCredential) CBECoreAPIInterface {
+func NewCBECoreAPI(param *CBECoreCredential) CBECoreAPIInterface {
 	config := internal.SetConfig(
 		param.Username,
 		param.Password,
