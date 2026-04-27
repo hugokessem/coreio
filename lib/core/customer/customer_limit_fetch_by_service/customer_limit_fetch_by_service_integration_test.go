@@ -14,7 +14,7 @@ func TestIntegrationCustomerLimitFetchByService(t *testing.T) {
 	params := Params{
 		Username:    "SUPERAPP",
 		Password:    "123456",
-		ServiceCode: "GLOBAL-MASS",
+		ServiceCode: "GLOBAL-MIDDLE",
 	}
 
 	xmlRequest := NewCustomerLimitFetchByService(params)
@@ -45,7 +45,10 @@ func TestIntegrationCustomerLimitFetchByService(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
+	t.Logf("Status: %+v", result.Success)
+	t.Logf("Parsed Result: %+v", result.Detail)
 	// Check that the fetch succeeded
+
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 	t.Log("resultDetail", result.Detail)
