@@ -89,8 +89,10 @@ type FundTransferType struct {
 	LocalTotalTaxAmount  string        `xml:"LOCTOTTAXAMT"`
 	LocalPosChgsAmount   string        `xml:"LOCPOSCHGSAMT"`
 	CustGroupLevel       string        `xml:"CUSTGROUPLEVEL"`
-	DebitCustomer        string        `xml:"SENDERNAME"`
-	CreditCustomer       string        `xml:"RECEIVERNAME"`
+	DebitCustomerName    string        `xml:"SENDERNAME"`
+	CreditCustomerName   string        `xml:"RECEIVERNAME"`
+	DebitCustomerNumber  string        `xml:"DEBITCUSTOMER"`
+	CreditCustomerNumber string        `xml:"CREDITCUSTOMER"`
 	DrAdvicerEqdYN       string        `xml:"DRADVICEREQDYN"`
 	CrAdvicerEqdYN       string        `xml:"CRADVICEREQDYN"`
 	ChargedCustomer      string        `xml:"CHARGEDCUSTOMER"`
@@ -269,8 +271,10 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				LocalChargeAmount:           resp.FundTransferType.LocalChargeAmount,
 				LocalPosChgsAmount:          resp.FundTransferType.LocalPosChgsAmount,
 				CustGroupLevel:              resp.FundTransferType.CustGroupLevel,
-				DebitCustomer:               resp.FundTransferType.DebitCustomer,
-				CreditCustomer:              resp.FundTransferType.CreditCustomer,
+				DebitCustomerName:           resp.FundTransferType.DebitCustomerName,
+				CreditCustomerName:          resp.FundTransferType.CreditCustomerName,
+				DebitCustomerNumber:         resp.FundTransferType.DebitCustomerNumber,
+				CreditCustomerNumber:        resp.FundTransferType.CreditCustomerNumber,
 				DrAdvicerEqdYN:              resp.FundTransferType.DrAdvicerEqdYN,
 				CrAdvicerEqdYN:              resp.FundTransferType.CrAdvicerEqdYN,
 				ChargedCustomer:             resp.FundTransferType.ChargedCustomer,

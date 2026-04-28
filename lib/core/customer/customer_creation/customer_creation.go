@@ -67,9 +67,7 @@ func NewCustomerCreation(param Params) string {
 	menemoic := SetMenemoic(param)
 	fullName := FullName(param)
 	return fmt.Sprintf(`
-    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-xmlns:iib="http://temenos.com/IIBONBOARDING"
-xmlns:cus="http://temenos.com/CUSTOMERCREATEINDIVIDUAL">
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iib="http://temenos.com/IIBONBOARDING" xmlns:cus="http://temenos.com/CUSTOMERCREATEINDIVIDUAL">
     <soapenv:Header/>
     <soapenv:Body>
         <iib:CustomerOpening>
