@@ -53,7 +53,7 @@ type Body struct {
 
 type AccountListByCIFResponse struct {
 	Status *struct {
-		SuccessIndicator string   `xml:"successIndicat"`
+		SuccessIndicator string   `xml:"successIndicator"`
 		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	AccountListByCIFType *struct {
@@ -89,9 +89,9 @@ type AccountListByCIFDetail struct {
 }
 
 type AccountListResult struct {
-	Success bool
-	Details []AccountListByCIFDetail
-	Message []string
+	Success  bool
+	Details  []AccountListByCIFDetail
+	Messages []string
 }
 
 func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
@@ -105,22 +105,22 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 		resp := env.Body.AccountListByCIFResponse
 		if resp.Status == nil {
 			return &AccountListResult{
-				Success: false,
-				Message: []string{"Missing Status"},
+				Success:  false,
+				Messages: []string{"Missing Status"},
 			}, nil
 		}
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &AccountListResult{
-				Success: false,
-				Message: resp.Status.Messages,
+				Success:  false,
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 		if resp.AccountListByCIFType == nil ||
 			resp.AccountListByCIFType.Group == nil ||
 			len(resp.AccountListByCIFType.Group.Details) == 0 {
 			return &AccountListResult{
-				Success: true,
-				Message: resp.Status.Messages,
+				Success:  true,
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
@@ -153,13 +153,13 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 			}
 		}
 		return &AccountListResult{
-			Success: true,
-			Details: detailsList,
-			Message: []string{},
+			Success:  true,
+			Details:  detailsList,
+			Messages: []string{},
 		}, nil
 	}
 	return &AccountListResult{
-		Success: false,
-		Message: []string{"Invalid response format"},
+		Success:  false,
+		Messages: []string{"Invalid response format"},
 	}, nil
 }

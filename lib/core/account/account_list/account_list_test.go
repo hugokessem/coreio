@@ -266,7 +266,7 @@ func TestParseAccountListSOAP(t *testing.T) {
 				}
 
 				if len(tc.expectedMessages) > 0 {
-					assert.Equal(t, tc.expectedMessages, result.Message)
+					assert.Equal(t, tc.expectedMessages, result.Messages)
 				}
 			}
 		})
