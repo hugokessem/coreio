@@ -265,6 +265,7 @@ func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTra
 		ChannelType:         param.ChannelType,
 		CreditCurrency:      param.CreditCurrency,
 		CreditAmount:        param.CreditAmount,
+		SuperappUserCode:    param.SuperappUserCode,
 	}
 
 	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
