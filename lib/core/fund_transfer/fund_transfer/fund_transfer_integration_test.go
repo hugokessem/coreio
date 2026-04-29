@@ -22,7 +22,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		Password: "123456",
 		// DebitAccountNumber: "1000446114291",
 		// DebitCurrency:      "USD",
-		DebitAccountNumber:  "1000173071349",
+		DebitAccountNumber:  "1000263525144",
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
@@ -36,6 +36,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CustomerSegment:     "MASS",
 		// SuperappUserCode:    "user-code",
 		IsFraudCheckEnabled: false,
+		SuperappUserCode:    "SA1036559081",
 	}
 
 	xmlRequest := NewFundTransfer(params)

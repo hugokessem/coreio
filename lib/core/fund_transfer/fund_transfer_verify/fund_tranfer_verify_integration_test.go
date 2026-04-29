@@ -20,7 +20,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000173071349",
+		DebitAccountNumber:  "1000263525144",
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
