@@ -33,6 +33,7 @@ import (
 	ministatementbylimit "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_limit"
 	phonelookup "github.com/hugokessem/coreio/lib/core/phone_lookup"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
+	servicedetail "github.com/hugokessem/coreio/lib/core/service/service_detail"
 	servicelimit "github.com/hugokessem/coreio/lib/core/service/service_limit"
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
 	standingordercreate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_create"
@@ -113,6 +114,10 @@ type StatusCheckResult = statuscheck.StatusCheckResult
 
 type CustomerDetailParam = customerdetail.CustomerDetailParam
 type CustomerDetailResult = customerdetail.CustomerDetailResult
+
+type ServiceDetailParam = servicedetail.ServiceDetailParams
+type ServiceDetailResult = servicedetail.ServiceDetailResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -152,6 +157,7 @@ type CBECoreAPIInterface interface {
 	CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error)
 
 	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
+	ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error)
 }
 
 type CBECoreCredential struct {
@@ -175,6 +181,42 @@ const (
 	Key   = "Content-Type"
 	Value = "text/xml; charset=utf-8"
 )
+
+func (c *CBECoreAPI) ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error) {
+	params := servicedetail.Params{
+		Username:    c.config.Username,
+		Password:    c.config.Password,
+		ServiceCode: param.ServiceCode,
+	}
+
+	xmlRequest := servicedetail.NewServiceDetail(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := servicedetail.ParseServiceDetailSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
 
 func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error) {
 	params := customerdetail.Params{
