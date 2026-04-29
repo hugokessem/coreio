@@ -50,7 +50,8 @@ type Body struct {
 
 type CustomerLookupResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	CustomerLookupInformation *struct {
 		GlobalCustomerDetails struct {
@@ -77,7 +78,7 @@ type CustomerDetail struct {
 type CustomerDetailResult struct {
 	Success       bool
 	CustomerInfos *CustomerDetail
-	Message       string
+	Message       []string
 }
 
 func ParseCustomerDetailSOAP(response string) (*CustomerDetailResult, error) {
@@ -93,21 +94,21 @@ func ParseCustomerDetailSOAP(response string) (*CustomerDetailResult, error) {
 		if resp.Status == nil {
 			return &CustomerDetailResult{
 				Success: false,
-				Message: "Invalid response structure",
+				Message: []string{"Invalid response structure"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &CustomerDetailResult{
 				Success: false,
-				Message: "Customer lookup failed",
+				Message: resp.Status.Messages,
 			}, nil
 		}
 
 		if resp.CustomerLookupInformation.GlobalCustomerDetails.CustomerDetail == nil {
 			return &CustomerDetailResult{
 				Success: false,
-				Message: "No customer details found",
+				Message: resp.Status.Messages,
 			}, nil
 		}
 
@@ -119,6 +120,6 @@ func ParseCustomerDetailSOAP(response string) (*CustomerDetailResult, error) {
 
 	return &CustomerDetailResult{
 		Success: false,
-		Message: "Invalid response type",
+		Message: []string{"Invalid response type"},
 	}, nil
 }

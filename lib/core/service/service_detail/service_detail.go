@@ -106,12 +106,10 @@ func ParseServiceDetailSOAP(response string) (*ServiceDetailResult, error) {
 			}, nil
 		}
 
-		if envelope.Body.ServiceTypeListResponse.ServiceTypeList != nil &&
-			envelope.Body.ServiceTypeListResponse.ServiceTypeList.Group != nil &&
-			len(envelope.Body.ServiceTypeListResponse.ServiceTypeList.Group.ServiceDetails) > 0 {
+		if resp.ServiceTypeList != nil && resp.ServiceTypeList.Group != nil {
 			return &ServiceDetailResult{
 				Success:  true,
-				Detail:   envelope.Body.ServiceTypeListResponse.ServiceTypeList.Group.ServiceDetails,
+				Detail:   resp.ServiceTypeList.Group.ServiceDetails,
 				Messages: []string{},
 			}, nil
 		}

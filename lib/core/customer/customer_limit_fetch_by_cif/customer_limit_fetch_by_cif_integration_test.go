@@ -48,7 +48,8 @@ func TestIntegrationCustomerLimitFetchByCIF(t *testing.T) {
 	// // Check that the fetch succeeded
 	// assert.True(t, result.Success)
 	// assert.NotNil(t, result.Detail)
-	t.Log("resultDetail", result.Detail)
+	t.Logf(`result: %v`, result)
+	t.Logf(`resultDetail: %v`, result.Detail.GUserChannel.MUserChannel[0].SGServiceType)
 	t.Log("message", result.Messages)
 	assert.NotNil(t, result.Detail)
 	assert.True(t, result.Success) // Check that the fetch succeede
