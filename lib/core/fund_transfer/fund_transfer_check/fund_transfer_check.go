@@ -66,47 +66,47 @@ type FundTransferType struct {
 	CreditValuedate         string `xml:"CREDITVALUEDATE"`
 	ProcessingDate          string `xml:"PROCESSINGDATE"`
 	ChargeCommissionDisplay struct {
-		CommisionType []struct {
-			ComissionType   string `xml:"COMMISSIONTYPE"`
-			ComissionAmount string `xml:"COMMISSIONAMT"`
+		MultipleCommissionType []struct {
+			CommissionType   string `xml:"COMMISSIONTYPE"`
+			CommissionAmount string `xml:"COMMISSIONAMT"`
 		} `xml:"mCOMMISSIONTYPE"`
 	} `xml:"gCOMMISSIONTYPE"`
-	CurrentRate          string        `xml:"CUSTOMERRATE"`
-	CommissionCode       string        `xml:"COMMISSIONCODE"`
-	ChargeCode           string        `xml:"CHARGECODE"`
-	ProfitCenterCustomer string        `xml:"PROFITCENTRECUST"`
-	ReturnToDept         string        `xml:"RETURNTODEPT"`
-	FedFunds             string        `xml:"FEDFUNDS"`
-	PositionType         string        `xml:"POSITIONTYPE"`
-	AmountDebited        string        `xml:"AMOUNTDEBITED"`
-	AmountCredited       string        `xml:"AMOUNTCREDITED"`
-	TotalChargeAmount    string        `xml:"TOTALCHARGEAMT"`
-	CreditCompCode       string        `xml:"CREDITCOMPCODE"`
-	DebitCompCode        string        `xml:"DEBITCOMPCODE"`
-	LocAmtDebited        string        `xml:"LOCAMTDEBITED"`
-	LocAmtCredited       string        `xml:"LOCAMTCREDITED"`
-	LocalChargeAmount    string        `xml:"LOCALCHARGEAMT"`
-	LocalTotalTaxAmount  string        `xml:"LOCTOTTAXAMT"`
-	LocalPosChgsAmount   string        `xml:"LOCPOSCHGSAMT"`
-	CustGroupLevel       string        `xml:"CUSTGROUPLEVEL"`
-	DebitCustomerName    string        `xml:"SENDERNAME"`
-	CreditCustomerName   string        `xml:"RECEIVERNAME"`
-	DebitCustomerNumber  string        `xml:"DEBITCUSTOMER"`
-	CreditCustomerNumber string        `xml:"CREDITCUSTOMER"`
-	DrAdvicerEqdYN       string        `xml:"DRADVICEREQDYN"`
-	CrAdvicerEqdYN       string        `xml:"CRADVICEREQDYN"`
-	ChargedCustomer      string        `xml:"CHARGEDCUSTOMER"`
-	TotRecComm           string        `xml:"TOTRECCOMM"`
-	TotRecCommLcl        string        `xml:"TOTRECCOMMLCL"`
-	TotRecChg            string        `xml:"TOTRECCHG"`
-	TotRecChgLcl         string        `xml:"TOTRECCHGLCL"`
-	RateFixing           string        `xml:"RATEFIXING"`
-	TotRecChgCrcCy       string        `xml:"TOTRECCHGCRCCY"`
-	TotSndChgCrcCy       string        `xml:"TOTSNDCHGCRCCY"`
-	AuthDate             string        `xml:"AUTHDATE"`
-	RoundType            string        `xml:"ROUNDTYPE"`
-	PaymentDetail        PaymentDetail `xml:"gPAYMENTDETAILS"`
-	GlobalTaxType        struct {
+	CurrentRate              string        `xml:"CUSTOMERRATE"`
+	CommissionCode           string        `xml:"COMMISSIONCODE"`
+	ChargeCode               string        `xml:"CHARGECODE"`
+	ProfitCenterCustomer     string        `xml:"PROFITCENTRECUST"`
+	ReturnToDept             string        `xml:"RETURNTODEPT"`
+	FedFunds                 string        `xml:"FEDFUNDS"`
+	PositionType             string        `xml:"POSITIONTYPE"`
+	DebitAmountWithCurrency  string        `xml:"AMOUNTDEBITED"`
+	CreditAmountWithCurrency string        `xml:"AMOUNTCREDITED"`
+	TotalChargeAmount        string        `xml:"TOTALCHARGEAMT"`
+	CreditCompCode           string        `xml:"CREDITCOMPCODE"`
+	DebitCompCode            string        `xml:"DEBITCOMPCODE"`
+	LocAmtDebited            string        `xml:"LOCAMTDEBITED"`
+	LocAmtCredited           string        `xml:"LOCAMTCREDITED"`
+	LocalChargeAmount        string        `xml:"LOCALCHARGEAMT"`
+	LocalTotalTaxAmount      string        `xml:"LOCTOTTAXAMT"`
+	LocalPosChgsAmount       string        `xml:"LOCPOSCHGSAMT"`
+	CustGroupLevel           string        `xml:"CUSTGROUPLEVEL"`
+	DebitCustomerName        string        `xml:"SENDERNAME"`
+	CreditCustomerName       string        `xml:"RECEIVERNAME"`
+	DebitCustomerNumber      string        `xml:"DEBITCUSTOMER"`
+	CreditCustomerNumber     string        `xml:"CREDITCUSTOMER"`
+	DrAdvicerEqdYN           string        `xml:"DRADVICEREQDYN"`
+	CrAdvicerEqdYN           string        `xml:"CRADVICEREQDYN"`
+	ChargedCustomer          string        `xml:"CHARGEDCUSTOMER"`
+	TotRecComm               string        `xml:"TOTRECCOMM"`
+	TotRecCommLcl            string        `xml:"TOTRECCOMMLCL"`
+	TotRecChg                string        `xml:"TOTRECCHG"`
+	TotRecChgLcl             string        `xml:"TOTRECCHGLCL"`
+	RateFixing               string        `xml:"RATEFIXING"`
+	TotRecChgCrcCy           string        `xml:"TOTRECCHGCRCCY"`
+	TotSndChgCrcCy           string        `xml:"TOTSNDCHGCRCCY"`
+	AuthDate                 string        `xml:"AUTHDATE"`
+	RoundType                string        `xml:"ROUNDTYPE"`
+	PaymentDetail            PaymentDetail `xml:"gPAYMENTDETAILS"`
+	GlobalTaxType            struct {
 		TaxType []struct {
 			TaxType   string `xml:"TAXTYPE"`
 			TaxAmount string `xml:"TAXAMT"`
@@ -139,13 +139,6 @@ type FundTransferType struct {
 
 type PaymentDetail struct {
 	PaymentDetail string `xml:"PAYMENTDETAILS"`
-}
-
-type ChargeCommissionDisplay struct {
-	CommisionType struct {
-		ComissionType   string `xml:"COMMISSIONTYPE"`
-		ComissionAmount string `xml:"COMMISSIONAMT"`
-	} `xml:"mCOMMISSIONTYPE"`
 }
 
 type FundTransferCheckResult struct {
@@ -183,6 +176,7 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 		}
 
 		var totalComission float64
+		var disasterRecoveryFund float64
 		totalTaxAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalTotalTaxAmount, 64)
 		debitCurrency := resp.FundTransferType.DebitCurrency
 		creditCurrency := resp.FundTransferType.CreditCurrency
@@ -192,32 +186,66 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 		} else {
 			currency = creditCurrency
 		}
-		dr := fmt.Sprintf("%s0", currency)
-		for _, v := range resp.FundTransferType.ChargeCommissionDisplay.CommisionType {
-			if v.ComissionType == "CBECOMSPDIS" {
-				if v.ComissionAmount != "" {
-					dr = v.ComissionAmount
+		for _, v := range resp.FundTransferType.ChargeCommissionDisplay.MultipleCommissionType {
+			// REMAINIG
+			if v.CommissionType == "CBECOMSPDIS" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
 				}
 			}
 
-			if v.ComissionType == "CARDDRT" {
-				if v.ComissionAmount != "" {
-					dr = v.ComissionAmount
+			// VCARD, PMCARD, LOCAL CARD
+			if v.CommissionType == "CARDDRT" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
 				}
 			}
 
-			if v.ComissionType == "COMFTATM" {
-				if v.ComissionAmount != "" {
-					totalTaxAmount, _ = strconv.ParseFloat(v.ComissionAmount, 64)
+			// CARD
+			if v.CommissionType == "COMFTATM" {
+				if v.CommissionAmount != "" {
+					totalTaxAmount, _ = strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64) // vat
 				}
 			}
 
+			// TELEBURR, MPESA, EBIRR
+			if v.CommissionType == "DRFWALLETSP" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
+				}
+			}
+
+			// ECOMMERCE
+			if v.CommissionType == "ECOMDRFSP" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
+				}
+			}
+
+			// IPS
+			if v.CommissionType == "IPSDRFLATSP" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
+				}
+			}
+
+			if v.CommissionType == "IPSPDRPCSP" {
+				if v.CommissionAmount != "" {
+					dr, _ := strconv.ParseFloat(strings.TrimPrefix(v.CommissionAmount, currency), 64)
+					disasterRecoveryFund += dr
+				}
+			}
 		}
-		amount, _ := strconv.ParseFloat(strings.TrimPrefix(dr, debitCurrency), 64)
-		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
-		totalComission = totalChargedAmount - totalTaxAmount - amount
 
-		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.AmountDebited, debitCurrency))
+		totalChargedAmount, _ := strconv.ParseFloat(resp.FundTransferType.LocalChargeAmount, 64)
+		totalComission = totalChargedAmount - totalTaxAmount - disasterRecoveryFund
+
+		originalDebitAmountStr := strings.TrimSpace(strings.TrimPrefix(resp.FundTransferType.DebitAmountWithCurrency, debitCurrency))
 		originalDebitAmountWithoutCurrency, err := strconv.ParseFloat(originalDebitAmountStr, 64)
 		if err != nil && strings.TrimSpace(resp.FundTransferType.DebitAmount) != "" {
 			originalDebitAmountWithoutCurrency, err = strconv.ParseFloat(strings.TrimSpace(resp.FundTransferType.DebitAmount), 64)
@@ -240,7 +268,9 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 		originalPaidAmount := originalDebitAmountWithoutCurrency - originalTotalChargeAmountWithoutCurrency
 		originalPaidAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, originalPaidAmount)
 		totalServiceChargeWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalComission)
-		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", debitCurrency, totalTaxAmount)
+		totalTaxAmountWithCurrency := fmt.Sprintf("%s%.4f", currency, totalTaxAmount)
+		disasterRecoveryFundWithCurrency := fmt.Sprintf("%s%.4f", currency, disasterRecoveryFund)
+
 		return &FundTransferCheckResult{
 			Status: true,
 			Detail: &FundTransferType{
@@ -261,8 +291,8 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				ReturnToDept:                resp.FundTransferType.ReturnToDept,
 				FedFunds:                    resp.FundTransferType.FedFunds,
 				PositionType:                resp.FundTransferType.PositionType,
-				AmountDebited:               resp.FundTransferType.AmountDebited,
-				AmountCredited:              resp.FundTransferType.AmountCredited,
+				DebitAmountWithCurrency:     resp.FundTransferType.DebitAmountWithCurrency,
+				CreditAmountWithCurrency:    resp.FundTransferType.CreditAmountWithCurrency,
 				TotalChargeAmount:           resp.FundTransferType.TotalChargeAmount,
 				CreditCompCode:              fmt.Sprintf("%.4f", totalTaxAmount),
 				DebitCompCode:               resp.FundTransferType.DebitCompCode,
@@ -302,7 +332,7 @@ func ParseFundTransferCheckSOAP(xmlData string) (*FundTransferCheckResult, error
 				PaymentDetail:               resp.FundTransferType.PaymentDetail,
 				CurrentRate:                 resp.FundTransferType.CurrentRate,
 				LocalTotalTaxAmount:         totalTaxAmountWithCurrency,
-				DisasterReservedFund:        dr,
+				DisasterReservedFund:        disasterRecoveryFundWithCurrency,
 				OriginalPaidAmount:          originalPaidAmountWithCurrency,
 				TotalCommisionWithComission: totalServiceChargeWithCurrency,
 				DebitReference:              resp.FundTransferType.DebitReference,

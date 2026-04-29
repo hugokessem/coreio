@@ -23,6 +23,7 @@ type Params struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
+	UserID              string
 }
 
 type FundTransferVerifyParams struct {
@@ -41,6 +42,7 @@ type FundTransferVerifyParams struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
+	UserID              string
 }
 
 func NewFundTransferVerify(params Params) string {
@@ -96,11 +98,12 @@ func NewFundTransferVerify(params Params) string {
                 <fun:ServiceCode>%s</fun:ServiceCode>
                 <fun:CustomerRole>%s</fun:CustomerRole>
                 <fun:ChannelType>%s</fun:ChannelType>
+	        	<fun:UserID>%s</fun:UserID>
             </FUNDSTRANSFERFTTXNSUPERAPPType>
         </cbes:AccountTransfer_Validate>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType, params.UserID)
 }
 
 type Envelope struct {
@@ -279,6 +282,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 		} else {
 			currency = creditCurrency
 		}
+
 		for _, v := range resp.FundTransferType.GlobalCommissionType.MultipleCommissionType {
 			// REMAINIG
 			if v.CommissionType == "CBECOMSPDIS" {

@@ -14,7 +14,7 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
-		FTNumber: "FT2134310D88",
+		FTNumber: "FT21343FGHD6",
 	}
 
 	xmlRequest := NewFundTransferCheck(params)
@@ -49,8 +49,14 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 	}
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
-	t.Logf("result: %+v", result)
-	t.Log("detail", result.Detail)
+	detail := result.Detail
+	t.Logf("Debit Amount: %s", detail.DebitAmount)
+	t.Logf("Debit Amount With Currency: %s", detail.DebitAmountWithCurrency)
+	t.Logf("Credit Amount With Currency: %s", detail.CreditAmountWithCurrency)
+	t.Logf("Total Commision With Comission: %s", detail.TotalCommisionWithComission)
+	t.Logf("Desaster Recovery Fund: %s", detail.DisasterReservedFund)
+	t.Logf("Processing Date: %s", detail.ProcessingDate)
+	t.Logf("Service Code: %s", detail.ServiceCode)
 
 	// Check that the lookup succeeded
 	if result.Status {
@@ -65,8 +71,8 @@ func TestIntegrationFundTransferCheck(t *testing.T) {
 			t.Logf("Debit Amount: %s", result.Detail.DebitAmount)
 			t.Logf("Credit Amount: %s", result.Detail.CreditAmount)
 			t.Logf("Processing Date: %s", result.Detail.ProcessingDate)
-			t.Logf("Amount Debited: %s", result.Detail.AmountDebited)
-			t.Logf("Amount Credited: %s", result.Detail.AmountCredited)
+			t.Logf("Amount Debited: %s", result.Detail.DebitAmountWithCurrency)
+			t.Logf("Amount Credited: %s", result.Detail.CreditAmountWithCurrency)
 			t.Logf("Total Charge Amount: %s", result.Detail.TotalChargeAmount)
 		}
 	} else {
