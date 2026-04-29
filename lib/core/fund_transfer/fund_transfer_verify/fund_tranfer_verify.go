@@ -23,7 +23,7 @@ type Params struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
-	UserID              string
+	SuperappUserCode    string
 }
 
 type FundTransferVerifyParams struct {
@@ -42,7 +42,7 @@ type FundTransferVerifyParams struct {
 	ServiceCode         string
 	CustomerSegment     string
 	ChannelType         string
-	UserID              string
+	SuperappUserCode    string
 }
 
 func NewFundTransferVerify(params Params) string {
@@ -103,7 +103,7 @@ func NewFundTransferVerify(params Params) string {
         </cbes:AccountTransfer_Validate>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType, params.UserID)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.ServiceCode, params.CustomerSegment, params.ChannelType, params.SuperappUserCode)
 }
 
 type Envelope struct {

@@ -42,14 +42,14 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 
 		// CreditAccountNumber: "1000357597823",
 		// CreditCurrency:      "ETB",
-		DebitReference:  "DEBIT NARRATIVE",
-		CreditReference: "CREDIT NARRATIVE",
-		PaymentDetails:  "TEST PAYMENT",
-		ClientReference: clientReference.String(),
-		ServiceCode:     "CBE",
-		CustomerSegment: "MASS",
-		ChannelType:     "APP",
-		UserID:          "SA1036559081",
+		DebitReference:   "DEBIT NARRATIVE",
+		CreditReference:  "CREDIT NARRATIVE",
+		PaymentDetails:   "TEST PAYMENT",
+		ClientReference:  clientReference.String(),
+		ServiceCode:      "CBE",
+		CustomerSegment:  "MASS",
+		ChannelType:      "APP",
+		SuperappUserCode: "SA1036559081",
 	}
 
 	xmlRequest := NewFundTransferVerify(params)
