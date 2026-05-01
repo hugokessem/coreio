@@ -45,6 +45,10 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		resp, err = client.Do(req)
 		fmt.Printf("---[%d]Response status: %v\n", (attempt + 1), resp.StatusCode)
 		fmt.Printf("---[%d]Response body: %v\n\n\n", (attempt + 1), resp.Body)
+		if resp == nil {
+			return nil, fmt.Errorf("response is nil: %w", err)
+		}
+
 		if err == nil && resp.StatusCode < 500 {
 			return resp, nil
 		}
