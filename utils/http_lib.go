@@ -24,7 +24,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		Timeout: config.Timeout * time.Second,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
+				InsecureSkipVerify: false,
 				MinVersion:         tls.VersionTLS13,
 			},
 			DisableKeepAlives: true,
@@ -46,6 +46,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		if resp == nil {
 			return nil, fmt.Errorf("response is nil: %w", err)
 		}
+
 		fmt.Printf("---[%d]Response status: %v\n", (attempt + 1), resp.StatusCode)
 		fmt.Printf("---[%d]Response body: %v\n\n\n", (attempt + 1), resp.Body)
 
