@@ -638,6 +638,12 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 		AccountNumber: param.AccountNumber,
 	}
 
+	fmt.Println("username: ", params.Username)
+	fmt.Println("password: ", params.Password)
+	fmt.Println("AccountNumber: ", param.AccountNumber)
+	fmt.Println("Param: ", param)
+	fmt.Println("------------------------------------")
+
 	xmlRequest := accountlookup.NewAccountLookup(params)
 	headers := map[string]string{
 		Key: Value,
