@@ -53,7 +53,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 			return resp, nil
 		}
 
-		// Clean up response if we’ll retry
+		// Clean up response if we’ll retry!
 		if resp != nil {
 			io.Copy(io.Discard, resp.Body)
 			resp.Body.Close()
