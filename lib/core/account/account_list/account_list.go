@@ -151,6 +151,7 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 				RestrictionType:         detail.RestrictionType,
 				RestricttionDescription: detail.RestricttionDescription,
 				InactiveFlag:            detail.InactiveFlag,
+				AccountName:             detail.AccountName,
 			}
 		}
 		return &AccountListResult{
@@ -164,3 +165,5 @@ func ParseAccountListSOAP(xmlData string) (*AccountListResult, error) {
 		Messages: []string{"Invalid response format"},
 	}, nil
 }
+
+// ok

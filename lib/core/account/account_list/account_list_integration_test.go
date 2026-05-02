@@ -52,6 +52,14 @@ func TestIntegrationAccountList(t *testing.T) {
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Details)
 	t.Logf("result: %v", result.Details)
+	for _, detail := range result.Details {
+		t.Logf("Account Name: %s", detail.AccountName)
+		// assert.NotEmpty(t, detail.CustomerName)
+		// assert.NotEmpty(t, detail.Currency)
+		// assert.NotEmpty(t, detail.CustomerID)
+		// t.Logf("Account: AccountNumber=%s, CustomerName=%s, Currency=%s",
+		// 	detail.AccountNumber, detail.CustomerName, detail.Currency)
+	}
 
 	// if len(result.Details) > 0 {
 	// 	// Validate at least one account detail
