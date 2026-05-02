@@ -66,6 +66,7 @@ type AccountListByCIFResponse struct {
 type AccountListByCIFDetail struct {
 	AccountNumber           string `xml:"AccountNumber"`
 	CustomerName            string `xml:"CustomerName"`
+	AccountName             string `xml:"AccountName"`
 	Restriction             string `xml:"Restriction"`
 	Currency                string `xml:"Currency"`
 	CustomerID              string `xml:"CustomerID"`

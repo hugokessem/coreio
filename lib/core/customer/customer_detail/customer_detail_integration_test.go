@@ -70,5 +70,11 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	t.Logf("Result: %v", result)
 	t.Logf("Result Success: %v", result.Success)
 	t.Logf("Customer Name: %s", result.CustomerInfos)
+	t.Logf("CustomerGroup: %v", result.CustomerInfos.CustomerGroup)
+	t.Logf("CustomerSegment: %v", result.CustomerInfos.CustomerSegment)
+	t.Logf("CustomerSubSegment: %v", result.CustomerInfos.CustomerSubSegment)
+	if len(result.Message) > 0 {
+		t.Logf("Messages: %v", result.Message)
+	}
 
 }

@@ -11,6 +11,27 @@ import (
 	"time"
 )
 
+// tlsConfig := &tls.Config{
+//         // Set the minimum version to TLS 1.2
+//         MinVersion: tls.VersionTLS12,
+
+//         // Optional: Force ONLY TLS 1.2 (ignoring TLS 1.3)
+//         // MaxVersion: tls.VersionTLS12,
+
+//         // Optional: Specify secure cipher suites for TLS 1.2
+//         CipherSuites: []uint16{
+//             tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+//             tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+//         },
+//     }
+
+//     // Apply to an HTTP Transport
+//     transport := &http.Transport{
+//         TLSClientConfig: tlsConfig,
+//     }
+
+//     client := &http.Client{Transport: transport}
+
 type Config struct {
 	MaxRetries int
 	Timeout    time.Duration
@@ -46,9 +67,6 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		if resp == nil {
 			return nil, fmt.Errorf("response is nil: %w", err)
 		}
-
-		fmt.Printf("---[%d]Response status: %v\n", (attempt + 1), resp.StatusCode)
-		fmt.Printf("---[%d]Response body: %v\n\n\n", (attempt + 1), resp.Body)
 
 		if err == nil && resp.StatusCode < 500 {
 			return resp, nil

@@ -15,9 +15,10 @@ func TestGenerateXML(t *testing.T) {
 		{
 			name: "Validate account lookup",
 			param: Params{
-				Username:      "SUPERAPP",
-				Password:      "123456",
-				AccountNumber: "1000000006924",
+				Username: "SUPERAPP",
+				Password: "123456",
+				// AccountNumber: "1000000006924",
+				AccountNumber: "ETB1753600950162",
 			},
 			expect: []string{
 				"<criteriaValue>1000000006924</criteriaValue>",

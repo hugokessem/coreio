@@ -14,7 +14,7 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000446114658",
+		AccountNumber: "ETB1753600950162",
 		// AccountNumber: "1000200300134",
 	}
 
