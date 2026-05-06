@@ -7,15 +7,15 @@ import (
 )
 
 type Params struct {
-	Username         string
-	Password         string
-	AccountNumber    string
-	SuperappUserCode string
+	Username       string
+	Password       string
+	AccountNumber  string
+	CustomerNumber string
 }
 
 type AccountLookupParam struct {
-	AccountNumber    string
-	SuperappUserCode string
+	AccountNumber  string
+	CustomerNumber string
 }
 
 func NewAccountLookup(param Params) string {
@@ -43,7 +43,7 @@ func NewAccountLookup(param Params) string {
          </ACCOUNTENQUIRYSUPERAPPType>
       </cbes:AccountLookup>
    </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.SuperappUserCode)
+</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.CustomerNumber)
 }
 
 // ----------------- Generic SOAP Envelope -----------------

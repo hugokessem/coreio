@@ -13,6 +13,7 @@ import (
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
+	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
@@ -53,6 +54,9 @@ type ServiceLimitResult = servicelimit.ServiceLimitResult
 
 type SplitPaymentParam = splitpayment.SplitPaymentParam
 type SplitPaymentResult = splitpayment.SplitPaymentResult
+
+type NameLookupParam = namelookup.NameLookupParam
+type NameLookupResult = namelookup.NameLookupResult
 
 type AccountCreationParam = accountcreation.AccountCreationParams
 type AccountCreationResult = accountcreation.AccountCreationResult
@@ -158,6 +162,8 @@ type CBECoreAPIInterface interface {
 
 	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
 	ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error)
+
+	NameLookup(param NameLookupParam) (*NameLookupResult, error)
 }
 
 type CBECoreCredential struct {
@@ -181,6 +187,42 @@ const (
 	Key   = "Content-Type"
 	Value = "text/xml; charset=utf-8"
 )
+
+func (c *CBECoreAPI) NameLookup(param NameLookupParam) (*NameLookupResult, error) {
+	params := namelookup.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumber: param.AccountNumber,
+	}
+
+	xmlRequest := namelookup.NewNameLookup(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := namelookup.ParseNameLookupSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
 
 func (c *CBECoreAPI) ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error) {
 	params := servicedetail.Params{
@@ -633,10 +675,10 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 
 func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
 	params := accountlookup.Params{
-		Username:         c.config.Username,
-		Password:         c.config.Password,
-		AccountNumber:    param.AccountNumber,
-		SuperappUserCode: param.SuperappUserCode,
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		AccountNumber:  param.AccountNumber,
+		CustomerNumber: param.CustomerNumber,
 	}
 
 	xmlRequest := accountlookup.NewAccountLookup(params)

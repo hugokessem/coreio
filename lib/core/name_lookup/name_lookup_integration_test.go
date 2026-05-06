@@ -1,4 +1,4 @@
-package accountlookup
+package namelookup
 
 import (
 	"crypto/tls"
@@ -12,13 +12,12 @@ import (
 
 func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
-		Username:       "SUPERAPP",
-		Password:       "123456",
-		AccountNumber:  "1000517052152",
-		CustomerNumber: "1771239173",
+		Username:      "SUPERAPP",
+		Password:      "123456",
+		AccountNumber: "1000517052152",
 	}
 
-	xmlRequest := NewAccountLookup(params)
+	xmlRequest := NewNameLookup(params)
 	t.Logf("xmlRequest %v", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
@@ -44,18 +43,19 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseAccountLookupSOAP(string(responseData))
+	result, err := ParseNameLookupSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Log("resultDetail", result.Detail)
+	t.Logf("AccountHolderName: %+v", result.Detail.AccountName)
+	t.Logf("Currency: %+v", result.Detail.Currency)
+	t.Log("resultDetail", result)
 
 	if result.Detail != nil {
 		assert.Equal(t, "1000517052152", result.Detail.AccountNumber)
-		assert.Equal(t, "YOHHANES TESHOME SHIFERAW", result.Detail.CustomerName)
 		assert.Equal(t, "ETB", result.Detail.Currency)
 	} else {
 		t.Error("Expected Detail to be non-nil")
