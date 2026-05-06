@@ -12,10 +12,10 @@ import (
 
 func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
-		Username:      "SUPERAPP",
-		Password:      "123456",
-		AccountNumber: "ETB1753600950162",
-		// AccountNumber: "1000200300134",
+		Username:         "SUPERAPP",
+		Password:         "123456",
+		AccountNumber:    "1000301764441",
+		SuperappUserCode: "1041192441",
 	}
 
 	xmlRequest := NewAccountLookup(params)
