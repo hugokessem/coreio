@@ -15,7 +15,7 @@ func TestIntegrationAccountLookup(t *testing.T) {
 		Username:         "SUPERAPP",
 		Password:         "123456",
 		AccountNumber:    "1000301764441",
-		SuperappUserCode: "1041192441",
+		SuperappUserCode: "1771239173",
 	}
 
 	xmlRequest := NewAccountLookup(params)

@@ -633,9 +633,10 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 
 func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
 	params := accountlookup.Params{
-		Username:      c.config.Username,
-		Password:      c.config.Password,
-		AccountNumber: param.AccountNumber,
+		Username:         c.config.Username,
+		Password:         c.config.Password,
+		AccountNumber:    param.AccountNumber,
+		SuperappUserCode: param.SuperappUserCode,
 	}
 
 	xmlRequest := accountlookup.NewAccountLookup(params)

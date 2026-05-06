@@ -14,7 +14,8 @@ type Params struct {
 }
 
 type AccountLookupParam struct {
-	AccountNumber string
+	AccountNumber    string
+	SuperappUserCode string
 }
 
 func NewAccountLookup(param Params) string {
