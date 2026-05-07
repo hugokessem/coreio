@@ -225,6 +225,7 @@ type FundTransferDetail struct {
 	DisasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
 	OriginalPaidAmount                 string `xml:"ORIGPAIDAMT"`
 	TotalCommisionWithComission        string `xml:"TOTALCOMISSON"`
+	CreditPhoneNumber                  string `xml:"PHONENUM"`
 }
 
 type FundTransferResponse struct {
@@ -441,6 +442,7 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 				DisasterReservedFund:               disasterRecoveryFundWithCurrency,
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
+				CreditPhoneNumber:                  resp.FundTransferType.CreditPhoneNumber,
 			},
 			Messages: resp.Status.Messages,
 		}, nil
