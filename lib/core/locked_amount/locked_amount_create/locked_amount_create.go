@@ -101,7 +101,7 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &CreateLockedAmountResult{
 				Success:  false,
-				Messages: []string{"API returned failure"},
+				Messages: resp.Messages,
 			}, nil
 		}
 
