@@ -59,10 +59,10 @@ type Body struct {
 
 type CreateLockedAmountResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
-		TransactionID    string `xml:"transactionId"`
-		Application      string `xml:"application"`
-		Messages        string `xml:"messageId"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		TransactionID    string   `xml:"transactionId"`
+		Application      string   `xml:"application"`
+		Messages         []string `xml:"messageId"`
 	} `xml:"Status"`
 	CreateLockedAmount *CreateLockedAmountDetail `xml:"ACLOCKEDEVENTSType"`
 }
@@ -101,7 +101,7 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &CreateLockedAmountResult{
 				Success:  false,
-				Messages: resp.Messages,
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
