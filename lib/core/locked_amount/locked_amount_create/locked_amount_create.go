@@ -62,7 +62,7 @@ type CreateLockedAmountResponse struct {
 		SuccessIndicator string `xml:"successIndicator"`
 		TransactionID    string `xml:"transactionId"`
 		Application      string `xml:"application"`
-		MessageId        string `xml:"messageId"`
+		Messages        string `xml:"messageId"`
 	} `xml:"Status"`
 	CreateLockedAmount *CreateLockedAmountDetail `xml:"ACLOCKEDEVENTSType"`
 }
