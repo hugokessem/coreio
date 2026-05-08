@@ -18,6 +18,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
+		// ServiceCode: "CBE",
 	}
 
 	xmlRequest := NewServiceDetail(params)
