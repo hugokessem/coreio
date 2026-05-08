@@ -89,6 +89,7 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 		return nil, err
 	}
 
+	fmt.Println("response: ", env)
 	if env.Body.CreateLockedAmountResponse != nil {
 		resp := env.Body.CreateLockedAmountResponse
 		if resp.Status == nil {
