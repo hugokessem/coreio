@@ -12,7 +12,7 @@ type Params struct {
 	AccountNumber string
 }
 
-type AccountLookupParam struct {
+type NameLookupParam struct {
 	AccountNumber string
 }
 
