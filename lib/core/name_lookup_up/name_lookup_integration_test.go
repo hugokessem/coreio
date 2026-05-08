@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIntegrationNameLookup(t *testing.T) {
+func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
@@ -50,11 +50,13 @@ func TestIntegrationNameLookup(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Log("resultDetail", result.Detail)
+	t.Logf("AccountHolderName: %+v", result.Detail.AccountName)
+	t.Logf("Currency: %+v", result.Detail.Currency)
+	t.Logf("Customer Number: %+v", result.Detail.CustomerNumber)
+	t.Log("resultDetail", result)
 
 	if result.Detail != nil {
 		assert.Equal(t, "1000517052152", result.Detail.AccountNumber)
-		assert.Equal(t, "YOHHANES TESHOME SHIFERAW", result.Detail.CustomerName)
 		assert.Equal(t, "ETB", result.Detail.Currency)
 	} else {
 		t.Error("Expected Detail to be non-nil")

@@ -45,6 +45,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
+	t.Logf("core response %s", string(responseData))
 	result, err := ParseCreateLockedAmountSOAP(string(responseData))
 
 	assert.NoError(t, err)

@@ -99,6 +99,16 @@ type AccountLookupDetail struct {
 	DAOName         string `xml:"DAOName"`
 }
 
+type AccountInformation struct {
+	AccountHolderName string `json:"AccountHolderName"`
+	AccountNumber     string `json:"AccountNumber"`
+	AccountCurrency   string `json:"AccountCurrency"`
+	AccountType       string `json:"AccountType"`
+	AccountBranchName string `json:"AccountBranchName"`
+	AccountBranchCode string `json:"AccountBranchCode"`
+	CustomerNumber    string `json:"CustomerNumber"`
+}
+
 // ----------------- Failure or no records -----------------
 type AccountBalanceInquiryResponse struct {
 	Status *struct {
