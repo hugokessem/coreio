@@ -16,21 +16,20 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000259876854",
+		DebitAccountNumber:  "1000498200943",
 		DebitCurrency:       "ETB",
 		DebitAmount:         "1000",
 		CreditCurrency:      "ETB",
-		CreditAccountNumber: "1000382499388",
+		CreditAccountNumber: "1000517052152",
 		CreditReference:     "Credit reference",
 		DebitReference:      "Debit reference",
 		ClientReference:     uuid.String(),
-		ServiceCode:         "ECOMMERCE",
-		LockID:              "ACLK21343H06NC",
+		ServiceCode:         "SITOTA",
+		LockID:              "ACLK21343BVYNW",
 		PaymentDetails:      "Apple",
 		CustomerRole:        "MASS",
 		ChannelType:         "APP",
 		SuperappUserCode:    "SA1036095547",
-		// :        "ACLK21343Z18JJ",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)
@@ -49,12 +48,13 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 	}
 
 	resp, err := client.Do(req)
+	t.Logf("---resp: %v", resp)
 	assert.NoError(t, err)
 	assert.NotNil(t, resp)
 	defer resp.Body.Close()
 
 	responseData, err := io.ReadAll(resp.Body)
-	t.Logf("---resp: %+v", resp.Body)
+	t.Logf("---resp.Body: %+v", resp.Body)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 

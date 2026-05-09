@@ -16,6 +16,36 @@ type NameLookupParam struct {
 	AccountNumber string
 }
 
+var prefix []string = []string{"ABA",
+	"BITSUH.ABUNE",
+	"CAPTAIN",
+	"COLONEL",
+	"COMMANDER",
+	"COMMISSIONER",
+	"CONSTABLE",
+	"DIAKON",
+	"DR",
+	"EMAHOY",
+	"ENE",
+	"GENERAL",
+	"HAJI",
+	"INSPECTOR",
+	"KES",
+	"LIEUTENANT",
+	"MAJOR",
+	"MISS",
+	"MR",
+	"MRS",
+	"MS",
+	"MUFTI",
+	"PROFESSOR",
+	"REV",
+	"SERGEANT",
+	"SHIEH",
+	"SISTER",
+	"USTAZ",
+}
+
 func NewNameLookup(param Params) string {
 	return fmt.Sprintf(
 		`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
@@ -136,6 +166,16 @@ func ParseNameLookupSOAP(xmlData string) (*NameLookupResult, error) {
 				Messages: []string{"No account details found"},
 			}, nil
 		}
+
+		name := resp.AccountEnquirySuperappType.Group.Details.AccountName
+		temp := strings.Split(name, " ")
+
+		for _, v := range prefix {
+			if strings.EqualFold(temp[0], v) {
+				name = strings.Join(temp[1:], " ")
+				break
+			}
+		}
 		return &NameLookupResult{
 			Success: true,
 			Detail: &NameLookupDetail{
@@ -160,7 +200,7 @@ func ParseNameLookupSOAP(xmlData string) (*NameLookupResult, error) {
 				Target:          resp.AccountEnquirySuperappType.Group.Details.Target,
 				TinNO:           resp.AccountEnquirySuperappType.Group.Details.TinNO,
 				Category:        resp.AccountEnquirySuperappType.Group.Details.Category,
-				AccountName:     resp.AccountEnquirySuperappType.Group.Details.AccountName,
+				AccountName:     name,
 				SubSegment:      resp.AccountEnquirySuperappType.Group.Details.SubSegment,
 				CustomerGroup:   resp.AccountEnquirySuperappType.Group.Details.CustomerGroup,
 				AccountInactive: resp.AccountEnquirySuperappType.Group.Details.AccountInactive,
