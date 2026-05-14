@@ -67,6 +67,12 @@ type NameLookupResultDetail struct {
 	Currency        string `xml:"Currency"`
 	RestrictionType string `xml:"RestrictionType"`
 	InactiveFlag    string `xml:"InactiveFlag"`
+	Industry        string `xml:"Industry"`
+	CustomerSegment string `xml:"CustomerSegment"`
+	SubSegment      string `xml:"SubSegment"`
+	CustomerGroup   string `xml:"CustomerGroup"`
+	Category        string `xml:"Category"`
+	Sector          string `xml:"Sector"`
 }
 
 type NameLookupResult struct {
@@ -98,7 +104,9 @@ func ParseNameLookupSOAP(xmlData string) (*NameLookupResult, error) {
 				Messages: resp.Status.Messages,
 			}, nil
 		}
-		if resp.NameLookupDetailResult == nil || resp.NameLookupDetailResult.NameLookup == nil || resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail == nil {
+		if resp.NameLookupDetailResult == nil ||
+			resp.NameLookupDetailResult.NameLookup == nil ||
+			resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail == nil {
 			return &NameLookupResult{
 				Success:  false,
 				Detail:   nil,
@@ -115,6 +123,12 @@ func ParseNameLookupSOAP(xmlData string) (*NameLookupResult, error) {
 				Currency:        resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.Currency,
 				RestrictionType: resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.RestrictionType,
 				InactiveFlag:    resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.InactiveFlag,
+				Industry:        resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.Industry,
+				CustomerSegment: resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.CustomerSegment,
+				SubSegment:      resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.SubSegment,
+				CustomerGroup:   resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.CustomerGroup,
+				Category:        resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.Category,
+				Sector:          resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail.Sector,
 			},
 		}, nil
 

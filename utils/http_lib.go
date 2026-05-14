@@ -73,10 +73,8 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		}
 
 		// Clean up response if we’ll retry!
-		if resp != nil {
-			io.Copy(io.Discard, resp.Body)
-			resp.Body.Close()
-		}
+		io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
 
 		// Exponential backoff with jitter
 		backoff := time.Duration(math.Pow(2, float64(attempt))) * time.Second
