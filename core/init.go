@@ -522,11 +522,11 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 
 func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
-		Username: c.config.Username,
-		Password: c.config.Password,
-		Customer: param.Customer,
-		Category: param.Category,
-		Currency: param.Currency,
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+		Category:       param.Category,
+		Currency:       param.Currency,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	headers := map[string]string{

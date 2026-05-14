@@ -9,14 +9,14 @@ import (
 type Params struct {
 	Username       string
 	Password       string
-	Customer       string
+	CustomerNumber string
 	Category       string
 	Currency       string
 	AccountOfficer string
 }
 
 type AccountCreationParams struct {
-	Customer       string
+	CustomerNumber string
 	Category       string
 	Currency       string
 	AccountOfficer string
@@ -43,7 +43,7 @@ func NewAccountCreation(param Params) string {
 			</cbes:AccountOpeningSuperApp>
 		</soapenv:Body>
 	</soapenv:Envelope>
-	`, param.Password, param.Username, param.Customer, param.Category, param.Currency, param.AccountOfficer)
+	`, param.Password, param.Username, param.CustomerNumber, param.Category, param.Currency, param.AccountOfficer)
 }
 
 type Envelope struct {
