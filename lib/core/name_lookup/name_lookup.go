@@ -95,11 +95,10 @@ func ParseNameLookupSOAP(xmlData string) (*NameLookupResult, error) {
 			return &NameLookupResult{
 				Success:  false,
 				Detail:   nil,
-				Messages: []string{"API returned failure"},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
-
-		if resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail == nil {
+		if resp.NameLookupDetailResult == nil || resp.NameLookupDetailResult.NameLookup == nil || resp.NameLookupDetailResult.NameLookup.NameLookupResultDetail == nil {
 			return &NameLookupResult{
 				Success:  false,
 				Detail:   nil,
