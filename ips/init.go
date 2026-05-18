@@ -23,13 +23,13 @@ type StatusCheckParam = statuscheck.Params
 type StatusCheckResult = statuscheck.PaymentStatusResult
 
 type QRPaymentParam = qrpayment.Params
-type QRPaymentResult = qrpayment.QrPaymentResult
+type QrPaymentResult = qrpayment.QrPaymentResult
 
 type IPSCoreAPIInterface interface {
 	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
 	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
 	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
-	QRPayment(param QRPaymentParam) (*QRPaymentParam, error)
+	QRPayment(param QRPaymentParam) (*QrPaymentResult, error)
 }
 
 type IPSCredentials struct {
@@ -46,8 +46,39 @@ type IPSCoreAPI struct {
 	config *internal.Config
 }
 
-func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QRPaymentParam, error) {
-	return nil, nil
+func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
+	config := utils.Config{
+		MaxRetries: 6,
+		Timeout:    30 * time.Second,
+	}
+
+	xmlRequest := qrpayment.NewQrPayment(param)
+	headers := map[string]string{
+		"Content-Type":     "application/xml",
+		"username":         c.config.Username,
+		"password":         c.config.Password,
+		"grant_type":       c.config.GrantType,
+		"Jwt_Assertion":    c.config.JwtAssertion,
+		"MB_authorization": c.config.MBAuthorization,
+		"Authorization":    c.config.Authorization,
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseDate, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := qrpayment.ParseQrPaymentSOAP(string(responseDate))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {

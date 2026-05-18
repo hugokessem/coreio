@@ -14,7 +14,7 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000564202235",
+		AccountNumber: "1000517052152",
 	}
 
 	xmlRequest := NewNameLookup(params)
@@ -53,8 +53,8 @@ func TestIntegrationAccountLookup(t *testing.T) {
 	// }
 
 	assert.True(t, result.Success)
-	// assert.NotNil(t, result.Detail)
-	// t.Logf("AccountHolderName: %+v", result.Detail.AccountName)
+	assert.NotNil(t, result.Detail)
+	t.Logf("Details: %+v", result.Detail)
 	// t.Logf("Currency: %+v", result.Detail.Currency)
 	// t.Logf("Customer Number: %+v", result.Detail.CustomerNumber)
 	// t.Log("resultDetail", result)
