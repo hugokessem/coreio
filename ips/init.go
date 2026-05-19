@@ -1,6 +1,7 @@
 package ips
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -53,6 +54,7 @@ func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
 	}
 
 	xmlRequest := qrpayment.NewQrPayment(param)
+	fmt.Println("[QRPayment]xmlRequest: %s", xmlRequest)
 	headers := map[string]string{
 		"Content-Type":     "application/xml",
 		"username":         c.config.Username,
