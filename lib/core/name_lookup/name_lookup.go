@@ -73,6 +73,7 @@ type NameLookupResultDetail struct {
 	CustomerGroup   string `xml:"CustomerGroup"`
 	Category        string `xml:"Category"`
 	Sector          string `xml:"Sector"`
+	TinNumber       string `xml:"TINNo"`
 }
 
 type NameLookupResult struct {
