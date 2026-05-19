@@ -40,6 +40,7 @@ type Params struct {
 	DebitAccountNumber        string
 	CreditAccountNumber       string
 	CreditAccountHolderName   string
+	MerchantLabel             string // <url1:Dept>
 	Narative                  string
 	DebiterInformation        DebiterInformation
 	CreditInformation         CrediterInformation
@@ -241,7 +242,7 @@ func NewQrPayment(param Params) string {
       </mb:Payment>
    </soapenv:Body>
 </soapenv:Envelope>
-	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, param.DebiterInformation.StreetName, param.DebiterInformation.BuildingNumber, param.DebiterInformation.PostalCode, param.DebiterInformation.TownName, param.DebiterInformation.Country, param.DebiterInformation.StreetName, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, param.CreditInformation.StreetName, param.CreditInformation.BuildingNumber, param.CreditInformation.PostalCode, param.CreditInformation.TownName, param.CreditInformation.Country, param.CreditInformation.AddressLine, param.CreditAccountHolderName, "", param.CreditAccountNumber, param.Narative, param.Narative)
+	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, param.DebiterInformation.StreetName, param.DebiterInformation.BuildingNumber, param.DebiterInformation.PostalCode, param.DebiterInformation.TownName, param.DebiterInformation.Country, param.DebiterInformation.StreetName, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, param.CreditInformation.StreetName, param.CreditInformation.BuildingNumber, param.CreditInformation.PostalCode, param.CreditInformation.TownName, param.CreditInformation.Country, param.CreditInformation.AddressLine, param.CreditAccountHolderName, param.MerchantLabel, param.CreditAccountNumber, param.Narative, param.Narative)
 }
 
 type Envelop struct {
