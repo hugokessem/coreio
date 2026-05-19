@@ -228,6 +228,7 @@ type FundTransferDetail struct {
 	DisasterReservedFund               string `xml:"DISASTERRESERVEFUND"`
 	OriginalPaidAmount                 string `xml:"ORIGPAIDAMT"`
 	TotalCommisionWithComission        string `xml:"TOTALCOMISSON"`
+	Segment                            string `xml:"SASEGMENT"`
 }
 
 type FundTransferVerifyResult struct {
@@ -446,6 +447,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				DisasterReservedFund:               disasterRecoveryFundWithCurrency,
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
+				Segment:                            resp.FundTransferType.Segment,
 			},
 			Messages: resp.Status.Messages,
 		}, nil

@@ -20,9 +20,9 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000263525144",
+		DebitAccountNumber:  "1000298095649",
 		DebitCurrency:       "ETB",
-		CreditAccountNumber: "1000298095649",
+		CreditAccountNumber: "1000517052152",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10",
 		// DebitAccountNumber: "1000446113608",
@@ -97,7 +97,8 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	t.Logf("DisasterReservedFund: %+v", result.Detail.DisasterReservedFund)
 	t.Logf("OriginalPaidAmount: %+v", result.Detail.OriginalPaidAmount)
 	t.Logf("TotalCommisionWithComission: %+v", result.Detail.TotalCommisionWithComission)
-
+	t.Logf("Customer Segment: %s", result.Detail.Segment)
+	t.Logf("Customer Role: %s", result.Detail.CustomerRole)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
 
