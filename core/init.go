@@ -907,6 +907,7 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 		From:          param.From,
 		To:            param.To,
 		LockedAmount:  param.LockedAmount,
+		UserID:        param.UserID,
 	}
 
 	xmlRequest := lockedamountcreate.NewCreateLockedAmount(params)
