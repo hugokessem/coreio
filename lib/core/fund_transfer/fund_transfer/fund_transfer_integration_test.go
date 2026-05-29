@@ -36,8 +36,10 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CustomerSegment:     "MASS",
 		// SuperappUserCode:    "user-code",
 		IsFraudCheckEnabled: false,
-		SuperappUserCode:    "SA1036559081",
+		SuperappUserCode:    "SA1040746858c",
 	}
+
+	t.Logf("param %v", params)
 
 	xmlRequest := NewFundTransfer(params)
 	t.Logf("Generated XML Request: %s", xmlRequest)
