@@ -523,11 +523,10 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 
 func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
-		Username:       c.config.Username,
-		Password:       c.config.Password,
 		CustomerNumber: param.CustomerNumber,
 		Category:       param.Category,
 		Currency:       param.Currency,
+		Url:            param.Url,
 		Header:         param.Header,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
@@ -539,7 +538,7 @@ func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreati
 		maps.Copy(headers, params.Header)
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+	resp, err := utils.DoPostWithRetry(param.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,
 	}, headers)

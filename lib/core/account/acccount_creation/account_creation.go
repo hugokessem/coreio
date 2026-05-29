@@ -13,6 +13,7 @@ type Params struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
+	Url            string
 	Header         map[string]string
 }
 
@@ -21,6 +22,7 @@ type AccountCreationParams struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
+	Url            string
 	Header         map[string]string
 }
 
