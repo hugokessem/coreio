@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"io"
+	"maps"
 	"strings"
 	"time"
 
@@ -527,11 +528,17 @@ func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreati
 		CustomerNumber: param.CustomerNumber,
 		Category:       param.Category,
 		Currency:       param.Currency,
+		Header:         param.Header,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	headers := map[string]string{
 		Key: Value,
 	}
+
+	if param.Header != nil {
+		maps.Copy(headers, params.Header)
+	}
+
 	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
 		Timeout:    30 * time.Second,
 		MaxRetries: 6,

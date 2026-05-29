@@ -81,6 +81,7 @@ type MiniStatementDetail struct {
 	TransactionReference string `xml:"REFNO"`
 	Post                 string `xml:"POST"`
 	Amount               string `xml:"PAMT"`
+	Naratice             string `xml:""`
 }
 
 type MiniStatementByDateRangeResult struct {

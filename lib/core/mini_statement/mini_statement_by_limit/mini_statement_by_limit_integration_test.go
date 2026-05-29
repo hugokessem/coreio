@@ -15,7 +15,7 @@ func TestIntegrationMiniStatementByRange(t *testing.T) {
 		Username:            "SUPERAPP",
 		Password:            "123456",
 		AccountNumber:       "1000445483684",
-		NumberOfTransaction: "3",
+		NumberOfTransaction: "25",
 	}
 
 	xmlRequest := NewMiniStatementByLimit(params)

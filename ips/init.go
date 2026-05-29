@@ -54,7 +54,7 @@ func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
 	}
 
 	xmlRequest := qrpayment.NewQrPayment(param)
-	fmt.Println("[QRPayment]xmlRequest: %s", xmlRequest)
+	fmt.Printf("[QRPayment]xmlRequest: %s\n\n", xmlRequest)
 	headers := map[string]string{
 		"Content-Type":     "application/xml",
 		"username":         c.config.Username,

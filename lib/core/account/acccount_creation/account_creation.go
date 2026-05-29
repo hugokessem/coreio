@@ -13,6 +13,7 @@ type Params struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
+	Header         map[string]string
 }
 
 type AccountCreationParams struct {
@@ -20,30 +21,33 @@ type AccountCreationParams struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
+	Header         map[string]string
 }
 
 func NewAccountCreation(param Params) string {
-	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
-		<soapenv:Header/>
-		<soapenv:Body>
-			<cbes:AccountOpeningSuperApp>
-			<WebRequestCommon>
-			<company/>
-			<password>%s</password>
-			<userName>%s</userName>
-			</WebRequestCommon>
-			<OfsFunction/>
-			<ACCOUNTCREATEINDIVIDUALType id="">
-				<acc:CUSTOMER>%s</acc:CUSTOMER>
-				<acc:CATEGORY>%s</acc:CATEGORY>
-				<acc:CURRENCY>%s</acc:CURRENCY>
-				<acc:ACCOUNTOFFICER>%s</acc:ACCOUNTOFFICER>
-			</ACCOUNTCREATEINDIVIDUALType>
-			</cbes:AccountOpeningSuperApp>
-		</soapenv:Body>
-	</soapenv:Envelope>
-	`, param.Password, param.Username, param.CustomerNumber, param.Category, param.Currency, param.AccountOfficer)
+	return fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
+		<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iib="http://temenos.com/IIBONBOARDING" xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
+			<soapenv:Header/>
+			<soapenv:Body>
+				<iib:AccountOpeningSuperApp>
+					<WebRequestCommon>
+						<company/>
+						<password>%s</password>
+						<userName>%s</userName>
+					</WebRequestCommon>
+					<OfsFunction></OfsFunction>
+					<ACCOUNTCREATEINDIVIDUALType id="">
+						<acc:CUSTOMER>%s</acc:CUSTOMER>
+						<acc:CATEGORY>%s</acc:CATEGORY>
+						<acc:CURRENCY>%s</acc:CURRENCY>
+						<acc:ACCOUNTOFFICER>%s</acc:ACCOUNTOFFICER>
+					</ACCOUNTCREATEINDIVIDUALType>
+				</iib:AccountOpeningSuperApp>
+			</soapenv:Body>
+		</soapenv:Envelope>`,
+		param.Password, param.Username, param.CustomerNumber, param.Category, param.Currency, param.AccountOfficer,
+	)
+
 }
 
 type Envelope struct {
@@ -66,10 +70,9 @@ type AccountCreationResponse struct {
 }
 
 type AccountCreationDetail struct {
-	XMLName            xml.Name `xml:"ACCOUNTType"`
-	AccountNumber      string   `xml:"id,attr"`
-	Customer           string   `xml:"CUSTOMER"`
-	Category           string   `xml:"CATEGORY"`
+	AccountNumber      string `xml:"id,attr"`
+	Customer           string `xml:"CUSTOMER"`
+	Category           string `xml:"CATEGORY"`
 	GlobalAccountTitle struct {
 		AccountTitle string `xml:"ACCOUNTTITLE1"`
 	} `xml:"gACCOUNTTITLE1"`

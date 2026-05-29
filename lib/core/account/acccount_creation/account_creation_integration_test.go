@@ -1,4 +1,4 @@
-package lockedamountcreate
+package acccountcreation
 
 import (
 	"crypto/tls"
@@ -12,17 +12,15 @@ import (
 
 func TestIntegrationCreateLockedAmount(t *testing.T) {
 	params := Params{
-		Username:      "SUPERAPP",
-		Password:      "123456",
-		AccountNumber: "1000517052152",
-		Description:   "3 Click Payment",
-		From:          "20251109",
-		To:            "20281111",
-		LockedAmount:  "1000",
-		UserID:        "SA1771239173",
+		Username:       "SUPERAPP",
+		Password:       "123456",
+		CustomerNumber: "1195875233",
+		Category:       "6501",
+		Currency:       "ETB",
+		AccountOfficer: "7016",
 	}
 
-	xmlRequest := NewCreateLockedAmount(params)
+	xmlRequest := NewAccountCreation(params)
 	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
@@ -47,7 +45,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
 	t.Logf("core response %s", string(responseData))
-	result, err := ParseCreateLockedAmountSOAP(string(responseData))
+	result, err := ParseAccountCreationSOAP(string(responseData))
 
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
@@ -59,10 +57,6 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	assert.NotNil(t, result.Detail)
 
 	if result.Detail != nil {
-		assert.Equal(t, "20251111", result.Detail.To)
-		assert.Equal(t, "20251109", result.Detail.From)
-		assert.Equal(t, "251.00", result.Detail.LockedAmount)
-		assert.Equal(t, "3 Click Payment", result.Detail.Description)
 		assert.Equal(t, "1000000006924", result.Detail.AccountNumber)
 	} else {
 		t.Error("Expected Detail to be non-nil")
