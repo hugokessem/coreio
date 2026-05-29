@@ -523,6 +523,9 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 
 func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
+		Username:       param.Username,
+		Password:       param.Password,
+		AccountOfficer: param.AccountOfficer,
 		CustomerNumber: param.CustomerNumber,
 		Category:       param.Category,
 		Currency:       param.Currency,

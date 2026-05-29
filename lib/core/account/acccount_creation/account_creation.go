@@ -18,6 +18,8 @@ type Params struct {
 }
 
 type AccountCreationParams struct {
+	Username       string
+	Password       string
 	CustomerNumber string
 	Category       string
 	Currency       string
