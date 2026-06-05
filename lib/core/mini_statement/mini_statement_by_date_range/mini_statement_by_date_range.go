@@ -21,8 +21,7 @@ type MiniStatementByDateRangeParam struct {
 
 func NewMiniStatementByDateRange(param Params) string {
 	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-xmlns:cbes="http://temenos.com/CBESUPERAPP">
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
     <soapenv:Header/>
     <soapenv:Body>
         <cbes:AccountStatementByRange>
@@ -81,7 +80,7 @@ type MiniStatementDetail struct {
 	TransactionReference string `xml:"REFNO"`
 	Post                 string `xml:"POST"`
 	Amount               string `xml:"PAMT"`
-	Naratice             string `xml:""`
+	Naratice             string `xml:"NARRATIVE"`
 }
 
 type MiniStatementByDateRangeResult struct {

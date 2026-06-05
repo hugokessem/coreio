@@ -14,7 +14,7 @@ func TestIntegrationListLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000000006924",
+		AccountNumber: "1000346468576",
 	}
 
 	xmlRequest := NewListLockedAmount(params)
@@ -47,14 +47,14 @@ func TestIntegrationListLockedAmount(t *testing.T) {
 
 	// Check that the lookup succeeded
 	t.Log(len(result.Details))
-	t.Log(result.Details[42])
 	assert.True(t, result.Success)
 	assert.Greater(t, len(result.Details), 0)
 
 	if len(result.Details) > 0 {
-		assert.Equal(t, "1000000006924", result.Details[0].AccountNumber)
+		assert.Equal(t, "1000346468576", result.Details[0].AccountNumber)
 		assert.Equal(t, "20120501", result.Details[0].LockedDate)
 		assert.Equal(t, "100", result.Details[0].LockedAmount)
+		t.Logf("Locked Count: %d", len(result.Details))
 	} else {
 		t.Error("Expected Detail to be non-nil")
 	}
