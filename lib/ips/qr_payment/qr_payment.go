@@ -3,6 +3,7 @@ package qrpayment
 import (
 	"encoding/xml"
 	"fmt"
+	"strings"
 )
 
 type DebiterInformation struct {
@@ -47,39 +48,43 @@ type Params struct {
 }
 
 func NewQrPayment(param Params) string {
-	debiterInformation := ""
+	tempDebiterInformation := strings.Builder{}
 	if param.DebiterInformation.StreetName != "" {
-		debiterInformation += fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.DebiterInformation.StreetName)
+		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.DebiterInformation.StreetName))
 	}
 	if param.DebiterInformation.BuildingNumber != "" {
-		debiterInformation += fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.DebiterInformation.BuildingNumber)
+		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.DebiterInformation.BuildingNumber))
 	}
 	if param.DebiterInformation.PostalCode != "" {
-		debiterInformation += fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.DebiterInformation.PostalCode)
+		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.DebiterInformation.PostalCode))
 	}
 	if param.DebiterInformation.TownName != "" {
-		debiterInformation += fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.DebiterInformation.TownName)
+		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.DebiterInformation.TownName))
 	}
 	if param.DebiterInformation.Country != "" {
-		debiterInformation += fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.DebiterInformation.Country)
+		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.DebiterInformation.Country))
 	}
 
-	creditInformation := ""
+	debiterInformation := fmt.Sprintf(`<urn1:PstlAdr>%v</urn1:PstlAdr>`, tempDebiterInformation)
+
+	tempCreditInformation := strings.Builder{}
 	if param.CreditInformation.StreetName != "" {
-		creditInformation += fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.CreditInformation.StreetName)
+		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.CreditInformation.StreetName))
 	}
 	if param.CreditInformation.BuildingNumber != "" {
-		creditInformation += fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.CreditInformation.BuildingNumber)
+		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.CreditInformation.BuildingNumber))
 	}
 	if param.CreditInformation.PostalCode != "" {
-		creditInformation += fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.CreditInformation.PostalCode)
+		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.CreditInformation.PostalCode))
 	}
 	if param.CreditInformation.TownName != "" {
-		creditInformation += fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.CreditInformation.TownName)
+		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.CreditInformation.TownName))
 	}
 	if param.CreditInformation.Country != "" {
-		creditInformation += fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.CreditInformation.Country)
+		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.CreditInformation.Country))
 	}
+
+	creditInformation := fmt.Sprintf(`<urn1:PstlAdr>%v</urn1:PstlAdr>`, tempCreditInformation)
 
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mb="http://MB_IPS" xmlns:urn="urn:iso:std:iso:20022:tech:xsd:head.001.001.03" xmlns:urn1="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
@@ -156,9 +161,7 @@ func NewQrPayment(param Params) string {
                      <urn1:ChrgBr>SLEV</urn1:ChrgBr>
                      <urn1:UltmtDbtr>
                         <urn1:Nm>%s</urn1:Nm>
-                        <urn1:PstlAdr>
 						%s
-                        </urn1:PstlAdr>
                      </urn1:UltmtDbtr>
                      <urn1:Dbtr>
                         <urn1:Nm>MSCWT</urn1:Nm>
@@ -205,9 +208,7 @@ func NewQrPayment(param Params) string {
                      </urn1:CdtrAgt>
                      <urn1:Cdtr>
                         <urn1:Nm>%s</urn1:Nm>
-                        <urn1:PstlAdr>
-						%s
-                        </urn1:PstlAdr>
+                        %s
                         <urn1:CtryOfRes>ET</urn1:CtryOfRes>
                         <urn1:CtctDtls>
                            <urn1:Nm>%s</urn1:Nm>
