@@ -18,23 +18,23 @@ type CustomerDetailParam struct {
 
 func NewCustomerDetail(param Params) string {
 	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <cbes:CustomerLookup>
-            <WebRequestCommon>
-                <company></company>
-                <password>%s</password>
-                <userName>%s</userName>
-            </WebRequestCommon>
-            <CUSTOMERLOOKUPSUPERAPPType>
-                <enquiryInputCollection>
-                    <columnName>@ID</columnName>
-                    <criteriaValue>%s</criteriaValue>
-                    <operand>EQ</operand>
-                </enquiryInputCollection>
-            </CUSTOMERLOOKUPSUPERAPPType>
-        </cbes:CustomerLookup>
-    </soapenv:Body>
+   <soapenv:Header/>
+   <soapenv:Body>
+      <cbes:ViewCustomedLimit>
+         <WebRequestCommon>
+            <company/>
+            <password>%s</password>
+            <userName>%s</userName>
+         </WebRequestCommon>
+         <CUSTOMLIMITAMENDENQType>
+            <enquiryInputCollection>
+               <columnName>ID</columnName>
+               <criteriaValue>%s</criteriaValue>
+               <operand>EQ</operand>
+            </enquiryInputCollection>
+         </CUSTOMLIMITAMENDENQType>
+      </cbes:ViewCustomedLimit>
+   </soapenv:Body>
 </soapenv:Envelope>
 	`, param.Password, param.Username, param.CustomerNumber)
 }

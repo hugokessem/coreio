@@ -1,61 +1,75 @@
 package utils
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"io"
 	"math"
 	"math/rand"
+	"net"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 )
-
-// tlsConfig := &tls.Config{
-//         // Set the minimum version to TLS 1.2
-//         MinVersion: tls.VersionTLS12,
-
-//         // Optional: Force ONLY TLS 1.2 (ignoring TLS 1.3)
-//         // MaxVersion: tls.VersionTLS12,
-
-//         // Optional: Specify secure cipher suites for TLS 1.2
-//         CipherSuites: []uint16{
-//             tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-//             tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-//         },
-//     }
-
-//     // Apply to an HTTP Transport
-//     transport := &http.Transport{
-//         TLSClientConfig: tlsConfig,
-//     }
-
-//     client := &http.Client{Transport: transport}
 
 type Config struct {
 	MaxRetries int
 	Timeout    time.Duration
 }
 
+var (
+	client *http.Client
+	once   sync.Once
+)
+
+func getClient() *http.Client {
+	once.Do(func() {
+		dialer := &net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}
+		client = &http.Client{
+			Timeout: 30 * time.Second,
+			Transport: &http.Transport{
+				Proxy:                 http.ProxyFromEnvironment,
+				DialContext:           dialer.DialContext,
+				ForceAttemptHTTP2:     true,
+				MaxIdleConns:          10,
+				MaxIdleConnsPerHost:   100,
+				MaxConnsPerHost:       500,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+				DisableKeepAlives:     false,
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: true,
+					MinVersion:         tls.VersionTLS12,
+				},
+			},
+		}
+	})
+
+	return client
+}
+
 func DoPostWithRetry(url string, xmlBody string, config Config, headers map[string]string) (*http.Response, error) {
 	var resp *http.Response
 	var err error
 
-	client := &http.Client{
-		Timeout: config.Timeout * time.Second,
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-				MinVersion:         tls.VersionTLS12,
-			},
-			DisableKeepAlives: true,
-			IdleConnTimeout:   10 * time.Second,
-		},
-	}
-
+	client := getClient()
 	for attempt := 0; attempt < config.MaxRetries; attempt++ {
-		req, reqErr := http.NewRequest("POST", url, strings.NewReader(xmlBody))
+		ctx, cancel := context.WithTimeout(context.Background(), config.Timeout)
+		req, reqErr := http.NewRequestWithContext(
+			ctx,
+			"POST",
+			url,
+			strings.NewReader(xmlBody),
+		)
+
 		if reqErr != nil {
+			cancel() // Ensure we cancel the context to free resources
 			return nil, fmt.Errorf("failed to create request: %w", reqErr)
 		}
 
@@ -64,6 +78,7 @@ func DoPostWithRetry(url string, xmlBody string, config Config, headers map[stri
 		}
 
 		resp, err = client.Do(req)
+		cancel() // Ensure we cancel the context to free resources
 		if resp == nil {
 			return nil, fmt.Errorf("response is nil: %w", err)
 		}

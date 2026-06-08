@@ -47,6 +47,40 @@ type Params struct {
 }
 
 func NewQrPayment(param Params) string {
+	debiterInformation := ""
+	if param.DebiterInformation.StreetName != "" {
+		debiterInformation += fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.DebiterInformation.StreetName)
+	}
+	if param.DebiterInformation.BuildingNumber != "" {
+		debiterInformation += fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.DebiterInformation.BuildingNumber)
+	}
+	if param.DebiterInformation.PostalCode != "" {
+		debiterInformation += fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.DebiterInformation.PostalCode)
+	}
+	if param.DebiterInformation.TownName != "" {
+		debiterInformation += fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.DebiterInformation.TownName)
+	}
+	if param.DebiterInformation.Country != "" {
+		debiterInformation += fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.DebiterInformation.Country)
+	}
+
+	creditInformation := ""
+	if param.CreditInformation.StreetName != "" {
+		creditInformation += fmt.Sprintf(`<urn1:StrtNm>%s</urn1:StrtNm>`, param.CreditInformation.StreetName)
+	}
+	if param.CreditInformation.BuildingNumber != "" {
+		creditInformation += fmt.Sprintf(`<urn1:BldgNb>%s</urn1:BldgNb>`, param.CreditInformation.BuildingNumber)
+	}
+	if param.CreditInformation.PostalCode != "" {
+		creditInformation += fmt.Sprintf(`<urn1:PstCd>%s</urn1:PstCd>`, param.CreditInformation.PostalCode)
+	}
+	if param.CreditInformation.TownName != "" {
+		creditInformation += fmt.Sprintf(`<urn1:TwnNm>%s</urn1:TwnNm>`, param.CreditInformation.TownName)
+	}
+	if param.CreditInformation.Country != "" {
+		creditInformation += fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.CreditInformation.Country)
+	}
+
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mb="http://MB_IPS" xmlns:urn="urn:iso:std:iso:20022:tech:xsd:head.001.001.03" xmlns:urn1="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
    <soapenv:Header/>
@@ -123,11 +157,7 @@ func NewQrPayment(param Params) string {
                      <urn1:UltmtDbtr>
                         <urn1:Nm>%s</urn1:Nm>
                         <urn1:PstlAdr>
-                           <urn1:StrtNm>%s</urn1:StrtNm>
-                           <urn1:BldgNb>%s</urn1:BldgNb>
-                           <urn1:PstCd>%s</urn1:PstCd>
-                           <urn1:TwnNm>%s</urn1:TwnNm>
-                           <urn1:Ctry>%s</urn1:Ctry>
+						%s
                         </urn1:PstlAdr>
                      </urn1:UltmtDbtr>
                      <urn1:Dbtr>
@@ -176,12 +206,7 @@ func NewQrPayment(param Params) string {
                      <urn1:Cdtr>
                         <urn1:Nm>%s</urn1:Nm>
                         <urn1:PstlAdr>
-                           <urn1:StrtNm>%s</urn1:StrtNm>
-                           <urn1:BldgNb>%s</urn1:BldgNb>
-                           <urn1:PstCd>%s</urn1:PstCd>
-                           <urn1:TwnNm>%s</urn1:TwnNm>
-                           <urn1:Ctry>%s</urn1:Ctry>
-                           <urn1:AdrLine>%s</urn1:AdrLine>
+						%s
                         </urn1:PstlAdr>
                         <urn1:CtryOfRes>ET</urn1:CtryOfRes>
                         <urn1:CtctDtls>
@@ -242,7 +267,7 @@ func NewQrPayment(param Params) string {
       </mb:Payment>
    </soapenv:Body>
 </soapenv:Envelope>
-	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, param.DebiterInformation.StreetName, param.DebiterInformation.BuildingNumber, param.DebiterInformation.PostalCode, param.DebiterInformation.TownName, param.DebiterInformation.Country, param.DebiterInformation.StreetName, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, param.CreditInformation.StreetName, param.CreditInformation.BuildingNumber, param.CreditInformation.PostalCode, param.CreditInformation.TownName, param.CreditInformation.Country, param.CreditInformation.AddressLine, param.CreditAccountHolderName, param.MerchantLabel, param.CreditAccountNumber, param.Narative, param.Narative)
+	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, debiterInformation, param.DebiterInformation.StreetName, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, creditInformation, param.CreditAccountHolderName, param.MerchantLabel, param.CreditAccountNumber, param.Narative, param.Narative)
 }
 
 type Envelop struct {
