@@ -43,7 +43,8 @@ func getHTTPClient(timeout time.Duration) *http.Client {
 			TLSHandshakeTimeout:   10 * time.Second,
 			ResponseHeaderTimeout: 65 * time.Second,
 			TLSClientConfig: &tls.Config{
-				MinVersion: tls.VersionTLS12,
+				MinVersion:         tls.VersionTLS12,
+				InsecureSkipVerify: true,
 			},
 		}
 		httpClient = &http.Client{
