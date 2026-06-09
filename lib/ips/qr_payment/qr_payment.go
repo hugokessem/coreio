@@ -65,7 +65,7 @@ func NewQrPayment(param Params) string {
 		tempDebiterInformation.WriteString(fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.DebiterInformation.Country))
 	}
 
-	debiterInformation := fmt.Sprintf(`<urn1:PstlAdr>%v</urn1:PstlAdr>`, tempDebiterInformation)
+	debiterInformation := fmt.Sprintf(`<urn1:PstlAdr>%s</urn1:PstlAdr>`, tempDebiterInformation.String())
 
 	tempCreditInformation := strings.Builder{}
 	if param.CreditInformation.StreetName != "" {
@@ -84,7 +84,7 @@ func NewQrPayment(param Params) string {
 		tempCreditInformation.WriteString(fmt.Sprintf(`<urn1:Ctry>%s</urn1:Ctry>`, param.CreditInformation.Country))
 	}
 
-	creditInformation := fmt.Sprintf(`<urn1:PstlAdr>%v</urn1:PstlAdr>`, tempCreditInformation)
+	creditInformation := fmt.Sprintf(`<urn1:PstlAdr>%s</urn1:PstlAdr>`, tempCreditInformation.String())
 
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mb="http://MB_IPS" xmlns:urn="urn:iso:std:iso:20022:tech:xsd:head.001.001.03" xmlns:urn1="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
