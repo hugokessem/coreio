@@ -26,34 +26,29 @@ var (
 	rng        = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
-func GetHTTPClient() *http.Client {
+func getHTTPClient(timeout time.Duration) *http.Client {
 	once.Do(func() {
 		dialer := &net.Dialer{
 			Timeout:   10 * time.Second,
 			KeepAlive: 60 * time.Second,
 		}
-
 		transport := &http.Transport{
-			Proxy:             http.ProxyFromEnvironment,
-			DialContext:       dialer.DialContext,
-			ForceAttemptHTTP2: true,
-
-			MaxIdleConns:        2000,
-			MaxIdleConnsPerHost: 500,
-			MaxConnsPerHost:     1000,
-
+			Proxy:                 http.ProxyFromEnvironment,
+			DialContext:           dialer.DialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          2000,
+			MaxIdleConnsPerHost:   500,
+			MaxConnsPerHost:       1000,
 			IdleConnTimeout:       120 * time.Second,
 			TLSHandshakeTimeout:   10 * time.Second,
 			ResponseHeaderTimeout: 65 * time.Second,
-
 			TLSClientConfig: &tls.Config{
 				MinVersion: tls.VersionTLS12,
 			},
 		}
-
-		// Use context timeout as the single source of truth.
 		httpClient = &http.Client{
 			Transport: transport,
+			Timeout:   timeout,
 		}
 	})
 
@@ -69,13 +64,13 @@ func DoPost(
 ) (*http.Response, error) {
 
 	if cfg.Timeout <= 0 {
-		cfg.Timeout = 70 * time.Second
+		cfg.Timeout = 120 * time.Second
 	}
 
-	client := GetHTTPClient()
+	client := getHTTPClient(cfg.Timeout)
 
-	ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
-	defer cancel()
+	// ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
+	// defer cancel()
 
 	req, err := http.NewRequestWithContext(
 		ctx,
@@ -114,7 +109,7 @@ func DoGetWithRetry(
 		cfg.Timeout = 30 * time.Second
 	}
 
-	client := GetHTTPClient()
+	client := getHTTPClient(cfg.Timeout)
 
 	var lastErr error
 
