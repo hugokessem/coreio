@@ -70,12 +70,11 @@ func DoPostWithRetry(
 		cfg.Timeout = 30 * time.Second
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout*time.Second)
-	defer cancel()
-
 	client := GetHTTPClient()
 	var lastErr error
 	for attempt := 0; attempt < cfg.MaxRetries; attempt++ {
+		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
+		defer cancel()
 
 		req, err := http.NewRequestWithContext(
 			ctx,
@@ -96,9 +95,7 @@ func DoPostWithRetry(
 
 		resp, err := client.Do(req)
 
-		// Success
 		if err == nil {
-
 			if !shouldRetryStatus(resp.StatusCode) {
 				return resp, nil
 			}
@@ -112,15 +109,11 @@ func DoPostWithRetry(
 
 		} else {
 			lastErr = err
-
-			// Context timeout/cancel
 			if errors.Is(err, context.DeadlineExceeded) ||
 				errors.Is(err, context.Canceled) {
 				return nil, err
 			}
 		}
-
-		// Last attempt
 		if attempt == cfg.MaxRetries-1 {
 			break
 		}
@@ -155,9 +148,7 @@ func shouldRetryStatus(status int) bool {
 }
 
 func calculateBackoff(attempt int) time.Duration {
-
 	base := time.Second * time.Duration(1<<attempt)
-
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	jitter := time.Duration(
