@@ -86,6 +86,13 @@ func NewQrPayment(param Params) string {
 
 	creditInformation := fmt.Sprintf(`<urn1:PstlAdr>%s</urn1:PstlAdr>`, tempCreditInformation.String())
 
+	var debiterStreet string
+	if param.DebiterInformation.StreetName != "" {
+		debiterStreet = fmt.Sprintf(`<urn1:PstlAdr>
+	<urn1:StrtNm>%s</urn1:StrtNm>
+ </urn1:PstlAdr>`, param.DebiterInformation.StreetName)
+	}
+
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mb="http://MB_IPS" xmlns:urn="urn:iso:std:iso:20022:tech:xsd:head.001.001.03" xmlns:urn1="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
    <soapenv:Header/>
@@ -165,9 +172,7 @@ func NewQrPayment(param Params) string {
                      </urn1:UltmtDbtr>
                      <urn1:Dbtr>
                         <urn1:Nm>MSCWT</urn1:Nm>
-                        <urn1:PstlAdr>
-                           <urn1:StrtNm>%s</urn1:StrtNm>
-                        </urn1:PstlAdr>
+						%s
                         <urn1:Id>
                            <urn1:PrvtId>
                               <urn1:Othr>
@@ -268,7 +273,7 @@ func NewQrPayment(param Params) string {
       </mb:Payment>
    </soapenv:Body>
 </soapenv:Envelope>
-	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, debiterInformation, param.DebiterInformation.StreetName, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, creditInformation, param.CreditAccountHolderName, param.MerchantLabel, param.CreditAccountNumber, param.Narative, param.Narative)
+	`, param.DebitBankBIC, param.CreditBankBIC, param.BizMessageIdentifier, param.CreditDate, param.MessageIdentifier, param.CreditDateTime, param.DebitBankBIC, param.CreditBankBIC, param.EndToEndIdentifier, param.TransactionIdentifier, param.InterBankSettlementAmount, param.AccptanceDtatTime, param.InstructedAmount, param.DebiterInformation.Name, debiterInformation, debiterStreet, param.DebitAccountNumber, param.DebitBankBIC, param.CreditBankBIC, param.CreditInformation.Name, creditInformation, param.CreditAccountHolderName, param.MerchantLabel, param.CreditAccountNumber, param.Narative, param.Narative)
 }
 
 type Envelop struct {
