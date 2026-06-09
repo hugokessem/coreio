@@ -54,14 +54,12 @@ func GetHTTPClient() *http.Client {
 
 	return httpClient
 }
-
 func DoPostWithRetry(
 	url string,
 	body string,
 	cfg Config,
 	headers map[string]string,
 ) (*http.Response, error) {
-
 	if cfg.MaxRetries <= 0 {
 		cfg.MaxRetries = 3
 	}
@@ -71,10 +69,11 @@ func DoPostWithRetry(
 	}
 
 	client := GetHTTPClient()
+
 	var lastErr error
+
 	for attempt := 0; attempt < cfg.MaxRetries; attempt++ {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
-		defer cancel()
 
 		req, err := http.NewRequestWithContext(
 			ctx,
@@ -83,10 +82,8 @@ func DoPostWithRetry(
 			strings.NewReader(body),
 		)
 		if err != nil {
-			return nil, fmt.Errorf(
-				"create request: %w",
-				err,
-			)
+			cancel()
+			return nil, fmt.Errorf("create request: %w", err)
 		}
 
 		for k, v := range headers {
@@ -95,40 +92,33 @@ func DoPostWithRetry(
 
 		resp, err := client.Do(req)
 
+		// Release timer/resources immediately.
+		cancel()
+
 		if err == nil {
 			if !shouldRetryStatus(resp.StatusCode) {
 				return resp, nil
 			}
 
-			lastErr = fmt.Errorf(
-				"received retryable status code: %d",
-				resp.StatusCode,
-			)
+			lastErr = fmt.Errorf("received retryable status code: %d", resp.StatusCode)
 
 			drainAndClose(resp.Body)
-
 		} else {
 			lastErr = err
-			if errors.Is(err, context.DeadlineExceeded) ||
-				errors.Is(err, context.Canceled) {
+
+			if errors.Is(err, context.Canceled) ||
+				errors.Is(err, context.DeadlineExceeded) {
 				return nil, err
 			}
 		}
-		if attempt == cfg.MaxRetries-1 {
-			break
-		}
 
-		backoff := calculateBackoff(attempt)
-
-		select {
-		case <-time.After(backoff):
-		case <-ctx.Done():
-			return nil, ctx.Err()
+		if attempt < cfg.MaxRetries-1 {
+			time.Sleep(calculateBackoff(attempt))
 		}
 	}
 
 	return nil, fmt.Errorf(
-		"request failed after %d retries: %w",
+		"request failed after %d attempts: %w",
 		cfg.MaxRetries,
 		lastErr,
 	)
