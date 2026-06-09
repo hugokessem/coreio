@@ -70,7 +70,7 @@ func DoPostWithRetry(
 		cfg.Timeout = 30 * time.Second
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout*time.Second)
 	defer cancel()
 
 	client := GetHTTPClient()
