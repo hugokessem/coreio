@@ -17,7 +17,7 @@ type Param struct {
 
 type StatusParam struct {
 	UserCode string
-	Status   valueobject.Status
+	Status   string
 }
 
 func NewStatusChange(param Param) (string, error) {
@@ -90,7 +90,7 @@ type StatusChangeResult struct {
 	Messages []string
 }
 
-func ParseSOPSuperAppUserChangeStatusResponse(xmlData string) (*StatusChangeResult, error) {
+func ParseSuperAppUserChangeStatusResponseSOAP(xmlData string) (*StatusChangeResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {

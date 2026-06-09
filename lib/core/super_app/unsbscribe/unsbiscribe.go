@@ -122,7 +122,7 @@ type UnsubscribeResult struct {
 	Messages []string
 }
 
-func ParseSOPSuperAppUserUnsubscribeResponse(xmlData string) (*UnsubscribeResult, error) {
+func ParseUnsubscribeResponseSOAP(xmlData string) (*UnsubscribeResult, error) {
 	var env Envelope
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {

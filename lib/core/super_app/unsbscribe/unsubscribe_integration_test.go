@@ -40,7 +40,7 @@ func TestIntegrationRevertFundTransfer(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseSOPSuperAppUserUnsubscribeResponse(string(responseData))
+	result, err := ParseUnsubscribeResponseSOAP(string(responseData))
 	assert.NoError(t, err)
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
