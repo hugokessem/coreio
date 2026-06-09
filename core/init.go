@@ -42,6 +42,10 @@ import (
 	standingorderlist "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list"
 	standingorderlisthistory "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_list_history"
 	standingorderupdate "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_update"
+	statuschange "github.com/hugokessem/coreio/lib/core/super_app/status_change"
+	valueobject "github.com/hugokessem/coreio/lib/core/super_app/status_change/value_object"
+	superappsubscribe "github.com/hugokessem/coreio/lib/core/super_app/subscribe"
+	superappunsubscribe "github.com/hugokessem/coreio/lib/core/super_app/unsbscribe"
 	"github.com/hugokessem/coreio/utils"
 )
 
@@ -123,6 +127,13 @@ type CustomerDetailResult = customerdetail.CustomerDetailResult
 type ServiceDetailParam = servicedetail.ServiceDetailParams
 type ServiceDetailResult = servicedetail.ServiceDetailResult
 
+type SuperAppSubscribeParam = superappsubscribe.Params
+type SuperAppSubscribeResult = superappsubscribe.SubscribeResult
+type SuperAppUnsubscribeParam = superappunsubscribe.Params
+type SuperAppUnsubscribeResult = superappunsubscribe.UnsubscribeResult
+type SuperAppStatusChangeParam = statuschange.StatusParam
+type SuperAppStatusChangeResult = statuschange.StatusChangeResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -165,6 +176,10 @@ type CBECoreAPIInterface interface {
 	ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error)
 
 	NameLookup(param NameLookupParam) (*NameLookupResult, error)
+
+	SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error)
+	SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error)
+	SuperAppStatusChange(param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
 }
 
 type CBECoreCredential struct {
@@ -189,6 +204,98 @@ const (
 	Value = "text/xml; charset=utf-8"
 )
 
+func (c *CBECoreAPI) SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error) {
+	params := superappsubscribe.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		UserCode: param.UserCode,
+	}
+
+	xmlRequest := superappsubscribe.NewSubscribe(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := superappsubscribe.ParseSubscribeResponseSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error) {
+	params := superappunsubscribe.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		UserCode: param.UserCode,
+	}
+	xmlRequest := superappunsubscribe.NewUnsubscribe(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := superappunsubscribe.ParseUnsubscribeResponseSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) SuperAppStatusChange(param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error) {
+	params := statuschange.Param{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		UserCode: param.UserCode,
+		Status:   valueobject.Status(param.Status),
+	}
+
+	xmlRequest, err := statuschange.NewStatusChange(params)
+	if err != nil {
+		return nil, err
+	}
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := statuschange.ParseSuperAppUserChangeStatusResponseSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 func (c *CBECoreAPI) NameLookup(param NameLookupParam) (*NameLookupResult, error) {
 	params := namelookup.Params{
 		Username:      c.config.Username,

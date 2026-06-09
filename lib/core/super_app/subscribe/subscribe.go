@@ -104,7 +104,7 @@ type SubscribeResult struct {
 	Messages []string
 }
 
-func ParseSOPSubscribeResponse(xmlData string) (*SubscribeResult, error) {
+func ParseSubscribeResponseSOAP(xmlData string) (*SubscribeResult, error) {
 	var envelope Envelope
 	err := xml.Unmarshal([]byte(xmlData), &envelope)
 	if err != nil {
