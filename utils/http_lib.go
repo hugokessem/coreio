@@ -54,7 +54,6 @@ func GetHTTPClient() *http.Client {
 		// Use context timeout as the single source of truth.
 		httpClient = &http.Client{
 			Transport: transport,
-			Timeout:   0,
 		}
 	})
 
