@@ -20,6 +20,7 @@ import (
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
 	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
+	customerlimitfetchbycifreturnservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif_return_service"
 	customerlimitfetchbyservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_service"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
@@ -134,6 +135,9 @@ type SuperAppUnsubscribeResult = superappunsubscribe.UnsubscribeResult
 type SuperAppStatusChangeParam = statuschange.StatusParam
 type SuperAppStatusChangeResult = statuschange.StatusChangeResult
 
+type CustomerLimitFetchByCIFReturnServiceParam = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceParam
+type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -180,6 +184,7 @@ type CBECoreAPIInterface interface {
 	SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error)
 	SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error)
 	SuperAppStatusChange(param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
+	CustomerLimitFetchByCIFReturnService(param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
 }
 
 type CBECoreCredential struct {
@@ -203,6 +208,35 @@ const (
 	Key   = "Content-Type"
 	Value = "text/xml; charset=utf-8"
 )
+
+func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error) {
+	params := customerlimitfetchbycifreturnservice.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+	xmlRequest := customerlimitfetchbycifreturnservice.NewCustomerLimitFetchByCIFReturnService(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
+		Timeout:    30 * time.Second,
+		MaxRetries: 6,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerlimitfetchbycifreturnservice.ParseCustomerLimitFetchByCIFReturnServiceSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 
 func (c *CBECoreAPI) SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error) {
 	params := superappsubscribe.Params{
