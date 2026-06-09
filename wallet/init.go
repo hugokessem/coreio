@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"context"
 	"io"
 	"time"
 
@@ -36,10 +37,10 @@ type CustomerAccountLookupParam = cutomer_accountlookup.CustomerAccountLookupPar
 type CustomerAccountLookupResult = cutomer_accountlookup.CustomerAccountLookupResult
 
 type WalletInterface interface {
-	AgentAccountLookup(param AgentAccountLookupParams) (*AgentAccountLookupResult, error)
-	AgentFundTransfer(param AgentFundTransferParams) (*AgentFundTransferResult, error)
-	CustomerAccountLookup(param CustomerAccountLookupParam) (*CustomerAccountLookupResult, error)
-	CustomerFundTransfer(param CustomerFundTransferParams) (*CustomerFundTransferResult, error)
+	AgentAccountLookup(ctx context.Context, param AgentAccountLookupParams) (*AgentAccountLookupResult, error)
+	AgentFundTransfer(ctx context.Context, param AgentFundTransferParams) (*AgentFundTransferResult, error)
+	CustomerAccountLookup(ctx context.Context, param CustomerAccountLookupParam) (*CustomerAccountLookupResult, error)
+	CustomerFundTransfer(ctx context.Context, param CustomerFundTransferParams) (*CustomerFundTransferResult, error)
 }
 
 func NewWalletAPI(param WalletCredentials) WalletInterface {
@@ -57,11 +58,16 @@ func NewWalletAPI(param WalletCredentials) WalletInterface {
 	}
 }
 
+const (
+	timeout    = 120 * time.Second
+	maxRetries = 1
+)
+
 // AgentAccountLookup implements WalletInterface.
-func (w *WalletAPI) AgentAccountLookup(param AgentAccountLookupParams) (*AgentAccountLookupResult, error) {
+func (w *WalletAPI) AgentAccountLookup(ctx context.Context, param AgentAccountLookupParams) (*AgentAccountLookupResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	// Convert public params to internal params with config values
@@ -81,7 +87,7 @@ func (w *WalletAPI) AgentAccountLookup(param AgentAccountLookupParams) (*AgentAc
 		"Authorization":     w.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, w.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -101,10 +107,10 @@ func (w *WalletAPI) AgentAccountLookup(param AgentAccountLookupParams) (*AgentAc
 }
 
 // AgentFundTransfer implements WalletInterface.
-func (w *WalletAPI) AgentFundTransfer(param AgentFundTransferParams) (*AgentFundTransferResult, error) {
+func (w *WalletAPI) AgentFundTransfer(ctx context.Context, param AgentFundTransferParams) (*AgentFundTransferResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	// Convert public params to internal params with config values
@@ -130,7 +136,7 @@ func (w *WalletAPI) AgentFundTransfer(param AgentFundTransferParams) (*AgentFund
 		"Authorization":     w.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, w.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -150,10 +156,10 @@ func (w *WalletAPI) AgentFundTransfer(param AgentFundTransferParams) (*AgentFund
 }
 
 // CustomerAccountLookup implements WalletInterface.
-func (w *WalletAPI) CustomerAccountLookup(param CustomerAccountLookupParam) (*CustomerAccountLookupResult, error) {
+func (w *WalletAPI) CustomerAccountLookup(ctx context.Context, param CustomerAccountLookupParam) (*CustomerAccountLookupResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	// Convert public params to internal params with config values
@@ -173,7 +179,7 @@ func (w *WalletAPI) CustomerAccountLookup(param CustomerAccountLookupParam) (*Cu
 		"Authorization":     w.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, w.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -193,10 +199,10 @@ func (w *WalletAPI) CustomerAccountLookup(param CustomerAccountLookupParam) (*Cu
 }
 
 // CustomerFundTransfer implements WalletInterface.
-func (w *WalletAPI) CustomerFundTransfer(param CustomerFundTransferParams) (*CustomerFundTransferResult, error) {
+func (w *WalletAPI) CustomerFundTransfer(ctx context.Context, param CustomerFundTransferParams) (*CustomerFundTransferResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	// Convert public params to internal params with config values
@@ -222,7 +228,7 @@ func (w *WalletAPI) CustomerFundTransfer(param CustomerFundTransferParams) (*Cus
 		"Authorization":     w.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(w.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, w.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}

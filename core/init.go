@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"maps"
@@ -139,52 +140,52 @@ type CustomerLimitFetchByCIFReturnServiceParam = customerlimitfetchbycifreturnse
 type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceResult
 
 type CBECoreAPIInterface interface {
-	CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
-	CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
-	CustomerLimitFetchByService(param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error)
+	CustomerLimitFetchByCustomerNumber(ctx context.Context, param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
+	CustomerLimitAmendByCustomerNumber(ctx context.Context, param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
+	CustomerLimitFetchByService(ctx context.Context, param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error)
 
-	ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error)
-	FundTransferVerify(param FundTransferVerifyParam) (*FundTransferVerifyResult, error)
-	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
-	FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error)
-	RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error)
-	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
-	AccountCreation(param AccountCreationParam) (*AccountCreationResult, error)
+	ServiceLimit(ctx context.Context, param ServiceLimitParam) (*ServiceLimitResult, error)
+	FundTransferVerify(ctx context.Context, param FundTransferVerifyParam) (*FundTransferVerifyResult, error)
+	FundTransfer(ctx context.Context, param FundTransferParam) (*FundTransferResult, error)
+	FundTransferCheck(ctx context.Context, param FundTransferCheckParam) (*FundTransferCheckResult, error)
+	RevertFundTransfer(ctx context.Context, param RevertFundTransferParam) (*RevertFundTransferResult, error)
+	AccountLookup(ctx context.Context, param AccountLookupParam) (*AccountLookupResult, error)
+	AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error)
 
-	LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTResult, error)
-	ListLockedAmount(param ListLockedAmountParam) (*ListLockedAmountResult, error)
-	CreateLockedAmount(param CreateLockedAmountParam) (*CreateLockedAmountResult, error)
-	ReleaseLockedAmount(param ReleaseLockedAmountParam) (*ReleaseLockedAmountResult, error)
+	LockedAmountFT(ctx context.Context, param LockedAmountFTParam) (*LockedAmountFTResult, error)
+	ListLockedAmount(ctx context.Context, param ListLockedAmountParam) (*ListLockedAmountResult, error)
+	CreateLockedAmount(ctx context.Context, param CreateLockedAmountParam) (*CreateLockedAmountResult, error)
+	ReleaseLockedAmount(ctx context.Context, param ReleaseLockedAmountParam) (*ReleaseLockedAmountResult, error)
 
-	ListStandingOrder(param ListStandingOrderParam) (*ListStandingOrderResult, error)
-	UpdateStandingOrder(param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error)
-	CreateStandingOrder(param CreateStandingOrderParam) (*CreateStandingOrderResult, error)
-	CancleStandingOrder(param CancleStandingOrderParam) (*CancelStandingOrderResult, error)
-	ListStandingOrderHistory(param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error)
+	ListStandingOrder(ctx context.Context, param ListStandingOrderParam) (*ListStandingOrderResult, error)
+	UpdateStandingOrder(ctx context.Context, param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error)
+	CreateStandingOrder(ctx context.Context, param CreateStandingOrderParam) (*CreateStandingOrderResult, error)
+	CancleStandingOrder(ctx context.Context, param CancleStandingOrderParam) (*CancelStandingOrderResult, error)
+	ListStandingOrderHistory(ctx context.Context, param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error)
 
-	MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
-	MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
+	MiniStatementByLimit(ctx context.Context, param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error)
+	MiniStatementByDateRange(ctx context.Context, param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error)
 
-	PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error)
+	PhoneLookup(ctx context.Context, param PhoneLookupParam) (*PhoneLookupResult, error)
 
-	CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error)
-	AccountList(param AccountListParam) (*AccountListResult, error)
-	CardReplace(param CardReplaceParam) (*CardReplaceResult, error)
-	CardRequest(param CardRequestParam) (*CardRequestResult, error)
+	CustomerLookup(ctx context.Context, param CustomerLookupParam) (*CustomerLookupResult, error)
+	AccountList(ctx context.Context, param AccountListParam) (*AccountListResult, error)
+	CardReplace(ctx context.Context, param CardReplaceParam) (*CardReplaceResult, error)
+	CardRequest(ctx context.Context, param CardRequestParam) (*CardRequestResult, error)
 
-	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
-	ExchangeRates() (*ExchangeRatesResult, error)
-	CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error)
+	StatusCheck(ctx context.Context, param StatusCheckParam) (*StatusCheckResult, error)
+	ExchangeRates(ctx context.Context) (*ExchangeRatesResult, error)
+	CustomerDetail(ctx context.Context, param CustomerDetailParam) (*CustomerDetailResult, error)
 
-	SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error)
-	ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error)
+	SplitPayment(ctx context.Context, param SplitPaymentParam) (*SplitPaymentResult, error)
+	ServiceDetail(ctx context.Context, param ServiceDetailParam) (*ServiceDetailResult, error)
 
-	NameLookup(param NameLookupParam) (*NameLookupResult, error)
+	NameLookup(ctx context.Context, param NameLookupParam) (*NameLookupResult, error)
 
-	SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error)
-	SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error)
-	SuperAppStatusChange(param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
-	CustomerLimitFetchByCIFReturnService(param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
+	SuperAppSubscribe(ctx context.Context, param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error)
+	SuperAppUnsubscribe(ctx context.Context, param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error)
+	SuperAppStatusChange(ctx context.Context, param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
+	CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
 }
 
 type CBECoreCredential struct {
@@ -205,11 +206,13 @@ type CBECoreAPI struct {
 }
 
 const (
-	Key   = "Content-Type"
-	Value = "text/xml; charset=utf-8"
+	Key        = "Content-Type"
+	Value      = "text/xml; charset=utf-8"
+	timeout    = 120 * time.Second
+	maxRetries = 1
 )
 
-func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error) {
+func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error) {
 	params := customerlimitfetchbycifreturnservice.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -219,9 +222,9 @@ func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(param CustomerLimitFet
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -238,7 +241,7 @@ func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(param CustomerLimitFet
 	return result, nil
 }
 
-func (c *CBECoreAPI) SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error) {
+func (c *CBECoreAPI) SuperAppSubscribe(ctx context.Context, param SuperAppSubscribeParam) (*SuperAppSubscribeResult, error) {
 	params := superappsubscribe.Params{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -249,9 +252,9 @@ func (c *CBECoreAPI) SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppS
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -268,7 +271,7 @@ func (c *CBECoreAPI) SuperAppSubscribe(param SuperAppSubscribeParam) (*SuperAppS
 	return result, nil
 }
 
-func (c *CBECoreAPI) SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error) {
+func (c *CBECoreAPI) SuperAppUnsubscribe(ctx context.Context, param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error) {
 	params := superappunsubscribe.Params{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -278,9 +281,9 @@ func (c *CBECoreAPI) SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*Super
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -297,7 +300,7 @@ func (c *CBECoreAPI) SuperAppUnsubscribe(param SuperAppUnsubscribeParam) (*Super
 	return result, nil
 }
 
-func (c *CBECoreAPI) SuperAppStatusChange(param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error) {
+func (c *CBECoreAPI) SuperAppStatusChange(ctx context.Context, param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error) {
 	params := statuschange.Param{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -312,9 +315,9 @@ func (c *CBECoreAPI) SuperAppStatusChange(param SuperAppStatusChangeParam) (*Sup
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -330,7 +333,7 @@ func (c *CBECoreAPI) SuperAppStatusChange(param SuperAppStatusChangeParam) (*Sup
 	}
 	return result, nil
 }
-func (c *CBECoreAPI) NameLookup(param NameLookupParam) (*NameLookupResult, error) {
+func (c *CBECoreAPI) NameLookup(ctx context.Context, param NameLookupParam) (*NameLookupResult, error) {
 	params := namelookup.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -342,9 +345,9 @@ func (c *CBECoreAPI) NameLookup(param NameLookupParam) (*NameLookupResult, error
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -366,7 +369,7 @@ func (c *CBECoreAPI) NameLookup(param NameLookupParam) (*NameLookupResult, error
 	return result, nil
 }
 
-func (c *CBECoreAPI) ServiceDetail(param ServiceDetailParam) (*ServiceDetailResult, error) {
+func (c *CBECoreAPI) ServiceDetail(ctx context.Context, param ServiceDetailParam) (*ServiceDetailResult, error) {
 	params := servicedetail.Params{
 		Username:    c.config.Username,
 		Password:    c.config.Password,
@@ -378,9 +381,9 @@ func (c *CBECoreAPI) ServiceDetail(param ServiceDetailParam) (*ServiceDetailResu
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -402,7 +405,7 @@ func (c *CBECoreAPI) ServiceDetail(param ServiceDetailParam) (*ServiceDetailResu
 	return result, nil
 }
 
-func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailResult, error) {
+func (c *CBECoreAPI) CustomerDetail(ctx context.Context, param CustomerDetailParam) (*CustomerDetailResult, error) {
 	params := customerdetail.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -414,9 +417,9 @@ func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailR
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -438,7 +441,7 @@ func (c *CBECoreAPI) CustomerDetail(param CustomerDetailParam) (*CustomerDetailR
 	return result, nil
 }
 
-func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {
+func (c *CBECoreAPI) StatusCheck(ctx context.Context, param StatusCheckParam) (*StatusCheckResult, error) {
 	params := statuscheck.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -450,9 +453,9 @@ func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -474,7 +477,7 @@ func (c *CBECoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 	return result, nil
 }
 
-func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTransferVerifyResult, error) {
+func (c *CBECoreAPI) FundTransferVerify(ctx context.Context, param FundTransferVerifyParam) (*FundTransferVerifyResult, error) {
 	params := fundtransferverify.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
@@ -499,9 +502,9 @@ func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTra
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -523,7 +526,7 @@ func (c *CBECoreAPI) FundTransferVerify(param FundTransferVerifyParam) (*FundTra
 	return result, nil
 }
 
-func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {
+func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(ctx context.Context, param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error) {
 	params := customerlimitfetchbycif.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -535,9 +538,9 @@ func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetch
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -558,7 +561,7 @@ func (c *CBECoreAPI) CustomerLimitFetchByCustomerNumber(param CustomerLimitFetch
 
 	return result, nil
 }
-func (c *CBECoreAPI) CustomerLimitFetchByService(param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error) {
+func (c *CBECoreAPI) CustomerLimitFetchByService(ctx context.Context, param CustomerLimitFetchByServiceParam) (*CustomerLimitFetchByServiceResult, error) {
 	params := customerlimitfetchbyservice.Params{
 		Username:    c.config.Username,
 		Password:    c.config.Password,
@@ -569,9 +572,9 @@ func (c *CBECoreAPI) CustomerLimitFetchByService(param CustomerLimitFetchByServi
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -591,7 +594,7 @@ func (c *CBECoreAPI) CustomerLimitFetchByService(param CustomerLimitFetchByServi
 
 	return result, nil
 }
-func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error) {
+func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(ctx context.Context, param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error) {
 	params := customerlimitamendbycif.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -603,9 +606,9 @@ func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(param CustomerLimitAmend
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -626,7 +629,7 @@ func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(param CustomerLimitAmend
 	return result, nil
 }
 
-func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult, error) {
+func (c *CBECoreAPI) SplitPayment(ctx context.Context, param SplitPaymentParam) (*SplitPaymentResult, error) {
 	params := splitpayment.Param{
 		Username:                 c.config.Username,
 		Password:                 c.config.Password,
@@ -641,9 +644,9 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -662,7 +665,7 @@ func (c *CBECoreAPI) SplitPayment(param SplitPaymentParam) (*SplitPaymentResult,
 	return result, nil
 }
 
-func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreationResult, error) {
+func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
 		Username:       param.Username,
 		Password:       param.Password,
@@ -682,9 +685,9 @@ func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreati
 		maps.Copy(headers, params.Header)
 	}
 
-	resp, err := utils.DoPostWithRetry(param.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, param.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -701,7 +704,7 @@ func (c *CBECoreAPI) AccountCreation(param AccountCreationParam) (*AccountCreati
 	return result, nil
 }
 
-func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult, error) {
+func (c *CBECoreAPI) ServiceLimit(ctx context.Context, param ServiceLimitParam) (*ServiceLimitResult, error) {
 	params := servicelimit.Params{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -710,9 +713,9 @@ func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult,
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -730,7 +733,7 @@ func (c *CBECoreAPI) ServiceLimit(param ServiceLimitParam) (*ServiceLimitResult,
 	return result, nil
 }
 
-func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
+func (c *CBECoreAPI) ExchangeRates(ctx context.Context) (*ExchangeRatesResult, error) {
 	params := exchangerate.Params{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -739,9 +742,9 @@ func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -759,7 +762,7 @@ func (c *CBECoreAPI) ExchangeRates() (*ExchangeRatesResult, error) {
 	return result, nil
 }
 
-func (c *CBECoreAPI) PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, error) {
+func (c *CBECoreAPI) PhoneLookup(ctx context.Context, param PhoneLookupParam) (*PhoneLookupResult, error) {
 	params := phonelookup.Params{
 		Username:    c.config.Username,
 		Password:    c.config.Password,
@@ -769,9 +772,9 @@ func (c *CBECoreAPI) PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, er
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -789,7 +792,7 @@ func (c *CBECoreAPI) PhoneLookup(param PhoneLookupParam) (*PhoneLookupResult, er
 	return result, nil
 }
 
-func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertFundTransferResult, error) {
+func (c *CBECoreAPI) RevertFundTransfer(ctx context.Context, param RevertFundTransferParam) (*RevertFundTransferResult, error) {
 	params := revertfundtransfer.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -800,9 +803,9 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -823,7 +826,7 @@ func (c *CBECoreAPI) RevertFundTransfer(param RevertFundTransferParam) (*RevertF
 	return result, nil
 }
 
-func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
+func (c *CBECoreAPI) AccountLookup(ctx context.Context, param AccountLookupParam) (*AccountLookupResult, error) {
 	params := accountlookup.Params{
 		Username:       c.config.Username,
 		Password:       c.config.Password,
@@ -835,9 +838,9 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -858,7 +861,7 @@ func (c *CBECoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 	return result, nil
 }
 
-func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, error) {
+func (c *CBECoreAPI) AccountList(ctx context.Context, param AccountListParam) (*AccountListResult, error) {
 	params := accountlist.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -870,9 +873,9 @@ func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, er
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -893,7 +896,7 @@ func (c *CBECoreAPI) AccountList(param AccountListParam) (*AccountListResult, er
 	return result, nil
 }
 
-func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
+func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) (*FundTransferResult, error) {
 	var messages []string
 	if strings.TrimSpace(param.ServiceCode) == "" {
 		messages = append(messages, "Service Code Not Found!")
@@ -957,9 +960,9 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -980,7 +983,7 @@ func (c *CBECoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 	return result, nil
 }
 
-func (c *CBECoreAPI) FundTransferCheck(param FundTransferCheckParam) (*FundTransferCheckResult, error) {
+func (c *CBECoreAPI) FundTransferCheck(ctx context.Context, param FundTransferCheckParam) (*FundTransferCheckResult, error) {
 	params := fundtransfercheck.Params{
 		Username: c.config.Username,
 		Password: c.config.Password,
@@ -991,9 +994,9 @@ func (c *CBECoreAPI) FundTransferCheck(param FundTransferCheckParam) (*FundTrans
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1014,7 +1017,7 @@ func (c *CBECoreAPI) FundTransferCheck(param FundTransferCheckParam) (*FundTrans
 	return result, nil
 }
 
-func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedAmountResult, error) {
+func (c *CBECoreAPI) ListLockedAmount(ctx context.Context, param ListLockedAmountParam) (*ListLockedAmountResult, error) {
 	params := lockedamountlist.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1025,9 +1028,9 @@ func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedA
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1048,7 +1051,7 @@ func (c *CBECoreAPI) ListLockedAmount(param ListLockedAmountParam) (*ListLockedA
 	return result, nil
 }
 
-func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateLockedAmountResult, error) {
+func (c *CBECoreAPI) CreateLockedAmount(ctx context.Context, param CreateLockedAmountParam) (*CreateLockedAmountResult, error) {
 	params := lockedamountcreate.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1064,9 +1067,9 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1087,7 +1090,7 @@ func (c *CBECoreAPI) CreateLockedAmount(param CreateLockedAmountParam) (*CreateL
 	return result, nil
 }
 
-func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTResult, error) {
+func (c *CBECoreAPI) LockedAmountFT(ctx context.Context, param LockedAmountFTParam) (*LockedAmountFTResult, error) {
 	params := lockedamountft.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
@@ -1112,9 +1115,9 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1135,7 +1138,7 @@ func (c *CBECoreAPI) LockedAmountFT(param LockedAmountFTParam) (*LockedAmountFTR
 	return result, nil
 }
 
-func (c *CBECoreAPI) ReleaseLockedAmount(param ReleaseLockedAmountParam) (*ReleaseLockedAmountResult, error) {
+func (c *CBECoreAPI) ReleaseLockedAmount(ctx context.Context, param ReleaseLockedAmountParam) (*ReleaseLockedAmountResult, error) {
 	params := lockedamountrelease.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1146,9 +1149,9 @@ func (c *CBECoreAPI) ReleaseLockedAmount(param ReleaseLockedAmountParam) (*Relea
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1169,7 +1172,7 @@ func (c *CBECoreAPI) ReleaseLockedAmount(param ReleaseLockedAmountParam) (*Relea
 	return result, nil
 }
 
-func (c *CBECoreAPI) CancleStandingOrder(param CancleStandingOrderParam) (*CancelStandingOrderResult, error) {
+func (c *CBECoreAPI) CancleStandingOrder(ctx context.Context, param CancleStandingOrderParam) (*CancelStandingOrderResult, error) {
 	params := standingordercancel.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1181,9 +1184,9 @@ func (c *CBECoreAPI) CancleStandingOrder(param CancleStandingOrderParam) (*Cance
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1204,7 +1207,7 @@ func (c *CBECoreAPI) CancleStandingOrder(param CancleStandingOrderParam) (*Cance
 	return result, nil
 }
 
-func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error) {
+func (c *CBECoreAPI) UpdateStandingOrder(ctx context.Context, param UpdateStandingOrderParam) (*UpdateStandingOrderResult, error) {
 	params := standingorderupdate.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
@@ -1222,9 +1225,9 @@ func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*Updat
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1245,7 +1248,7 @@ func (c *CBECoreAPI) UpdateStandingOrder(param UpdateStandingOrderParam) (*Updat
 	return result, nil
 }
 
-func (c *CBECoreAPI) ListStandingOrderHistory(param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error) {
+func (c *CBECoreAPI) ListStandingOrderHistory(ctx context.Context, param ListStandingOrderHistoryParam) (*ListStandingOrderHistoryResult, error) {
 	params := standingorderlisthistory.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1255,9 +1258,9 @@ func (c *CBECoreAPI) ListStandingOrderHistory(param ListStandingOrderHistoryPara
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -1274,7 +1277,7 @@ func (c *CBECoreAPI) ListStandingOrderHistory(param ListStandingOrderHistoryPara
 	}
 	return result, nil
 }
-func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*CreateStandingOrderResult, error) {
+func (c *CBECoreAPI) CreateStandingOrder(ctx context.Context, param CreateStandingOrderParam) (*CreateStandingOrderResult, error) {
 	params := standingordercreate.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
@@ -1291,9 +1294,9 @@ func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*Creat
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1314,7 +1317,7 @@ func (c *CBECoreAPI) CreateStandingOrder(param CreateStandingOrderParam) (*Creat
 	return result, nil
 }
 
-func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStandingOrderResult, error) {
+func (c *CBECoreAPI) ListStandingOrder(ctx context.Context, param ListStandingOrderParam) (*ListStandingOrderResult, error) {
 	params := standingorderlist.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1325,9 +1328,9 @@ func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStand
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1348,7 +1351,7 @@ func (c *CBECoreAPI) ListStandingOrder(param ListStandingOrderParam) (*ListStand
 	return result, nil
 }
 
-func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error) {
+func (c *CBECoreAPI) MiniStatementByLimit(ctx context.Context, param MiniStatementByLimitParams) (*MiniStatementByLimitResult, error) {
 	params := ministatementbylimit.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
@@ -1360,9 +1363,9 @@ func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*Mi
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1382,7 +1385,7 @@ func (c *CBECoreAPI) MiniStatementByLimit(param MiniStatementByLimitParams) (*Mi
 	return result, nil
 }
 
-func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error) {
+func (c *CBECoreAPI) MiniStatementByDateRange(ctx context.Context, param MiniStatementByDateRangeParam) (*MiniStatementByDateRangeResult, error) {
 	params := ministatementbydaterange.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1396,9 +1399,9 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1418,7 +1421,7 @@ func (c *CBECoreAPI) MiniStatementByDateRange(param MiniStatementByDateRangePara
 	return result, nil
 }
 
-func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupResult, error) {
+func (c *CBECoreAPI) CustomerLookup(ctx context.Context, param CustomerLookupParam) (*CustomerLookupResult, error) {
 	params := customerlookup.Params{
 		Username:           c.config.Username,
 		Password:           c.config.Password,
@@ -1429,9 +1432,9 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 		Key: Value,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
@@ -1451,7 +1454,7 @@ func (c *CBECoreAPI) CustomerLookup(param CustomerLookupParam) (*CustomerLookupR
 	return result, nil
 }
 
-func (c *CBECoreAPI) CardReplace(param CardReplaceParam) (*CardReplaceResult, error) {
+func (c *CBECoreAPI) CardReplace(ctx context.Context, param CardReplaceParam) (*CardReplaceResult, error) {
 	params := cardreplace.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1461,9 +1464,9 @@ func (c *CBECoreAPI) CardReplace(param CardReplaceParam) (*CardReplaceResult, er
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err
@@ -1482,7 +1485,7 @@ func (c *CBECoreAPI) CardReplace(param CardReplaceParam) (*CardReplaceResult, er
 	return result, nil
 }
 
-func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, error) {
+func (c *CBECoreAPI) CardRequest(ctx context.Context, param CardRequestParam) (*CardRequestResult, error) {
 	params := cardrequest.Params{
 		Username:      c.config.Username,
 		Password:      c.config.Password,
@@ -1496,9 +1499,9 @@ func (c *CBECoreAPI) CardRequest(param CardRequestParam) (*CardRequestResult, er
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, utils.Config{
-		Timeout:    30 * time.Second,
-		MaxRetries: 6,
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
 		return nil, err

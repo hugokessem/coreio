@@ -1,6 +1,7 @@
 package ips
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -27,10 +28,10 @@ type QRPaymentParam = qrpayment.Params
 type QrPaymentResult = qrpayment.QrPaymentResult
 
 type IPSCoreAPIInterface interface {
-	AccountLookup(param AccountLookupParam) (*AccountLookupResult, error)
-	FundTransfer(param FundTransferParam) (*FundTransferResult, error)
-	StatusCheck(param StatusCheckParam) (*StatusCheckResult, error)
-	QRPayment(param QRPaymentParam) (*QrPaymentResult, error)
+	AccountLookup(ctx context.Context, param AccountLookupParam) (*AccountLookupResult, error)
+	FundTransfer(ctx context.Context, param FundTransferParam) (*FundTransferResult, error)
+	StatusCheck(ctx context.Context, param StatusCheckParam) (*StatusCheckResult, error)
+	QRPayment(ctx context.Context, param QRPaymentParam) (*QrPaymentResult, error)
 }
 
 type IPSCredentials struct {
@@ -47,10 +48,15 @@ type IPSCoreAPI struct {
 	config *internal.Config
 }
 
-func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
+const (
+	timeout    = 120 * time.Second
+	maxRetries = 1
+)
+
+func (c *IPSCoreAPI) QRPayment(ctx context.Context, param QRPaymentParam) (*QrPaymentResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	xmlRequest := qrpayment.NewQrPayment(param)
@@ -64,7 +70,7 @@ func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
 		"MB_authorization": c.config.MBAuthorization,
 		"Authorization":    c.config.Authorization,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -83,10 +89,10 @@ func (c *IPSCoreAPI) QRPayment(param QRPaymentParam) (*QrPaymentResult, error) {
 	return result, nil
 }
 
-func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, error) {
+func (c *IPSCoreAPI) StatusCheck(ctx context.Context, param StatusCheckParam) (*StatusCheckResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	xmlRequest := statuscheck.NewStatusCheck(param)
@@ -99,7 +105,7 @@ func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 		"MB_authorization": c.config.MBAuthorization,
 		"Authorization":    c.config.Authorization,
 	}
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -119,10 +125,10 @@ func (c *IPSCoreAPI) StatusCheck(param StatusCheckParam) (*StatusCheckResult, er
 }
 
 // AccountLookupParam implements CBEIspAPIInterface.
-func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResult, error) {
+func (c *IPSCoreAPI) AccountLookup(ctx context.Context, param AccountLookupParam) (*AccountLookupResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	xmlRequest := accountlookup.NewAccountLookup(param)
@@ -136,7 +142,7 @@ func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 		"Authorization":    c.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -156,10 +162,10 @@ func (c *IPSCoreAPI) AccountLookup(param AccountLookupParam) (*AccountLookupResu
 }
 
 // FundTransfer implements CBEIspAPIInterface.
-func (c *IPSCoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult, error) {
+func (c *IPSCoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) (*FundTransferResult, error) {
 	config := utils.Config{
-		MaxRetries: 6,
-		Timeout:    30 * time.Second,
+		MaxRetries: maxRetries,
+		Timeout:    timeout,
 	}
 
 	xmlRequest := fundtransfer.NewFundTransfer(param)
@@ -173,7 +179,7 @@ func (c *IPSCoreAPI) FundTransfer(param FundTransferParam) (*FundTransferResult,
 		"Authorization":    c.config.Authorization,
 	}
 
-	resp, err := utils.DoPostWithRetry(c.config.Url, xmlRequest, config, headers)
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, config, headers)
 	if err != nil {
 		return nil, err
 	}
