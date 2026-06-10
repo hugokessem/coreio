@@ -77,6 +77,7 @@ func (c *IPSCoreAPI) QRPayment(ctx context.Context, param QRPaymentParam) (*QrPa
 	defer resp.Body.Close()
 
 	responseDate, err := io.ReadAll(resp.Body)
+	fmt.Printf("[QRPayment]responseDate: %s\n\n", string(responseDate))
 	if err != nil {
 		return nil, err
 	}
