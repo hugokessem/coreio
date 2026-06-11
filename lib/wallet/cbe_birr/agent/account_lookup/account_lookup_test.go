@@ -15,11 +15,12 @@ func TestAgentAccountLookupGeneratedXML(t *testing.T) {
 		{
 			name: "Validate Agent Account Lookup",
 			param: Params{
-				OriginalConverstationIdentifier: "CONV123456",
 				ThirdPartyIdentifier:            "USSDPushCaller",
 				Password:                        "8eZVmhR2RmGWW/991P8DjLDpHiiiLUle0u",
-				Timestamp:                       "20130402152345",
+				InitiatorIdentifier:             "Anamail",
 				SecurityCredential:              "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
+				OriginalConverstationIdentifier: "CONV123456",
+				Timestamp:                       "20130402152345",
 				PhoneNumber:                     "251000",
 			},
 			expect: []string{
@@ -41,11 +42,12 @@ func TestAgentAccountLookupGeneratedXML(t *testing.T) {
 		{
 			name: "Validate Agent Account Lookup with different values",
 			param: Params{
-				OriginalConverstationIdentifier: "CONV789012",
 				ThirdPartyIdentifier:            "TESTCALLER",
 				Password:                        "TESTPASSWORD123",
-				Timestamp:                       "20250101120000",
+				InitiatorIdentifier:             "Anamail",
 				SecurityCredential:              "TESTSECURITY123",
+				OriginalConverstationIdentifier: "CONV789012",
+				Timestamp:                       "20250101120000",
 				PhoneNumber:                     "251911",
 			},
 			expect: []string{
@@ -54,7 +56,9 @@ func TestAgentAccountLookupGeneratedXML(t *testing.T) {
 				`<req:Password>TESTPASSWORD123</req:Password>`,
 				`<req:Timestamp>20250101120000</req:Timestamp>`,
 				`<req:SecurityCredential>TESTSECURITY123</req:SecurityCredential>`,
+				`<req:IdentifierType>4</req:IdentifierType>`,
 				`<req:Identifier>251911</req:Identifier>`,
+				`<req:QueryOrganizationInfoRequest/>`,
 			},
 		},
 	}
@@ -125,27 +129,16 @@ func TestParseAgentLookupSOAP(t *testing.T) {
 	assert.NotNil(t, result)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	
+
 	if result.Detail != nil {
 		assert.Equal(t, "1.0", result.Detail.Version)
 		assert.Equal(t, "S_334220042321001", result.Detail.OriginalConverstationIdentifier)
 		assert.Equal(t, "AG_20251127_7010236952534809c7c2", result.Detail.ConversationIdentifier)
-		
-		if result.Detail.OrganizationBasicData.OrganizationBasicData != nil {
-			orgData := result.Detail.OrganizationBasicData.OrganizationBasicData
+
+		if result.Detail.OrganizationBasicData != (OrganizationBasicData{}) {
+			orgData := result.Detail.OrganizationBasicData
 			assert.Equal(t, "251000", orgData.ShortCode)
 			assert.Equal(t, "gedaplc", orgData.OrganizationName)
-			assert.Equal(t, "03", orgData.IdentityStatus)
-			assert.Equal(t, "20160810", orgData.CreationDate)
-			assert.Equal(t, "11", orgData.TrustLevel)
-			assert.Equal(t, "Top Organization Trust Level", orgData.TrustLevelName)
-			assert.Equal(t, "11024", orgData.RuleProfileID)
-			assert.Equal(t, "Default Organization Rule Profile", orgData.RuleProfileName)
-			assert.Equal(t, "92", orgData.ChargeProfileID)
-			assert.Equal(t, "Bank Branch Charge Profile", orgData.ChargeProfileName)
-			assert.Equal(t, "Accounting Model for Aggregator", orgData.AggregatorAcctModel)
-			assert.Equal(t, "1", orgData.HierarchyLevel)
-			assert.Equal(t, "Aggregator", orgData.HierarchyModel)
 		}
 	}
 }

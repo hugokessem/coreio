@@ -24,7 +24,6 @@ func TestIntegrationAgentFundTransfer(t *testing.T) {
 		ReceiverParty:          "251000",
 		Amount:                 "124.00",
 		Currency:               "ETB",
-		Narative:               "Integration test",
 		ThirdPartyIdentifier:   "USSDPushCaller",
 		Password:               "8eZVmhR2RmGWW/1P8DjLDpHiiiLUle0u",
 		SecurityCredential:     "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",

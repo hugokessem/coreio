@@ -52,7 +52,7 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseCustomerLookupSOAP(string(responseData))
+	result, err := ParseCustomerLookupSOAP(string(responseData), params.PhoneNumber)
 	if err != nil {
 		t.Logf("Parsing error: %v", err)
 		t.Logf("Response data: %s", string(responseData))
@@ -65,16 +65,9 @@ func TestIntegrationCustomerAccountLookup(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField)
-	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[7].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[7].KYCValue)
-	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[24].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[24].KYCValue)
-	t.Log("result", result.Detail.CustomerKYCData.SimpleKYCData.KycField[25].KYCName, result.Detail.CustomerKYCData.SimpleKYCData.KycField[25].KYCValue)
-	t.Log("fistname", result.Detail.FirstName)
-	t.Log("lastname", result.Detail.LastName)
-	t.Log("phonenumber", result.Detail.PhoneNumber)
 
 	if result.Detail != nil {
-		t.Logf("result: %v", result.Detail.CustomerKYCData)
+		t.Logf("result: %v", result.Detail)
 		assert.Equal(t, strconv.Itoa(n), result.Detail.OriginalConverstationIdentifier)
 		assert.Equal(t, "1.0", result.Detail.Version)
 	} else {

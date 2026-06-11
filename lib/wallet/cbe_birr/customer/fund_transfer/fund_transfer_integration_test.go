@@ -23,13 +23,12 @@ func TestIntegrationCustomerFundTransfer(t *testing.T) {
 		Timestamp:              time.Now().Format("20060102150405"),
 		SecurityCredential:     "BWJ3KefDOdp+GHqRnA9Yfo2RbsZM60sw",
 		ThirdPartyIdentifier:   "USSDPushCaller",
-		PrimaryParty:           "000099",
+		ShortCode:              "000099",
 		ReceiverParty:          "251913170005",
 		Amount:                 "10.00",
 		Currency:               "ETB",
-		Narative:               "Integration test",
 		DebitAccountNumber:     "1000184084108",
-		DebitAccountHolderName: "Elnatan Michael Michael",
+		DebitAccountHolderName: "John Doe",
 	}
 
 	xmlRequest := NewCustomerFundTransfer(params)
