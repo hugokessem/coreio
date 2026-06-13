@@ -36,67 +36,94 @@ type CustomerFundTransferParams struct {
 
 func NewCustomerFundTransfer(param Params) string {
 	xe := escapeXML
+
 	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://cps.huawei.com/synccpsinterface/api_requestmgr" xmlns:req="http://cps.huawei.com/synccpsinterface/request" xmlns:com="http://cps.huawei.com/synccpsinterface/common" xmlns:cus="http://cps.huawei.com/cpsinterface/customizedrequest">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <api:Request>
-            <req:Header>
-                <req:Version>1.0</req:Version>
-                <req:CommandID>InitTrans_MB EMC</req:CommandID>
-                <req:OriginatorConversationID>%s</req:OriginatorConversationID>
-                <req:Caller>
-                    <req:CallerType>2</req:CallerType>
-                    <req:ThirdPartyID>%s</req:ThirdPartyID>
-                    <req:Password>%s</req:Password>
-                </req:Caller>
-                <req:KeyOwner>1</req:KeyOwner>
-                <req:Timestamp>%s</req:Timestamp>
-            </req:Header>
-            <req:Body>
-                <req:Identity>
-                    <req:Initiator>
-                        <req:IdentifierType>11</req:IdentifierType>
-                        <req:Identifier>%s</req:Identifier>
-                        <req:SecurityCredential>%s</req:SecurityCredential>
-                        <req:ShortCode>%s</req:ShortCode>
-                    </req:Initiator>
-                    <req:ReceiverParty>
-                        <req:IdentifierType>1</req:IdentifierType>
-                        <req:Identifier>%s</req:Identifier>
-                    </req:ReceiverParty>
-                </req:Identity>
-                <req:TransactionRequest>
-                    <req:Parameters>
-                        <req:Amount>%s</req:Amount>
-                        <req:Currency>%s</req:Currency>
-                        <req:ReasonType>Transfer from CBE SuperAPP to CBEBIRR</req:ReasonType>
-                    </req:Parameters>
-                </req:TransactionRequest>
-                <req:ReferenceData>
-                    <req:ReferenceItem>
-                        <com:Key>Debited shortcode</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>Debited Customer Name</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>Debited Acct</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                    <req:ReferenceItem>
-                        <com:Key>MB txnID</com:Key>
-                        <com:Value>%s</com:Value>
-                    </req:ReferenceItem>
-                </req:ReferenceData>
-            </req:Body>
-        </api:Request>
-    </soapenv:Body>
-</soapenv:Envelope>`, xe(param.FTNumber), xe(param.ThirdPartyIdentifier), xe(param.Password), xe(param.Timestamp),
-		xe(param.InitiatorIdentifier), xe(param.SecurityCredential), xe(param.ShortCode),
-		xe(param.ReceiverParty), xe(param.Amount), xe(param.Currency),
-		xe(param.ShortCode), xe(param.DebitAccountHolderName), xe(param.DebitAccountNumber), xe(param.FTNumber))
+	  <soapenv:Header/>
+	  <soapenv:Body>
+		  <api:Request>
+			  <req:Header>
+				  <req:Version>1.0</req:Version>
+				  <req:CommandID>InitTrans_MB E-Money Creation</req:CommandID>
+				  <req:OriginatorConversationID>%s</req:OriginatorConversationID>
+				  <req:Caller>
+					  <req:CallerType>2</req:CallerType>
+					  <req:ThirdPartyID>%s</req:ThirdPartyID>
+					  <req:Password>%s</req:Password>
+				  </req:Caller>
+				  <req:KeyOwner>1</req:KeyOwner>
+				  <req:Timestamp>%s</req:Timestamp>
+			  </req:Header>
+  
+			  <req:Body>
+				  <req:Identity>
+  
+					  <req:Initiator>
+						  <req:IdentifierType>14</req:IdentifierType>
+						  <req:Identifier>%s</req:Identifier>
+						  <req:SecurityCredential>%s</req:SecurityCredential>
+					  </req:Initiator>
+  
+					  <req:PrimaryParty>
+						  <req:IdentifierType>4</req:IdentifierType>
+						  <req:Identifier>%s</req:Identifier>
+					  </req:PrimaryParty>
+  
+					  <req:ReceiverParty>
+						  <req:IdentifierType>1</req:IdentifierType>
+						  <req:Identifier>%s</req:Identifier>
+					  </req:ReceiverParty>
+  
+				  </req:Identity>
+  
+				  <req:TransactionRequest>
+					  <req:Parameters>
+						  <req:Amount>%s</req:Amount>
+						  <req:Currency>%s</req:Currency>
+						  <req:ReasonType>Transfer from MB to CBEBIRR</req:ReasonType>
+					  </req:Parameters>
+				  </req:TransactionRequest>
+  
+				  <req:ReferenceData>
+					  <req:ReferenceItem>
+						  <com:Key>Debited shortcode</com:Key>
+						  <com:Value>%s</com:Value>
+					  </req:ReferenceItem>
+  
+					  <req:ReferenceItem>
+						  <com:Key>Debited Customer Name</com:Key>
+						  <com:Value>%s</com:Value>
+					  </req:ReferenceItem>
+  
+					  <req:ReferenceItem>
+						  <com:Key>Debited Acct</com:Key>
+						  <com:Value>%s</com:Value>
+					  </req:ReferenceItem>
+  
+					  <req:ReferenceItem>
+						  <com:Key>MB txnID</com:Key>
+						  <com:Value>%s</com:Value>
+					  </req:ReferenceItem>
+				  </req:ReferenceData>
+  
+			  </req:Body>
+		  </api:Request>
+	  </soapenv:Body>
+  </soapenv:Envelope>`,
+		xe(param.FTNumber),
+		xe(param.ThirdPartyIdentifier),
+		xe(param.Password),
+		xe(param.Timestamp),
+		xe(param.InitiatorIdentifier),
+		xe(param.SecurityCredential),
+		xe(param.ShortCode),
+		xe(param.ReceiverParty),
+		xe(param.Amount),
+		xe(param.Currency),
+		xe(param.ShortCode),
+		xe(param.DebitAccountHolderName),
+		xe(param.DebitAccountNumber),
+		xe(param.FTNumber),
+	)
 }
 
 type ReferenceDetail struct {
