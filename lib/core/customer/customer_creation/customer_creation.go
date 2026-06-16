@@ -43,6 +43,41 @@ type Params struct {
 	CustomerGroup      string
 }
 
+type CreateCustomerParams struct {
+	FirstName          string
+	MiddleName         string
+	LastName           string
+	PhoneNumber        string
+	Address            string
+	PostalCode         string
+	ISOCountryCode     string
+	AccountOffice      string
+	Industry           string
+	ISONationalityCode string
+	ISOResidentCode    string
+	UniqueID           string
+	IssuesBy           string
+	IssuedDate         string
+	ExpiryDate         string
+	Gender             string
+	DateOfBirth        string
+	MaritalStatus      string
+	Email              string
+	EmploymentStatus   string
+	Occupation         string
+	EmployerName       string
+	EmployerAddress    string
+	EmployerBusiness   string
+	CustomerCurrency   string
+	Salary             string
+	AnnualBonus        string
+	NetMonthlyIncome   string
+	NetMonthlyExpence  string
+	TinNumber          string
+	MotherName         string
+	CustomerGroup      string
+}
+
 func LastNineDigits(phone string) (string, bool) {
 	if len(phone) < 9 {
 		return "", false

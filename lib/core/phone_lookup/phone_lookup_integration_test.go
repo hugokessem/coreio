@@ -14,10 +14,11 @@ func TestIntegrationPhoneLookup(t *testing.T) {
 	params := Params{
 		Username:    "SUPERAPP",
 		Password:    "123456",
-		PhoneNumber: "Y911706628",
+		PhoneNumber: "M962982702",
 	}
 
 	xmlRequest := NewPhoneLookup(params)
+	t.Logf("xmlRequest %v", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -53,7 +54,7 @@ func TestIntegrationPhoneLookup(t *testing.T) {
 	// Check that the lookup succeeded
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Logf("result: %v", result.Detail)
+	t.Logf("result[*result.Detail]: %v", *result.Detail)
 
 	if result.Detail != nil {
 		assert.NotEmpty(t, result.Detail.CustomerID)

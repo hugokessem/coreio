@@ -18,6 +18,7 @@ import (
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 
+	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
 	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
@@ -64,6 +65,9 @@ type SplitPaymentResult = splitpayment.SplitPaymentResult
 
 type NameLookupParam = namelookup.NameLookupParam
 type NameLookupResult = namelookup.NameLookupResult
+
+type CreateCustomerParam = customercreation.CreateCustomerParams
+type CreateCustomerResult = customercreation.CustomerCreationResult
 
 type AccountCreationParam = accountcreation.AccountCreationParams
 type AccountCreationResult = accountcreation.AccountCreationResult
@@ -186,6 +190,7 @@ type CBECoreAPIInterface interface {
 	SuperAppUnsubscribe(ctx context.Context, param SuperAppUnsubscribeParam) (*SuperAppUnsubscribeResult, error)
 	SuperAppStatusChange(ctx context.Context, param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
 	CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
+	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
 }
 
 type CBECoreCredential struct {
@@ -211,6 +216,66 @@ const (
 	timeout    = 120 * time.Second
 	maxRetries = 1
 )
+
+func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error) {
+	params := customercreation.Params{
+		Username:           c.config.Username,
+		Password:           c.config.Password,
+		FirstName:          param.FirstName,
+		MiddleName:         param.MiddleName,
+		LastName:           param.LastName,
+		PhoneNumber:        param.PhoneNumber,
+		Address:            param.Address,
+		PostalCode:         param.PostalCode,
+		ISOCountryCode:     param.ISOCountryCode,
+		AccountOffice:      param.AccountOffice,
+		Industry:           param.Industry,
+		ISONationalityCode: param.ISONationalityCode,
+		ISOResidentCode:    param.ISOResidentCode,
+		UniqueID:           param.UniqueID,
+		IssuesBy:           param.IssuesBy,
+		IssuedDate:         param.IssuedDate,
+		ExpiryDate:         param.ExpiryDate,
+		Gender:             param.Gender,
+		DateOfBirth:        param.DateOfBirth,
+		MaritalStatus:      param.MaritalStatus,
+		Email:              param.Email,
+		EmploymentStatus:   param.EmploymentStatus,
+		Occupation:         param.Occupation,
+		EmployerName:       param.EmployerName,
+		EmployerAddress:    param.EmployerAddress,
+		EmployerBusiness:   param.EmployerBusiness,
+		CustomerCurrency:   param.CustomerCurrency,
+		Salary:             param.Salary,
+		AnnualBonus:        param.AnnualBonus,
+		NetMonthlyIncome:   param.NetMonthlyIncome,
+		NetMonthlyExpence:  param.NetMonthlyExpence,
+		TinNumber:          param.TinNumber,
+		MotherName:         param.MotherName,
+		CustomerGroup:      param.CustomerGroup,
+	}
+	xmlRequest := customercreation.NewCustomerCreation(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customercreation.ParseCustomerCreationSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 
 func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error) {
 	params := customerlimitfetchbycifreturnservice.Params{
