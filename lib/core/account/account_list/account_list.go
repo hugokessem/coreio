@@ -82,7 +82,7 @@ type AccountListByCIFDetail struct {
 	CustomerSegment         string `xml:"CustomerSegment"`
 	Target                  string `xml:"Target"`
 	Gender                  string `xml:"Gender"`
-	BirthOfDate             string `xml:"BirthOfDate"`
+	BirthOfDate             string `xml:"DateofBirth"`
 	Email                   string `xml:"Email"`
 	RestrictionType         string `xml:"RestrictionType"`
 	RestricttionDescription string `xml:"RestrictionDesc"`
