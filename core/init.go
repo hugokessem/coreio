@@ -20,6 +20,7 @@ import (
 
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
+	customerfetch "github.com/hugokessem/coreio/lib/core/customer/customer_fetch"
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
 	customerlimitfetchbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif"
 	customerlimitfetchbycifreturnservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif_return_service"
@@ -140,6 +141,9 @@ type SuperAppUnsubscribeResult = superappunsubscribe.UnsubscribeResult
 type SuperAppStatusChangeParam = statuschange.StatusParam
 type SuperAppStatusChangeResult = statuschange.StatusChangeResult
 
+type CustomerFetchParam = customerfetch.CustomerFetchParam
+type CustomerFetchResult = customerfetch.CustomerFetchResult
+
 type CustomerLimitFetchByCIFReturnServiceParam = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceParam
 type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceResult
 
@@ -191,6 +195,7 @@ type CBECoreAPIInterface interface {
 	SuperAppStatusChange(ctx context.Context, param SuperAppStatusChangeParam) (*SuperAppStatusChangeResult, error)
 	CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
 	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
+	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
 }
 
 type CBECoreCredential struct {
@@ -216,6 +221,40 @@ const (
 	timeout    = 120 * time.Second
 	maxRetries = 1
 )
+
+func (c *CBECoreAPI) CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error) {
+
+	params := customerfetch.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+		FetchBy:        param.FetchBy,
+	}
+
+	xmlRequest := customerfetch.NewCustomerFetch(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := customerfetch.ParseCustomerFetchSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
 
 func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error) {
 	params := customercreation.Params{
