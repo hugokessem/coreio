@@ -706,6 +706,7 @@ func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(ctx context.Context, par
 		ChannelLimit:   param.ChannelLimit,
 	}
 	xmlRequest := customerlimitamendbycif.NewCustomerLimitAmendByCIF(params)
+	fmt.Println("xmlRequest: ", xmlRequest)
 	headers := map[string]string{
 		Key: Value,
 	}
@@ -727,6 +728,7 @@ func (c *CBECoreAPI) CustomerLimitAmendByCustomerNumber(ctx context.Context, par
 	}
 
 	result, err := customerlimitamendbycif.ParseCustomerLimitAmendByCIFSOAP(string(responseData))
+	fmt.Println("result:", result)
 	if err != nil {
 		return nil, err
 	}
