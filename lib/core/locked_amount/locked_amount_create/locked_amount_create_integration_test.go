@@ -14,11 +14,11 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		AccountNumber: "1000517052152",
+		AccountNumber: "1000199986857",
 		Description:   "3 Click Payment",
 		From:          "20251109",
 		To:            "20281111",
-		LockedAmount:  "1000",
+		LockedAmount:  "6",
 		UserID:        "SA1771239173",
 	}
 
