@@ -346,6 +346,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		Header:             param.Header,
 	}
 	xmlRequest := customercreation.NewCustomerCreation(params)
+	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
 		Key: Value,
 	}
@@ -363,6 +364,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	}
 	defer resp.Body.Close()
 	responseData, err := io.ReadAll(resp.Body)
+	fmt.Println("responseData", string(responseData))
 	if err != nil {
 		return nil, err
 	}

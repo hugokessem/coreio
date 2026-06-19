@@ -1,150 +1,162 @@
 package main
 
-// import (
-// 	"context"
-// 	"fmt"
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"math/rand"
+	"net/http"
+	"strings"
+	"time"
 
-// 	"github.com/hugokessem/coreio/core"
-// 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
-// )
+	"github.com/hugokessem/coreio/core"
+)
 
-// type CoreAPI struct {
-// 	coreInterface core.CBECoreAPIInterface
-// }
+const (
+	sandboxOAuthTokenURL = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/oauth-mb-cbebirr/oauth2/token?target=https%3A%2F%2Fapi-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
+	sandboxCustomerURL   = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/cust_creation?target=https%3A%2F%2Fapi-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
+	sandboxOAuthBody     = "grant_type=client_credentials&client_id=f1ceebd8d6d5b802dc7fd8332ab33603&client_secret=05ac01f2f134bfff2549669bc11bd6cc&scope=mb-cbebirr-scope"
+)
 
-// func InitCoreAPICalls(username, password, url, fraudAPIAuth, fraudAPIUrl, fraudAPIForwardHost string) CoreAPI {
-// 	return CoreAPI{
-// 		coreInterface: core.NewCBECoreAPI(core.CBECoreCredential{
-// 			Username: username,
-// 			Password: password,
-// 			Url:      url,
-// 			FraudAPICredential: core.FraudAPICredential{
-// 				Authorization: fraudAPIAuth,
-// 				Url:           fraudAPIUrl,
-// 				ForwardHost:   fraudAPIForwardHost,
-// 			},
-// 		}),
-// 	}
-// }
+type CoreAPI struct {
+	coreInterface core.CBECoreAPIInterface
+}
 
-// func (c *CoreAPI) FT(ft core.FundTransferParam) (*core.FundTransferResult, error) {
-// 	result, err := c.coreInterface.FundTransfer(ft)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+type oauthTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+}
 
-// 	return result, nil
-// }
+func InitCoreAPICalls(username, password, url string) CoreAPI {
+	return CoreAPI{
+		coreInterface: core.NewCBECoreAPI(&core.CBECoreCredential{
+			Username: username,
+			Password: password,
+			Url:      url,
+		}),
+	}
+}
 
-// func (c *CoreAPI) CustomerAmendByCIF(ctx context.Context, ft core.CustomerLimitAmendByCIFParam) (*core.CustomerLimitAmendByCIFResult, error) {
-// 	result, err := c.coreInterface.CustomerLimitAmendByCustomerNumber(ft)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (c *CoreAPI) CreateCustomer(ctx context.Context, param core.CreateCustomerParam) (*core.CreateCustomerResult, error) {
+	result, err := c.coreInterface.CreateCustomer(ctx, param)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return result, nil
-// }
+	return result, nil
+}
 
-// func (c *CoreAPI) CustomerLimitFetchByService(ctx context.Context, ft core.CustomerLimitFetchByServiceParam) (*core.CustomerLimitFetchByServiceResult, error) {
-// 	result, err := c.coreInterface.CustomerLimitFetchByService(ft)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func getAccessToken(ctx context.Context) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, sandboxOAuthTokenURL, strings.NewReader(sandboxOAuthBody))
+	if err != nil {
+		return "", fmt.Errorf("create oauth request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-// 	return result, nil
-// }
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("oauth request failed: %w", err)
+	}
+	defer resp.Body.Close()
 
-// func (c *CoreAPI) MiniStatementByDate(ctx context.Context, ft core.MiniStatementByDateRangeParam) (*core.MiniStatementByDateRangeResult, error) {
-// 	result, err := c.coreInterface.MiniStatementByDateRange(ft)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("read oauth response: %w", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("oauth request returned %s: %s", resp.Status, string(responseData))
+	}
 
-// 	return result, nil
-// }
+	var tokenResp oauthTokenResponse
+	if err := json.Unmarshal(responseData, &tokenResp); err != nil {
+		return "", fmt.Errorf("parse oauth response: %w", err)
+	}
+	if tokenResp.AccessToken == "" {
+		return "", fmt.Errorf("oauth response missing access_token")
+	}
 
-// func main() {
-// 	// ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-// 	// defer cancel()
+	return tokenResp.AccessToken, nil
+}
 
-// 	calls := InitCoreAPICalls(
-// 		"SUPERAPP",
-// 		"123456",
-// 		"https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null",
-// 		"Basic YWRtaW46YWRtaW4=",
-// 		"https://devapisuperapp.cbe.com.et/superapp/parser/proxy/scoringapi/digital-transactions/?target=https://nguat.cbe.com.et",
-// 		"nguat.cbe.com.et",
-// 	)
+func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
-// 	// fethchByService, err := calls.CustomerLimitFetchByService(context.Background(), core.CustomerLimitFetchByServiceParam{
-// 	// 	ServiceCode: "GLOBAL-MASS",
-// 	// })
+	accessToken, err := getAccessToken(ctx)
+	if err != nil {
+		log.Fatalf("failed to get access token: %v", err)
+	}
 
-// 	// if err != nil {
-// 	// 	fmt.Println("failed to fetch by service", err)
-// 	// 	return
-// 	// }
-// 	// fmt.Println("fetch by service", fethchByService)
+	calls := InitCoreAPICalls(
+		"SUPERAPP",
+		"123456",
+		sandboxCustomerURL,
+	)
 
-// 	ft := core.FundTransferParam{
-// 		DebitAccountNumber:  "1000517052152",
-// 		CreditAccountNumber: "1000000006924",
+	tinNumber := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	nationalID := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	email := fmt.Sprintf("sampletet%d@gmail.com", rand.Intn(10000000000000000))
+	phoneNumber := fmt.Sprintf("+25191%06d", rand.Intn(1000000))
+	legalID := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
 
-// 		// CreditAccountNumber: "1000517052152",
-// 		// DebitAccountNumber: "1000319950331", // usd account
-// 		// DebitCurrency: "ETB",
-// 		// DebitAmount:         "2.00",
-// 		CreditAmount:    "12",
-// 		CreditCurrency:  "ETB",
-// 		TransactionID:   "TXN123458889",
-// 		DebitReference:  "Payment",
-// 		CreditReference: "Received payment",
-// 		PaymentDetail:   "Fund transfer",
-// 		ServiceCode:     "CBE",
-// 		Meta: frauddetection.FraudAPIPayload{
-// 			TranasctionID:              "FT24330T1NSA3",
-// 			AccountID:                  "1000517052152",
-// 			CustomerName:               "YOHHANES TESHOME SHIFERAW",
-// 			CustomerPhoneMobileSMS:     "+251911706628",
-// 			BeneficiaryAccountID:       "1000000006924",
-// 			BeneficiaryName:            "ABIY HAILEYESUS MENGISTU",
-// 			AccountCategory:            "6502",
-// 			AccountCurrency:            "ETB",
-// 			TransactionConvertedAmount: "180",
-// 			TransactionType:            "Mobile Transfer",
-// 			SourceUser:                 "104723KIK",
-// 			ChangeInPhoneEmail:         "Y",
-// 			TransactionTimestamp:       "2025-10-28 09:27:20",
-// 			ChangeInPIN:                "Y",
-// 			ChangeInPassword:           "N",
-// 			ChangeInDevice:             "N",
-// 		},
-// 	}
+	customer := core.CreateCustomerParam{
+		FirstName:          "KETEM",
+		MiddleName:         "HAILU",
+		LastName:           "TAYE",
+		PhoneNumber:        phoneNumber,
+		Address:            "ADDIS ABABA",
+		PostalCode:         "4144",
+		ISOCountryCode:     "ET",
+		AccountOffice:      "7124",
+		Industry:           "1499",
+		ISONationalityCode: "ET",
+		ISOResidentCode:    "ET",
+		UniqueID:           legalID,
+		IssuesBy:           "FAYDA",
+		IssuedDate:         "20210504",
+		ExpiryDate:         "20500101",
+		Gender:             "MALE",
+		DateOfBirth:        "19900310",
+		MaritalStatus:      "SINGLE",
+		Email:              email,
+		EmploymentStatus:   "EMPLOYED",
+		Occupation:         "HIRED",
+		EmployerName:       "MIDRO",
+		EmployerAddress:    "ADDIS ABABA",
+		EmployerBusiness:   "SHARE COMPANY",
+		CustomerCurrency:   "ETB",
+		Salary:             "75000",
+		AnnualBonus:        "50000",
+		NetMonthlyIncome:   "55000",
+		NetMonthlyExpence:  "42000",
+		TinNumber:          tinNumber,
+		MotherName:         "TIGIST ADAM FEKADU",
+		CustomerGroup:      "RETAIL",
+		NationalId:         nationalID,
+		Url:                sandboxCustomerURL,
+		Header: map[string]string{
+			"Authorization": "Bearer " + accessToken,
+		},
+	}
 
-// 	// ft := core.MiniStatementByDateRangeParam{
-// 	// 	AccountNumber: "1000184349713",
-// 	// 	From:          "20200101",
-// 	// 	To:            "20200105",
-// 	// }
+	result, err := calls.CreateCustomer(ctx, customer)
+	if err != nil {
+		log.Fatalf("create customer failed: %v", err)
+	}
 
-// 	// result, err := calls.MiniStatementByDate(ctx, ft)
-// 	// result, err := calls.FT(ft)
-// 	// if err != nil {
-// 	// 	log.Fatalf("%v", err)
-// 	// 	return
-// 	// }
+	if !result.Success {
+		log.Fatalf("create customer rejected: %v", result.Messages)
+	}
 
-// 	result, _ := calls.FT(ft)
-// 	fmt.Println("result", result)
-// 	if result.Success {
-// 		fmt.Println("amount", result)
-// 		fmt.Println("detai;", result.Detail)
-// 		fmt.Println("TransctionID", result.Detail.TransactionID)
-// 		fmt.Println("ft", result.Detail.FTNumber)
-// 		return
-// 	} else {
-// 		// fmt.Println("error", result.Message)
-// 		fmt.Println("error", result.Messages)
-// 	}
-
-// }
+	fmt.Printf("customer created successfully\n")
+	if result.Detail != nil {
+		fmt.Printf("mnemonic: %s\n", result.Detail.Menmonic)
+		fmt.Printf("full name: %s\n", result.Detail.FullName)
+		fmt.Printf("phone: %s\n", result.Detail.PhoneNumber)
+		fmt.Printf("national id: %s\n", result.Detail.NationalId)
+		fmt.Printf("cocode: %s\n", result.Detail.Cocode)
+		fmt.Printf("customer number: %s\n", result.Detail.Address)
+	}
+}

@@ -444,6 +444,7 @@ type CustomerTypeDetail struct {
 	Ownership        string
 	NationalId       string
 	Cocode           string
+	AccountNumber    string
 }
 
 type CustomerCreationResult struct {
