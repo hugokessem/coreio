@@ -781,25 +781,25 @@ func (c *CBECoreAPI) SplitPayment(ctx context.Context, param SplitPaymentParam) 
 
 func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
-		Username:       param.Username,
-		Password:       param.Password,
+		Username:       c.config.Username,
+		Password:       c.config.Password,
 		AccountOfficer: param.AccountOfficer,
 		CustomerNumber: param.CustomerNumber,
 		Category:       param.Category,
 		Currency:       param.Currency,
-		Url:            param.Url,
-		Header:         param.Header,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	headers := map[string]string{
 		Key: Value,
 	}
-
 	if param.Header != nil {
-		maps.Copy(headers, params.Header)
+		maps.Copy(headers, param.Header)
 	}
-
-	resp, err := utils.DoPost(ctx, param.Url, xmlRequest, utils.Config{
+	url := c.config.Url
+	if param.Url != "" {
+		url = param.Url
+	}
+	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)

@@ -13,13 +13,9 @@ type Params struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
-	Url            string
-	Header         map[string]string
 }
 
 type AccountCreationParams struct {
-	Username       string
-	Password       string
 	CustomerNumber string
 	Category       string
 	Currency       string
@@ -29,29 +25,29 @@ type AccountCreationParams struct {
 }
 
 func NewAccountCreation(param Params) string {
-	return fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
-		<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iib="http://temenos.com/IIBONBOARDING" xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
-			<soapenv:Header/>
-			<soapenv:Body>
-				<iib:AccountOpeningSuperApp>
-					<WebRequestCommon>
-						<company/>
-						<password>%s</password>
-						<userName>%s</userName>
-					</WebRequestCommon>
-					<OfsFunction></OfsFunction>
-					<ACCOUNTCREATEINDIVIDUALType id="">
-						<acc:CUSTOMER>%s</acc:CUSTOMER>
-						<acc:CATEGORY>%s</acc:CATEGORY>
-						<acc:CURRENCY>%s</acc:CURRENCY>
-						<acc:ACCOUNTOFFICER>%s</acc:ACCOUNTOFFICER>
-					</ACCOUNTCREATEINDIVIDUALType>
-				</iib:AccountOpeningSuperApp>
-			</soapenv:Body>
-		</soapenv:Envelope>`,
+	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:iib="http://temenos.com/IIBONBOARDING"
+xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <iib:AccountOpeningSuperApp>
+            <WebRequestCommon>
+                <company/>
+                <password>%s</password>
+                <userName>%s</userName>
+            </WebRequestCommon>
+            <OfsFunction></OfsFunction>
+            <ACCOUNTCREATEINDIVIDUALType id="">
+                <acc:CUSTOMER>%s</acc:CUSTOMER>
+                <acc:CATEGORY>%s</acc:CATEGORY>
+                <acc:CURRENCY>%s</acc:CURRENCY>
+                <acc:ACCOUNTOFFICER>%s</acc:ACCOUNTOFFICER>
+            </ACCOUNTCREATEINDIVIDUALType>
+        </iib:AccountOpeningSuperApp>
+    </soapenv:Body>
+</soapenv:Envelope>`,
 		param.Password, param.Username, param.CustomerNumber, param.Category, param.Currency, param.AccountOfficer,
 	)
-
 }
 
 type Envelope struct {
@@ -70,10 +66,10 @@ type AccountCreationResponse struct {
 		TransactionId    string   `xml:"transactionId"`
 		Application      string   `xml:"application"`
 	} `xml:"Status"`
-	AccountCreationDetail *AccountCreationDetail `xml:"ACCOUNTType"`
+	AccountType AccountType `xml:"ACCOUNTType"`
 }
 
-type AccountCreationDetail struct {
+type AccountType struct {
 	AccountNumber      string `xml:"id,attr"`
 	Customer           string `xml:"CUSTOMER"`
 	Category           string `xml:"CATEGORY"`
@@ -122,9 +118,42 @@ type AccountCreationDetail struct {
 	ProductType  string `xml:"PRODUCTTYPE"`
 }
 
+type AccountTypeDetail struct {
+	AccountNumber    string
+	Customer         string
+	Category         string
+	AccountTitle     string
+	ShortTitle       string
+	PositionType     string
+	Currency         string
+	CurrencyMarket   string
+	AccountOfficer   string
+	PostingRestrict  string
+	ConditionGroup   string
+	CapDateCharge    string
+	Passbook         string
+	OpeningDate      string
+	OpenCategory     string
+	ChargeCcy        string
+	ChargeMkt        string
+	InterestCcy      string
+	InterestMkt      string
+	AltAcctTypes     []string
+	AllowNetting     string
+	SingleLimit      string
+	CurrNo           string
+	Inputter         string
+	Datetime         string
+	Authoriser       string
+	CoCode           string
+	DeptCode         string
+	HasJointCust     string
+	ProductType      string
+}
+
 type AccountCreationResult struct {
 	Success  bool
-	Detail   *AccountCreationDetail
+	Detail   *AccountTypeDetail
 	Messages []string
 }
 
@@ -150,16 +179,54 @@ func ParseAccountCreationSOAP(xmlData string) (*AccountCreationResult, error) {
 			}, nil
 		}
 
-		if resp.AccountCreationDetail == nil {
+		if resp.AccountType.AccountNumber == "" {
 			return &AccountCreationResult{
-				Success:  false,
-				Messages: []string{},
+				Success:  true,
+				Messages: resp.Status.Messages,
 			}, nil
+		}
+
+		altAcctTypes := make([]string, 0, len(resp.AccountType.GlobalAltAcctType.MALTACCTTYPE))
+		for _, altAcctType := range resp.AccountType.GlobalAltAcctType.MALTACCTTYPE {
+			altAcctTypes = append(altAcctTypes, altAcctType.AltAcctType)
+		}
+
+		detail := &AccountTypeDetail{
+			AccountNumber:   resp.AccountType.AccountNumber,
+			Customer:        resp.AccountType.Customer,
+			Category:        resp.AccountType.Category,
+			AccountTitle:    resp.AccountType.GlobalAccountTitle.AccountTitle,
+			ShortTitle:      resp.AccountType.GlobalShortTitle.ShortTitle,
+			PositionType:    resp.AccountType.PositionType,
+			Currency:        resp.AccountType.Currency,
+			CurrencyMarket:  resp.AccountType.CurrencyMarket,
+			AccountOfficer:  resp.AccountType.AccountOfficer,
+			PostingRestrict: resp.AccountType.GlobalPostingRestrict.PostingRestrict,
+			ConditionGroup:  resp.AccountType.ConditionGroup,
+			CapDateCharge:   resp.AccountType.GlobalCapDateCharge.CapDateCharge,
+			Passbook:        resp.AccountType.Passbook,
+			OpeningDate:     resp.AccountType.OpeningDate,
+			OpenCategory:    resp.AccountType.OpenCategory,
+			ChargeCcy:       resp.AccountType.ChargeCcy,
+			ChargeMkt:       resp.AccountType.ChargeMkt,
+			InterestCcy:     resp.AccountType.InterestCcy,
+			InterestMkt:     resp.AccountType.InterestMkt,
+			AltAcctTypes:    altAcctTypes,
+			AllowNetting:    resp.AccountType.AllowNetting,
+			SingleLimit:     resp.AccountType.SingleLimit,
+			CurrNo:          resp.AccountType.CurrNo,
+			Inputter:        resp.AccountType.GlobalInputter.Inputter,
+			Datetime:        resp.AccountType.GlobalDatetime.Datetime,
+			Authoriser:      resp.AccountType.Authoriser,
+			CoCode:          resp.AccountType.CoCode,
+			DeptCode:        resp.AccountType.DeptCode,
+			HasJointCust:    resp.AccountType.HasJointCust,
+			ProductType:     resp.AccountType.ProductType,
 		}
 
 		return &AccountCreationResult{
 			Success:  true,
-			Detail:   resp.AccountCreationDetail,
+			Detail:   detail,
 			Messages: resp.Status.Messages,
 		}, nil
 	}
