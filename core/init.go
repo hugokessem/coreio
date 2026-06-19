@@ -300,13 +300,11 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	headers := map[string]string{
 		Key: Value,
 	}
+
 	if param.Header != nil {
 		maps.Copy(headers, param.Header)
 	}
-	url := c.config.Url
-	if param.Url != "" {
-		url = param.Url
-	}
+	url := param.Url
 	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
