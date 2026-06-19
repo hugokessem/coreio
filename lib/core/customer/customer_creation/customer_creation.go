@@ -42,6 +42,8 @@ type Params struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	Url                string
+	Header             map[string]string
 }
 
 type CreateCustomerParams struct {

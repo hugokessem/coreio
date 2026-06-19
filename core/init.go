@@ -293,6 +293,8 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		MotherName:         param.MotherName,
 		CustomerGroup:      param.CustomerGroup,
 		NationalId:         param.NationalId,
+		Url:                param.Url,
+		Header:             param.Header,
 	}
 	xmlRequest := customercreation.NewCustomerCreation(params)
 	headers := map[string]string{
