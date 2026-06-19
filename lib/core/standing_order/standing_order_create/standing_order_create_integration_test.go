@@ -14,7 +14,8 @@ func TestIntegrationCreateStandingOrder(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000000006924",
+		BranchCode:          "ET0010863",
+		DebitAccountNumber:  "1000263525144",
 		CreditAccountNumber: "1000099636436",
 		PaymentDetail:       "Fund transfer",
 		CurrentDate:         "20260101",
@@ -24,6 +25,7 @@ func TestIntegrationCreateStandingOrder(t *testing.T) {
 	}
 
 	xmlRequest := NewCreateStandingOrder(params)
+	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
@@ -54,6 +56,7 @@ func TestIntegrationCreateStandingOrder(t *testing.T) {
 	t.Logf("result: %v", result.Detail)
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
+	t.Logf("result messages: %v", result.Messages)
 
 	if result.Detail != nil {
 		assert.Equal(t, "1000357597823", result.Detail.CreditAccountNumber)

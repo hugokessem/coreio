@@ -18,6 +18,8 @@ type Params struct {
 	CreditCurrency      string
 	PaymentDetail       string
 	ClientReference     string
+	BranchCode          string
+	SuperappUserCode    string
 }
 
 type BillPaymentParams struct {
@@ -30,6 +32,8 @@ type BillPaymentParams struct {
 	CreditCurrency      string
 	PaymentDetail       string
 	ClientReference     string
+	BranchCode          string
+	SuperappUserCode    string
 }
 
 func NewBillPayment(param Params) string {
@@ -39,7 +43,7 @@ func NewBillPayment(param Params) string {
     <soapenv:Body>
         <cbes:FTBillPayment>
             <WebRequestCommon>
-                <company/>
+                <company>%s</company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
@@ -64,10 +68,11 @@ func NewBillPayment(param Params) string {
                     <fun:CHARGETYPE></fun:CHARGETYPE>
                 </fun:gCHARGETYPE>
                 <fun:ClientReference>%s</fun:ClientReference>
+	            <fun:UserID>%s</fun:UserID>
             </FUNDSTRANSFERBILLPAYSUPERAPPType>
         </cbes:FTBillPayment>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.ClientReference)
+</soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.ClientReference, param.SuperappUserCode)
 }
 
 type Envelope struct {
@@ -81,10 +86,11 @@ type Body struct {
 
 type FTBillPaymentResponse struct {
 	Status *struct {
-		TransactionId    string `xml:"transactionId"`
-		MessageId        string `xml:"messageId"`
-		SuccessIndicator string `xml:"successIndicator"`
-		Application      string `xml:"application"`
+		TransactionId    string   `xml:"transactionId"`
+		MessageId        string   `xml:"messageId"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		Application      string   `xml:"application"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	BillPaymentDetail *BillPaymentDetail `xml:"FUNDSTRANSFERType"`
 }
@@ -139,7 +145,7 @@ type BillPaymentDetail struct {
 type BillPaymentResult struct {
 	Status  bool
 	Detail  *BillPaymentDetail
-	Message string
+	Message []string
 }
 
 func ParseBillPaymentSOAP(xmlData string) (*BillPaymentResult, error) {
@@ -153,19 +159,19 @@ func ParseBillPaymentSOAP(xmlData string) (*BillPaymentResult, error) {
 		if resp.Status == nil {
 			return &BillPaymentResult{
 				Status:  false,
-				Message: "Missing Status",
+				Message: resp.Status.Messages,
 			}, nil
 		}
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &BillPaymentResult{
 				Status:  false,
-				Message: "API returned failure",
+				Message: resp.Status.Messages,
 			}, nil
 		}
 		if resp.BillPaymentDetail == nil {
 			return &BillPaymentResult{
 				Status:  false,
-				Message: "Missing Bill Payment Detail",
+				Message: resp.Status.Messages,
 			}, nil
 		}
 
@@ -177,6 +183,6 @@ func ParseBillPaymentSOAP(xmlData string) (*BillPaymentResult, error) {
 
 	return &BillPaymentResult{
 		Status:  false,
-		Message: "Invalid response type",
+		Message: []string{"Invalid response type"},
 	}, nil
 }

@@ -14,7 +14,8 @@ func TestIntegrationUpdateStandingOrder(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		DebitAccountNumber:  "1000648501521",
+		BranchCode:          "ET0010863",
+		DebitAccountNumber:  "1000263525144",
 		CreditAccountNumber: "1000035279327",
 		PaymentDetail:       "Fund transfer",
 		CurrentDate:         "20260101",

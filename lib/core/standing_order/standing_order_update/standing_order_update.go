@@ -17,6 +17,7 @@ type Params struct {
 	CurrentDate         string
 	PaymentDetail       string
 	CreditAccountNumber string
+	BranchCode          string
 }
 
 type UpdateStandingOrderParam struct {
@@ -28,6 +29,7 @@ type UpdateStandingOrderParam struct {
 	CurrentDate         string
 	PaymentDetail       string
 	CreditAccountNumber string
+	BranchCode          string
 }
 
 func NewUpdateStandingOrder(param Params) string {
@@ -36,7 +38,7 @@ func NewUpdateStandingOrder(param Params) string {
     <soapenv:Body>
         <cbes:CreateUpdateStandingOrder>
             <WebRequestCommon>
-                <company/>
+                <company>%s</company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
@@ -53,7 +55,7 @@ func NewUpdateStandingOrder(param Params) string {
             </STANDINGORDERMANAGEORDERSUPERAPPType>
         </cbes:CreateUpdateStandingOrder>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.OrderId, param.Currency, param.Amount, param.Frequency, param.CurrentDate, param.PaymentDetail, param.CreditAccountNumber)
+</soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.DebitAccountNumber, param.OrderId, param.Currency, param.Amount, param.Frequency, param.CurrentDate, param.PaymentDetail, param.CreditAccountNumber)
 }
 
 type Envelope struct {

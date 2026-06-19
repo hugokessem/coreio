@@ -16,6 +16,7 @@ type Params struct {
 	Currency            string
 	Frequency           string
 	PaymentDetail       string
+	BranchCode          string
 }
 type CreateStandingOrderParams struct {
 	DebitAccountNumber  string
@@ -25,6 +26,7 @@ type CreateStandingOrderParams struct {
 	Currency            string
 	Frequency           string
 	PaymentDetail       string
+	BranchCode          string
 }
 
 func NewCreateStandingOrder(param Params) string {
@@ -34,7 +36,7 @@ func NewCreateStandingOrder(param Params) string {
     <soapenv:Body>
         <cbes:CreateUpdateStandingOrder>
             <WebRequestCommon>
-                <company/>
+                <company>%s</company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
@@ -51,7 +53,7 @@ func NewCreateStandingOrder(param Params) string {
             </STANDINGORDERMANAGEORDERSUPERAPPType>
         </cbes:CreateUpdateStandingOrder>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.Currency, param.Amount, param.Frequency, param.CurrentDate, param.PaymentDetail, param.CreditAccountNumber)
+</soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.DebitAccountNumber, param.Currency, param.Amount, param.Frequency, param.CurrentDate, param.PaymentDetail, param.CreditAccountNumber)
 }
 
 type Envelope struct {
@@ -78,10 +80,10 @@ type StandingOrderDetail struct {
 
 type StandingOrderResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
-		Messages         string `xml:"messages"`
-		Application      string `xml:"application"`
-		TransactionId    string `xml:"transactionId"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		Messages         []string `xml:"messages"`
+		Application      string   `xml:"application"`
+		TransactionId    string   `xml:"transactionId"`
 	} `xml:"Status"`
 	StandingOrderType *StandingOrderDetail `xml:"STANDINGORDERType"`
 }
@@ -110,14 +112,14 @@ func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &StandingOrderResult{
 				Success:  false,
-				Messages: []string{resp.Status.Messages},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
 		if resp.StandingOrderType == nil {
 			return &StandingOrderResult{
 				Success:  false,
-				Messages: []string{},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
@@ -125,7 +127,7 @@ func ParseCreateStandingOrderSOAP(xmlData string) (*StandingOrderResult, error) 
 		if !found {
 			return &StandingOrderResult{
 				Success:  false,
-				Messages: []string{"Failed to find Order ID!"},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 		return &StandingOrderResult{

@@ -22,6 +22,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		Password: "123456",
 		// DebitAccountNumber: "1000446114291",
 		// DebitCurrency:      "USD",
+		BranchCode:          "ET0010863",
 		DebitAccountNumber:  "1000263525144",
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000298095649",
