@@ -292,12 +292,20 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		TinNumber:          param.TinNumber,
 		MotherName:         param.MotherName,
 		CustomerGroup:      param.CustomerGroup,
+		NationalId:         param.NationalId,
 	}
 	xmlRequest := customercreation.NewCustomerCreation(params)
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+	if param.Header != nil {
+		maps.Copy(headers, param.Header)
+	}
+	url := c.config.Url
+	if param.Url != "" {
+		url = param.Url
+	}
+	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)

@@ -41,6 +41,7 @@ type Params struct {
 	TinNumber          string
 	MotherName         string
 	CustomerGroup      string
+	NationalId         string
 }
 
 type CreateCustomerParams struct {
@@ -76,6 +77,9 @@ type CreateCustomerParams struct {
 	TinNumber          string
 	MotherName         string
 	CustomerGroup      string
+	NationalId         string
+	Url                string
+	Header             map[string]string
 }
 
 func LastNineDigits(phone string) (string, bool) {
@@ -266,7 +270,7 @@ func NewCustomerCreation(param Params) string {
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Address, param.Address, param.PostalCode, param.ISOCountryCode, param.AccountOffice, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.FirstName, param.LastName, param.Gender, param.DateOfBirth, param.MaritalStatus, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.EmployerName, param.EmployerAddress, param.EmployerBusiness, param.CustomerCurrency, param.Salary, param.AnnualBonus, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.MotherName, param.CustomerGroup, param.UniqueID)
+    `, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Address, param.Address, param.PostalCode, param.ISOCountryCode, param.AccountOffice, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.FirstName, param.LastName, param.Gender, param.DateOfBirth, param.MaritalStatus, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.EmployerName, param.EmployerAddress, param.EmployerBusiness, param.CustomerCurrency, param.Salary, param.AnnualBonus, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.MotherName, param.CustomerGroup, param.NationalId)
 }
 
 type Envelope struct {
@@ -471,7 +475,7 @@ func ParseCustomerCreationSOAP(xmlData string) (*CustomerCreationResult, error) 
 		if resp.CustomerType.Menmonic == "" {
 			return &CustomerCreationResult{
 				Success:  true,
-				Messages: []string{},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
