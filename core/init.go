@@ -12,6 +12,7 @@ import (
 	accountcreation "github.com/hugokessem/coreio/lib/core/account/acccount_creation"
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
+	billpayment "github.com/hugokessem/coreio/lib/core/bill_payment"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
@@ -147,6 +148,9 @@ type CustomerFetchResult = customerfetch.CustomerFetchResult
 type CustomerLimitFetchByCIFReturnServiceParam = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceParam
 type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturnservice.CustomerLimitFetchByCIFReturnServiceResult
 
+type BillPaymentParam = billpayment.BillPaymentParams
+type BillPaymentResult = billpayment.BillPaymentResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(ctx context.Context, param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(ctx context.Context, param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -196,6 +200,7 @@ type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
 	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
+	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
 }
 
 type CBECoreCredential struct {
@@ -221,6 +226,50 @@ const (
 	timeout    = 120 * time.Second
 	maxRetries = 1
 )
+
+func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error) {
+	params := billpayment.Params{
+		Username:            c.config.Username,
+		Password:            c.config.Password,
+		BranchCode:          param.BranchCode,
+		DebitAccountNumber:  param.DebitAccountNumber,
+		DebitCurrency:       param.DebitCurrency,
+		DebitAmount:         param.DebitAmount,
+		DebitReference:      param.DebitReference,
+		CrediterReference:   param.CrediterReference,
+		CreditAccountNumber: param.CreditAccountNumber,
+		CreditCurrency:      param.CreditCurrency,
+		PaymentDetail:       param.PaymentDetail,
+		ClientReference:     param.ClientReference,
+		SuperappUserCode:    param.SuperappUserCode,
+	}
+
+	xmlRequest := billpayment.NewBillPayment(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := billpayment.ParseBillPaymentSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
 
 func (c *CBECoreAPI) CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error) {
 
@@ -607,6 +656,7 @@ func (c *CBECoreAPI) FundTransferVerify(ctx context.Context, param FundTransferV
 		CreditCurrency:      param.CreditCurrency,
 		CreditAmount:        param.CreditAmount,
 		SuperappUserCode:    param.SuperappUserCode,
+		BranchCode:          param.BranchCode,
 	}
 
 	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
@@ -1047,6 +1097,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		SuperappUserCode:    param.SuperappUserCode,
 		Meta:                param.Meta,
 		IsFraudCheckEnabled: param.IsFraudCheckEnabled,
+		BranchCode:          param.BranchCode,
 	}
 
 	if param.IsFraudCheckEnabled {
