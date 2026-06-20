@@ -202,6 +202,7 @@ type CBECoreAPIInterface interface {
 	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
+	AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error)
 }
 
 type CBECoreCredential struct {
