@@ -42,6 +42,7 @@ type Params struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	Category           string
 	Url                string
 	Header             map[string]string
 }
@@ -80,6 +81,7 @@ type CreateCustomerParams struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	Category           string
 	Url                string
 	Header             map[string]string
 }
@@ -294,7 +296,8 @@ type CustomerCreationResponse struct {
 }
 
 type CustomerType struct {
-	Menmonic   string `xml:"MNEMONIC"`
+	XMLName    xml.Name `xml:"CUSTOMERType"`
+	Menmonic   string   `xml:"MNEMONIC"`
 	GShortName struct {
 		ShortName string `xml:"SHORTNAME"`
 	} `xml:"gSHORTNAME"`

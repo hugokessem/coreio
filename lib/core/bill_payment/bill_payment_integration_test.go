@@ -100,7 +100,7 @@ func TestIntegrationBillPayment(t *testing.T) {
 		detail := result.Detail
 		t.Logf("Detail: %v", detail)
 		// Log important fields for debugging
-		t.Logf("Transaction ID: %s", detail.TransactionId)
+		t.Logf("Transaction ID: %s", detail.FTNumber)
 		t.Logf("Transaction Type: %s", detail.TransactionType)
 		t.Logf("Debit Amount: %s", detail.DebitAmount)
 		t.Logf("Amount Debited: %s", detail.AmountDebited)

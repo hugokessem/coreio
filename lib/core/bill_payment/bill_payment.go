@@ -96,7 +96,7 @@ type FTBillPaymentResponse struct {
 }
 
 type BillPaymentDetail struct {
-	TransactionId       string `xml:"id,attr"`
+	FTNumber            string `xml:"id,attr"`
 	TransactionType     string `xml:"TRANSACTIONTYPE"`
 	DebitAccountNumber  string `xml:"DEBITACCTNO"`
 	DebitCurrency       string `xml:"DEBITCURRENCY"`
