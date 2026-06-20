@@ -205,6 +205,7 @@ type CBECoreAPIInterface interface {
 	AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error)
 }
 
+// commented
 type CBECoreCredential struct {
 	Username           string
 	Password           string
