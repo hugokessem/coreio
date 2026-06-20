@@ -384,7 +384,10 @@ type CusteomerAccountCreationResponse struct {
 }
 
 func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error) {
+	fmt.Println("======================== Start =======================")
+	fmt.Printf("param %s, category %s\n", param, category)
 	customer, err := c.CreateCustomer(ctx, param)
+	fmt.Printf("customer %s\n", customer)
 	if err != nil {
 		return nil, err
 	}
@@ -394,7 +397,7 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		Currency:       param.CustomerCurrency,
 		AccountOfficer: param.AccountOffice,
 	})
-
+	fmt.Printf("account %s\n", account)
 	if err != nil {
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,
