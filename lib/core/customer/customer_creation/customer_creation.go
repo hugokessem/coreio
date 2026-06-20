@@ -42,7 +42,6 @@ type Params struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
-	Category           string
 	Url                string
 	Header             map[string]string
 }
@@ -81,7 +80,6 @@ type CreateCustomerParams struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
-	Category           string
 	Url                string
 	Header             map[string]string
 }

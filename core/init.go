@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"maps"
@@ -373,6 +374,39 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		return nil, err
 	}
 	return result, nil
+}
+
+type CusteomerAccountCreationResponse struct {
+	CustomerCreationDetail *CreateCustomerResult
+	AccountCreationDetail  *AccountCreationResult
+}
+
+func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error) {
+	customer, err := c.CreateCustomer(ctx, param)
+	if err != nil {
+		return nil, err
+	}
+	account, err := c.AccountCreation(ctx, AccountCreationParam{
+		CustomerNumber: customer.Detail.Customer,
+		Category:       category,
+		Currency:       param.CustomerCurrency,
+		AccountOfficer: param.AccountOffice,
+	})
+
+	if err != nil {
+		return &CusteomerAccountCreationResponse{
+			CustomerCreationDetail: customer,
+			AccountCreationDetail:  nil,
+		}, nil
+	}
+
+	if !account.Success {
+		return nil, errors.New(strings.Join(account.Messages, ", "))
+	}
+	return &CusteomerAccountCreationResponse{
+		AccountCreationDetail:  account,
+		CustomerCreationDetail: customer,
+	}, nil
 }
 
 func (c *CBECoreAPI) CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error) {
