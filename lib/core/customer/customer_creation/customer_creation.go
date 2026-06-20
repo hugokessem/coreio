@@ -294,9 +294,10 @@ type CustomerCreationResponse struct {
 }
 
 type CustomerType struct {
-	XMLName    xml.Name `xml:"CUSTOMERType"`
-	Menmonic   string   `xml:"MNEMONIC"`
-	GShortName struct {
+	XMLName        xml.Name `xml:"CUSTOMERType"`
+	CustomerNumber string   `xml:"id,attr"`
+	Menmonic       string   `xml:"MNEMONIC"`
+	GShortName     struct {
 		ShortName string `xml:"SHORTNAME"`
 	} `xml:"gSHORTNAME"`
 	GNameOne struct {
@@ -418,6 +419,7 @@ type CustomerType struct {
 }
 
 type CustomerTypeDetail struct {
+	CustomerNumber   string
 	Menmonic         string
 	FullName         string
 	Address          string
@@ -484,6 +486,7 @@ func ParseCustomerCreationSOAP(xmlData string) (*CustomerCreationResult, error) 
 		}
 
 		detail := &CustomerTypeDetail{
+			CustomerNumber:   resp.CustomerType.CustomerNumber,
 			Menmonic:         resp.CustomerType.Menmonic,
 			FullName:         resp.CustomerType.GShortName.ShortName,
 			Address:          resp.CustomerType.GLLAddress.MLLAddress.SGLLAddress.Address.Address,

@@ -114,7 +114,7 @@ func TestNewAccountCreation_SampleRequest(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1027958756",
+		CustomerNumber: "1195875233",
 		Category:       "6501",
 		Currency:       "ETB",
 		AccountOfficer: "7016",
@@ -125,9 +125,11 @@ func TestNewAccountCreation_SampleRequest(t *testing.T) {
 	assert.Contains(t, xmlRequest, `xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"`)
 	assert.Contains(t, xmlRequest, `xmlns:iib="http://temenos.com/IIBONBOARDING"`)
 	assert.Contains(t, xmlRequest, `xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL"`)
+	assert.Contains(t, xmlRequest, "<iib:AccountOpeningSuperApp>")
+	assert.Contains(t, xmlRequest, "<company/>")
 	assert.Contains(t, xmlRequest, "<userName>SUPERAPP</userName>")
 	assert.Contains(t, xmlRequest, "<password>123456</password>")
-	assert.Contains(t, xmlRequest, "<acc:CUSTOMER>1027958756</acc:CUSTOMER>")
+	assert.Contains(t, xmlRequest, "<acc:CUSTOMER>1195875233</acc:CUSTOMER>")
 	assert.Contains(t, xmlRequest, "<acc:CATEGORY>6501</acc:CATEGORY>")
 	assert.Contains(t, xmlRequest, "<acc:CURRENCY>ETB</acc:CURRENCY>")
 	assert.Contains(t, xmlRequest, "<acc:ACCOUNTOFFICER>7016</acc:ACCOUNTOFFICER>")

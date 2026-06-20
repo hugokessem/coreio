@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/hugokessem/coreio/core/internal"
-	accountcreation "github.com/hugokessem/coreio/lib/core/account/acccount_creation"
+	accountcreation "github.com/hugokessem/coreio/lib/core/account/account_creation"
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	billpayment "github.com/hugokessem/coreio/lib/core/bill_payment"
@@ -202,7 +202,7 @@ type CBECoreAPIInterface interface {
 	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
-	AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error)
+	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
 }
 
 // commented
@@ -383,21 +383,32 @@ type CusteomerAccountCreationResponse struct {
 	AccountCreationDetail  *AccountCreationResult
 }
 
-func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, category string) (*CusteomerAccountCreationResponse, error) {
+func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
 	fmt.Println("======================== Start =======================")
-	fmt.Printf("param %s, category %s\n", param, category)
+	fmt.Printf("param %+v, category %s\n", param, category)
 	customer, err := c.CreateCustomer(ctx, param)
-	fmt.Printf("customer %s\n", customer)
+	fmt.Printf("customer %+v\n", customer)
 	if err != nil {
 		return nil, err
 	}
+	if customer == nil || !customer.Success || customer.Detail == nil {
+		messages := []string{"customer creation failed"}
+		if customer != nil && len(customer.Messages) > 0 {
+			messages = customer.Messages
+		}
+		return nil, errors.New(strings.Join(messages, ", "))
+	}
+
 	account, err := c.AccountCreation(ctx, AccountCreationParam{
-		CustomerNumber: customer.Detail.Customer,
+		CustomerNumber: customer.Detail.CustomerNumber,
 		Category:       category,
 		Currency:       param.CustomerCurrency,
 		AccountOfficer: param.AccountOffice,
+		Header:         param.Header,
+		Url:            accountCreateURL,
 	})
-	fmt.Printf("account %s\n", account)
+
+	fmt.Printf("account %+v\n", account)
 	if err != nil {
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,

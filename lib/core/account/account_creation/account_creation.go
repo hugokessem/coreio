@@ -13,6 +13,8 @@ type Params struct {
 	Category       string
 	Currency       string
 	AccountOfficer string
+	Url            string
+	Header         map[string]string
 }
 
 type AccountCreationParams struct {
@@ -46,13 +48,17 @@ xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
         </iib:AccountOpeningSuperApp>
     </soapenv:Body>
 </soapenv:Envelope>`,
-		param.Password, param.Username, param.CustomerNumber, param.Category, param.Currency, param.AccountOfficer,
+		param.Password,
+		param.Username,
+		param.CustomerNumber,
+		param.Category,
+		param.Currency,
+		param.AccountOfficer,
 	)
 }
 
 type Envelope struct {
-	XMLName xml.Name `xml:"Envelope"`
-	Body    Body     `xml:"Body"`
+	Body Body `xml:"Body"`
 }
 
 type Body struct {
@@ -61,18 +67,19 @@ type Body struct {
 
 type AccountCreationResponse struct {
 	Status *struct {
-		SuccessIndicator string   `xml:"successIndicator"`
-		Messages         []string `xml:"messages"`
-		TransactionId    string   `xml:"transactionId"`
-		Application      string   `xml:"application"`
+		TransactionId string   `xml:"transactionId"`
+		Success       string   `xml:"successIndicator"`
+		Application   string   `xml:"application"`
+		Messages      []string `xml:"messagesId"`
 	} `xml:"Status"`
 	AccountType AccountType `xml:"ACCOUNTType"`
 }
 
 type AccountType struct {
-	AccountNumber      string `xml:"id,attr"`
-	Customer           string `xml:"CUSTOMER"`
-	Category           string `xml:"CATEGORY"`
+	XMLName            xml.Name `xml:"ACCOUNTType"`
+	AccountNumber      string   `xml:"id,attr"`
+	Customer           string   `xml:"CUSTOMER"`
+	Category           string   `xml:"CATEGORY"`
 	GlobalAccountTitle struct {
 		AccountTitle string `xml:"ACCOUNTTITLE1"`
 	} `xml:"gACCOUNTTITLE1"`
@@ -119,36 +126,36 @@ type AccountType struct {
 }
 
 type AccountTypeDetail struct {
-	AccountNumber    string
-	Customer         string
-	Category         string
-	AccountTitle     string
-	ShortTitle       string
-	PositionType     string
-	Currency         string
-	CurrencyMarket   string
-	AccountOfficer   string
-	PostingRestrict  string
-	ConditionGroup   string
-	CapDateCharge    string
-	Passbook         string
-	OpeningDate      string
-	OpenCategory     string
-	ChargeCcy        string
-	ChargeMkt        string
-	InterestCcy      string
-	InterestMkt      string
-	AltAcctTypes     []string
-	AllowNetting     string
-	SingleLimit      string
-	CurrNo           string
-	Inputter         string
-	Datetime         string
-	Authoriser       string
-	CoCode           string
-	DeptCode         string
-	HasJointCust     string
-	ProductType      string
+	AccountNumber   string
+	Customer        string
+	Category        string
+	AccountTitle    string
+	ShortTitle      string
+	PositionType    string
+	Currency        string
+	CurrencyMarket  string
+	AccountOfficer  string
+	PostingRestrict string
+	ConditionGroup  string
+	CapDateCharge   string
+	Passbook        string
+	OpeningDate     string
+	OpenCategory    string
+	ChargeCcy       string
+	ChargeMkt       string
+	InterestCcy     string
+	InterestMkt     string
+	AltAcctTypes    []string
+	AllowNetting    string
+	SingleLimit     string
+	CurrNo          string
+	Inputter        string
+	Datetime        string
+	Authoriser      string
+	CoCode          string
+	DeptCode        string
+	HasJointCust    string
+	ProductType     string
 }
 
 type AccountCreationResult struct {
@@ -172,7 +179,7 @@ func ParseAccountCreationSOAP(xmlData string) (*AccountCreationResult, error) {
 			}, nil
 		}
 
-		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+		if strings.ToLower(resp.Status.Success) != "success" {
 			return &AccountCreationResult{
 				Success:  false,
 				Messages: resp.Status.Messages,
@@ -233,6 +240,6 @@ func ParseAccountCreationSOAP(xmlData string) (*AccountCreationResult, error) {
 
 	return &AccountCreationResult{
 		Success:  false,
-		Messages: []string{"Invalid Response!"},
+		Messages: []string{"Invalid response type"},
 	}, nil
 }
