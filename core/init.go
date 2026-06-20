@@ -891,6 +891,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		Currency:       param.Currency,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
+	fmt.Println("xmlRequest: ", xmlRequest)
 	headers := map[string]string{
 		Key: Value,
 	}
@@ -914,6 +915,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		return nil, err
 	}
 	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
+	fmt.Println("result: ", result)
 	if err != nil {
 		return nil, err
 	}
