@@ -308,6 +308,51 @@ func (c *CBECoreAPI) CustomerFetch(ctx context.Context, param CustomerFetchParam
 	return result, nil
 }
 
+func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error) {
+	params := accountcreation.Params{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		AccountOfficer: param.AccountOfficer,
+		CustomerNumber: param.CustomerNumber,
+		Category:       param.Category,
+		Currency:       param.Currency,
+		Url:            param.Url,
+		Header:         param.Header,
+	}
+	xmlRequest := accountcreation.NewAccountCreation(params)
+	fmt.Println("xmlRequest: ", xmlRequest)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	if param.Header != nil {
+		maps.Copy(headers, param.Header)
+	}
+
+	url := c.config.Url
+	if param.Url != "" {
+		url = param.Url
+	}
+	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
+	fmt.Println("result: ", result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error) {
 	params := customercreation.Params{
 		Username:           c.config.Username,
@@ -878,47 +923,6 @@ func (c *CBECoreAPI) SplitPayment(ctx context.Context, param SplitPaymentParam) 
 		return nil, err
 	}
 
-	return result, nil
-}
-
-func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error) {
-	params := accountcreation.Params{
-		Username:       c.config.Username,
-		Password:       c.config.Password,
-		AccountOfficer: param.AccountOfficer,
-		CustomerNumber: param.CustomerNumber,
-		Category:       param.Category,
-		Currency:       param.Currency,
-	}
-	xmlRequest := accountcreation.NewAccountCreation(params)
-	fmt.Println("xmlRequest: ", xmlRequest)
-	headers := map[string]string{
-		Key: Value,
-	}
-	if param.Header != nil {
-		maps.Copy(headers, param.Header)
-	}
-	url := c.config.Url
-	if param.Url != "" {
-		url = param.Url
-	}
-	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
-		Timeout:    timeout,
-		MaxRetries: maxRetries,
-	}, headers)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	responseData, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
-	fmt.Println("result: ", result)
-	if err != nil {
-		return nil, err
-	}
 	return result, nil
 }
 
