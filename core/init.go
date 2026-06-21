@@ -319,6 +319,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		Url:            param.Url,
 		Header:         param.Header,
 	}
+	fmt.Println("param: ", param)
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	fmt.Println("xmlRequest: ", xmlRequest)
 	headers := map[string]string{
@@ -338,6 +339,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
+		fmt.Println("[before]err: ", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -348,6 +350,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
 	fmt.Println("result: ", result)
 	if err != nil {
+		fmt.Println("[after_parse]err: ", err)
 		return nil, err
 	}
 	return result, nil
@@ -393,6 +396,8 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		Url:                param.Url,
 		Header:             param.Header,
 	}
+
+	fmt.Println("[customer_creation]Param: ", param)
 	xmlRequest := customercreation.NewCustomerCreation(params)
 	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
@@ -414,10 +419,12 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	responseData, err := io.ReadAll(resp.Body)
 	fmt.Println("responseData", string(responseData))
 	if err != nil {
+		fmt.Println("err: ", err)
 		return nil, err
 	}
 	result, err := customercreation.ParseCustomerCreationSOAP(string(responseData))
 	if err != nil {
+		fmt.Println("[after_parse]err: ", err)
 		return nil, err
 	}
 	return result, nil
