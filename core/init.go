@@ -319,9 +319,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		Url:            param.Url,
 		Header:         param.Header,
 	}
-	fmt.Println("param: ", param)
 	xmlRequest := accountcreation.NewAccountCreation(params)
-	fmt.Println("xmlRequest: ", xmlRequest)
 	headers := map[string]string{
 		"Content-Type": "application/xml",
 	}
@@ -339,7 +337,6 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		MaxRetries: maxRetries,
 	}, headers)
 	if err != nil {
-		fmt.Println("[before]err: ", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -348,9 +345,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		return nil, err
 	}
 	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
-	fmt.Println("result: ", result)
 	if err != nil {
-		fmt.Println("[after_parse]err: ", err)
 		return nil, err
 	}
 	return result, nil
@@ -397,9 +392,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		Header:             param.Header,
 	}
 
-	fmt.Println("[customer_creation]Param: ", param)
 	xmlRequest := customercreation.NewCustomerCreation(params)
-	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
 		"Content-Type": "application/xml",
 	}
@@ -417,14 +410,11 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	}
 	defer resp.Body.Close()
 	responseData, err := io.ReadAll(resp.Body)
-	fmt.Println("responseData", string(responseData))
 	if err != nil {
-		fmt.Println("err: ", err)
 		return nil, err
 	}
 	result, err := customercreation.ParseCustomerCreationSOAP(string(responseData))
 	if err != nil {
-		fmt.Println("[after_parse]err: ", err)
 		return nil, err
 	}
 	return result, nil
@@ -437,10 +427,7 @@ type CusteomerAccountCreationResponse struct {
 }
 
 func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
-	fmt.Println("======================== Start =======================")
-	fmt.Printf("param %+v, category %s\n", param, category)
 	customer, err := c.CreateCustomer(ctx, param)
-	fmt.Printf("customer %+v\n", customer)
 	if err != nil {
 		return nil, err
 	}
@@ -470,13 +457,6 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		}, nil
 	}
 
-	fmt.Println("accountCreateURL: ", accountCreateURL)
-	fmt.Println("category: ", category)
-	fmt.Println("param.CustomerCurrency: ", param.CustomerCurrency)
-	fmt.Println("param.AccountOffice: ", param.AccountOffice)
-	fmt.Println("param.Header: ", param.Header)
-	fmt.Println("customer.Detail.CustomerNumber: ", customer.Detail.CustomerNumber)
-
 	account, err := c.AccountCreation(ctx, AccountCreationParam{
 		CustomerNumber: customer.Detail.CustomerNumber,
 		Category:       category,
@@ -486,9 +466,7 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		Url:            accountCreateURL,
 	})
 
-	fmt.Printf("account %+v\n", account)
 	if err != nil {
-		fmt.Println("[account_creation]err: ", err)
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,
 			AccountCreationDetail:  nil,
@@ -496,7 +474,6 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 	}
 
 	if !account.Success {
-		fmt.Println("[account_creation]failed: ", account.Messages)
 		return nil, errors.New(strings.Join(account.Messages, ", "))
 	}
 	return &CusteomerAccountCreationResponse{
