@@ -323,7 +323,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	fmt.Println("xmlRequest: ", xmlRequest)
 	headers := map[string]string{
-		Key: Value,
+		"Content-Type": "application/xml",
 	}
 
 	if param.Header != nil {
@@ -401,7 +401,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	xmlRequest := customercreation.NewCustomerCreation(params)
 	fmt.Println("xmlRequest", xmlRequest)
 	headers := map[string]string{
-		Key: Value,
+		"Content-Type": "application/xml",
 	}
 
 	if param.Header != nil {
@@ -462,6 +462,7 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 
 	fmt.Printf("account %+v\n", account)
 	if err != nil {
+		fmt.Println("[account_creation]err: ", err)
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,
 			AccountCreationDetail:  nil,
@@ -469,6 +470,7 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 	}
 
 	if !account.Success {
+		fmt.Println("[account_creation]failed: ", account.Messages)
 		return nil, errors.New(strings.Join(account.Messages, ", "))
 	}
 	return &CusteomerAccountCreationResponse{
