@@ -58,10 +58,10 @@ func fetchSandboxAccessToken(t *testing.T, client *http.Client) string {
 
 func TestIntegrationCreateCustomer(t *testing.T) {
 	tinNumber := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
-	nationalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	// nationalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
 	email := fmt.Sprintf("sampletet%d@gmail.com", rand.Intn(10000000000000000))
 	phoneNumber := fmt.Sprintf("+25191%06d", rand.Intn(1000000))
-	legalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	// legalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
 
 	params := Params{
 		Username:           "SUPERAPP",
@@ -77,7 +77,7 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 		Industry:           "1499",
 		ISONationalityCode: "ET",
 		ISOResidentCode:    "ET",
-		UniqueID:           legalId,
+		UniqueID:           "09as8df0a9s8f",
 		IssuesBy:           "FAYDA",
 		IssuedDate:         "20210504",
 		ExpiryDate:         "20500101",
@@ -98,7 +98,7 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 		TinNumber:          tinNumber,
 		MotherName:         "TIGIST ADAM FEKADU",
 		CustomerGroup:      "RETAIL",
-		NationalId:         nationalId,
+		NationalId:         "0787a0980987",
 	}
 
 	client := &http.Client{
@@ -141,6 +141,7 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 	t.Logf("parsed result success: %v", result.Success)
 	t.Logf("parsed result messages: %v", result.Messages)
 	t.Logf("parsed result detail: %+v", result.Detail)
+	t.Logf("Customr Number: %+v", result.Detail.CustomerNumber)
 
 	if !result.Success {
 		t.Logf("customer creation failed")

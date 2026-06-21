@@ -451,6 +451,13 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		return nil, errors.New(strings.Join(messages, ", "))
 	}
 
+	fmt.Println("accountCreateURL: ", accountCreateURL)
+	fmt.Println("category: ", category)
+	fmt.Println("param.CustomerCurrency: ", param.CustomerCurrency)
+	fmt.Println("param.AccountOffice: ", param.AccountOffice)
+	fmt.Println("param.Header: ", param.Header)
+	fmt.Println("customer.Detail.CustomerNumber: ", customer.Detail.CustomerNumber)
+
 	account, err := c.AccountCreation(ctx, AccountCreationParam{
 		CustomerNumber: customer.Detail.CustomerNumber,
 		Category:       category,
