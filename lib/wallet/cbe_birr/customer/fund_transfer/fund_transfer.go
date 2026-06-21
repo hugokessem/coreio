@@ -43,7 +43,7 @@ func NewCustomerFundTransfer(param Params) string {
 		  <api:Request>
 			  <req:Header>
 				  <req:Version>1.0</req:Version>
-				  <req:CommandID>InitTrans_MB E-Money Creation</req:CommandID>
+				  <req:CommandID>InitTrans_MB EMC</req:CommandID>
 				  <req:OriginatorConversationID>%s</req:OriginatorConversationID>
 				  <req:Caller>
 					  <req:CallerType>2</req:CallerType>
@@ -58,7 +58,7 @@ func NewCustomerFundTransfer(param Params) string {
 				  <req:Identity>
   
 					  <req:Initiator>
-						  <req:IdentifierType>14</req:IdentifierType>
+						  <req:IdentifierType>11</req:IdentifierType>
 						  <req:Identifier>%s</req:Identifier>
 						  <req:SecurityCredential>%s</req:SecurityCredential>
 					  </req:Initiator>
