@@ -433,6 +433,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 type CusteomerAccountCreationResponse struct {
 	CustomerCreationDetail *CreateCustomerResult
 	AccountCreationDetail  *AccountCreationResult
+	Messages               []string
 }
 
 func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
@@ -443,12 +444,30 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 	if err != nil {
 		return nil, err
 	}
+
 	if customer == nil || !customer.Success || customer.Detail == nil {
 		messages := []string{"customer creation failed"}
 		if customer != nil && len(customer.Messages) > 0 {
 			messages = customer.Messages
 		}
 		return nil, errors.New(strings.Join(messages, ", "))
+	}
+
+	var isAMLCheck bool
+	var messages []string
+	for _, value := range customer.Detail.Override {
+		if strings.Contains(value, "AML") {
+			isAMLCheck = true
+			messages = append(messages, value)
+		}
+	}
+
+	if isAMLCheck {
+		return &CusteomerAccountCreationResponse{
+			CustomerCreationDetail: customer,
+			Messages:               messages,
+			AccountCreationDetail:  nil,
+		}, nil
 	}
 
 	fmt.Println("accountCreateURL: ", accountCreateURL)

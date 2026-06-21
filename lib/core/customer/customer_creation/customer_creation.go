@@ -448,6 +448,7 @@ type CustomerTypeDetail struct {
 	NationalId       string
 	Cocode           string
 	AccountNumber    string
+	Override         []string
 }
 
 type CustomerCreationResult struct {
@@ -514,6 +515,7 @@ func ParseCustomerCreationSOAP(xmlData string) (*CustomerCreationResult, error) 
 			Ownership:        resp.CustomerType.Ownership,
 			NationalId:       resp.CustomerType.NationalId,
 			Cocode:           resp.CustomerType.CoCode,
+			Override:         resp.CustomerType.GOverride.Override,
 		}
 
 		return &CustomerCreationResult{

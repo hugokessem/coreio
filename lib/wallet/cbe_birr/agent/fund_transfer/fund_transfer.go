@@ -57,7 +57,7 @@ func NewAgentFundTransfer(param Params) string {
 		   <req:Body>
 			  <req:Identity>
 				 <req:Initiator>
-					<req:IdentifierType>14</req:IdentifierType>
+					<req:IdentifierType>11</req:IdentifierType>
 					<req:Identifier>%s</req:Identifier>
 					<req:SecurityCredential>%s</req:SecurityCredential>
 				 </req:Initiator>
