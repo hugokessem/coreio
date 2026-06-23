@@ -97,17 +97,30 @@ func ParseCustomerLimitFetchByCIFReturnServiceSOAP(xmlData string) (*CustomerLim
 			}, nil
 		}
 
-		detail := resp.CustomerLimitType.GCustomerLimitDetailType.CustomerLimitDetailType
-		if len(detail) == 0 {
+		// var hasFailed bool
+		// for i := range resp.Status.Messages {
+		// 	if strings.Contains(resp.Status.Messages[i], "SSELECT F.CUSTOMER.LIMIT") {
+		// 		hasFailed = true
+		// 	}
+		// }
+
+		if len(resp.Status.Messages) > 0 {
+			return &CustomerLimitFetchByCIFReturnServiceResult{
+				Success:  false,
+				Messages: resp.Status.Messages,
+			}, nil
+		}
+
+		detail := resp.CustomerLimitType
+		if detail == nil {
 			return &CustomerLimitFetchByCIFReturnServiceResult{
 				Success:  false,
 				Messages: []string{"missing detail"},
 			}, nil
 		}
-
 		return &CustomerLimitFetchByCIFReturnServiceResult{
 			Success:  true,
-			Detail:   detail,
+			Detail:   detail.GCustomerLimitDetailType.CustomerLimitDetailType,
 			Messages: resp.Status.Messages,
 		}, nil
 	}
@@ -116,4 +129,5 @@ func ParseCustomerLimitFetchByCIFReturnServiceSOAP(xmlData string) (*CustomerLim
 		Success:  false,
 		Messages: []string{"invalid response"},
 	}, nil
+
 }

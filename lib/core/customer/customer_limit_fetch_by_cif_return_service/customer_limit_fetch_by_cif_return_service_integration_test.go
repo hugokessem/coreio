@@ -14,7 +14,7 @@ func TestIntegrationCustomerLimitFetchByCIFReturnService(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1036559081",
+		CustomerNumber: "100000882",
 	}
 	xmlRequest := NewCustomerLimitFetchByCIFReturnService(params)
 	t.Log("XML Request:", xmlRequest)

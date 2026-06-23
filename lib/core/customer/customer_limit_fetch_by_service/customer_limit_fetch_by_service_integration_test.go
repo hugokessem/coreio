@@ -14,7 +14,7 @@ func TestIntegrationCustomerLimitFetchByService(t *testing.T) {
 	params := Params{
 		Username:    "SUPERAPP",
 		Password:    "123456",
-		ServiceCode: "GLOBAL-MASS",
+		ServiceCode: "GLOBAL-IFB.MASS",
 	}
 
 	xmlRequest := NewCustomerLimitFetchByService(params)
