@@ -63,6 +63,14 @@ type FundTransferParam struct {
 }
 
 func NewFundTransfer(params Params) string {
+	userCodeSplited := strings.Split(params.SuperappUserCode, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = params.SuperappUserCode
+	} else {
+		userCode = userCodeSplited[0]
+	}
+
 	var details []string
 	if params.CreditCurrency == "" || params.DebitCurrency == "" {
 		return "Both CreditCurrency and DebitCurrency are Requried!"
@@ -120,7 +128,7 @@ func NewFundTransfer(params Params) string {
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, params.BranchCode, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType, params.SuperappUserCode)
+`, params.BranchCode, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType, userCode)
 }
 
 type Envelope struct {
