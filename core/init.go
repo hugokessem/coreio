@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"maps"
@@ -16,6 +15,7 @@ import (
 	billpayment "github.com/hugokessem/coreio/lib/core/bill_payment"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
+	"github.com/hugokessem/coreio/lib/core/fayda"
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
@@ -152,6 +152,9 @@ type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturns
 type BillPaymentParam = billpayment.BillPaymentParams
 type BillPaymentResult = billpayment.BillPaymentResult
 
+type FaydaParam = fayda.FaydaParam
+type FaydaResult = fayda.FaydaResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(ctx context.Context, param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(ctx context.Context, param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -203,6 +206,7 @@ type CBECoreAPIInterface interface {
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
 	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
+	Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error)
 }
 
 // commented
@@ -423,16 +427,94 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 	return result, nil
 }
 
+func (c *CBECoreAPI) Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error) {
+	params := fayda.Params{
+		Username: c.config.Username,
+		Password: c.config.Password,
+		NID:      param.NID,
+	}
+	xmlRequest := fayda.NewFayda(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := utils.ReadResponseBody(resp, "fayda")
+	if err != nil {
+		return nil, err
+	}
+	result, err := fayda.ParseFaydaSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 type CusteomerAccountCreationResponse struct {
 	CustomerCreationDetail *CreateCustomerResult
 	AccountCreationDetail  *AccountCreationResult
+	PhoneLookupDetail      *PhoneLookupResult
+	FaydaDetail            *FaydaResult
 	Messages               []string
 }
 
 func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
+	nemonic, err := c.PhoneLookup(ctx, PhoneLookupParam{
+		PhoneNumber: param.PhoneNumber,
+	})
+	if err != nil {
+		return &CusteomerAccountCreationResponse{
+			Messages: []string{fmt.Sprintf("phone lookup failed: %v", err)},
+		}, nil
+	}
+
+	if nemonic.Success {
+		return &CusteomerAccountCreationResponse{
+			PhoneLookupDetail: nemonic,
+			Messages:          nemonic.Message,
+		}, nil
+	}
+
+	faydaResult, err := c.Fayda(ctx, FaydaParam{
+		NID: param.NationalId,
+	})
+	if err != nil {
+		return &CusteomerAccountCreationResponse{
+			Messages: []string{fmt.Sprintf("fayda verification failed: %v", err)},
+		}, nil
+	}
+
+	if !faydaResult.Success {
+		return &CusteomerAccountCreationResponse{
+			FaydaDetail: faydaResult,
+			Messages:    faydaResult.Message,
+		}, nil
+	}
+
+	if faydaResult.Detail.CustomerFlag == "FOUND" {
+		return &CusteomerAccountCreationResponse{
+			FaydaDetail: faydaResult,
+			Messages:    faydaResult.Message,
+		}, nil
+	}
+
 	customer, err := c.CreateCustomer(ctx, param)
 	if err != nil {
-		return nil, err
+		messages := []string{err.Error()}
+		if customer != nil && len(customer.Messages) > 0 {
+			messages = customer.Messages
+		}
+		return &CusteomerAccountCreationResponse{
+			CustomerCreationDetail: customer,
+			Messages:               messages,
+		}, nil
 	}
 
 	if customer == nil || !customer.Success || customer.Detail == nil {
@@ -440,23 +522,25 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		if customer != nil && len(customer.Messages) > 0 {
 			messages = customer.Messages
 		}
-		return nil, errors.New(strings.Join(messages, ", "))
+		return &CusteomerAccountCreationResponse{
+			CustomerCreationDetail: customer,
+			Messages:               messages,
+		}, nil
 	}
 
 	var isAMLCheck bool
-	var messages []string
+	var amlMessages []string
 	for _, value := range customer.Detail.Override {
 		if strings.Contains(value, "AML") {
 			isAMLCheck = true
-			messages = append(messages, value)
+			amlMessages = append(amlMessages, value)
 		}
 	}
 
 	if isAMLCheck {
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,
-			Messages:               messages,
-			AccountCreationDetail:  nil,
+			Messages:               amlMessages,
 		}, nil
 	}
 
@@ -468,17 +552,24 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		Header:         param.Header,
 		Url:            accountCreateURL,
 	})
-
 	if err != nil {
+		messages := []string{err.Error()}
+		if account != nil && len(account.Messages) > 0 {
+			messages = account.Messages
+		}
 		return &CusteomerAccountCreationResponse{
 			CustomerCreationDetail: customer,
-			AccountCreationDetail:  nil,
+			Messages:               messages,
 		}, nil
 	}
 
 	if !account.Success {
-		return nil, errors.New(strings.Join(account.Messages, ", "))
+		return &CusteomerAccountCreationResponse{
+			CustomerCreationDetail: customer,
+			Messages:               account.Messages,
+		}, nil
 	}
+
 	return &CusteomerAccountCreationResponse{
 		AccountCreationDetail:  account,
 		CustomerCreationDetail: customer,
@@ -1018,7 +1109,7 @@ func (c *CBECoreAPI) PhoneLookup(ctx context.Context, param PhoneLookupParam) (*
 	}
 	defer resp.Body.Close()
 
-	responseData, err := io.ReadAll(resp.Body)
+	responseData, err := utils.ReadResponseBody(resp, "phone lookup")
 	if err != nil {
 		return nil, err
 	}

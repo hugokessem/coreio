@@ -69,7 +69,7 @@ type GetCustomerPhoneNoDetail struct {
 type PhoneLookupResult struct {
 	Success bool
 	Detail  *GetCustomerPhoneNoDetail
-	Message string
+	Message []string
 }
 
 func ParsePhoneLookupSOAP(xmlData string) (*PhoneLookupResult, error) {
@@ -83,21 +83,21 @@ func ParsePhoneLookupSOAP(xmlData string) (*PhoneLookupResult, error) {
 		if resp.Status == nil {
 			return &PhoneLookupResult{
 				Success: false,
-				Message: "missing status",
+				Message: []string{"missing status"},
 			}, nil
 		}
 
 		if resp.Status.SuccessIndicator != "Success" {
 			return &PhoneLookupResult{
 				Success: false,
-				Message: "API returned failure",
+				Message: []string{"API returned failure"},
 			}, nil
 		}
 
 		if resp.GetCByPhoneNumberType == nil || resp.GetCByPhoneNumberType.Group == nil || resp.GetCByPhoneNumberType.Group.Details == nil {
 			return &PhoneLookupResult{
-				Success: true,
-				Message: "no details found",
+				Success: false,
+				Message: []string{"no details found"},
 			}, nil
 		}
 
@@ -114,7 +114,7 @@ func ParsePhoneLookupSOAP(xmlData string) (*PhoneLookupResult, error) {
 
 	return &PhoneLookupResult{
 		Success: false,
-		Message: "no details found",
+		Message: []string{"no details found"},
 	}, nil
 
 }

@@ -235,3 +235,27 @@ func classifyError(err error) error {
 		return err
 	}
 }
+
+func ReadResponseBody(resp *http.Response, operation string) ([]byte, error) {
+	if resp == nil {
+		return nil, fmt.Errorf("%s: nil HTTP response", operation)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("%s: read body: %w", operation, err)
+	}
+
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		if len(body) == 0 {
+			return nil, fmt.Errorf("%s: HTTP %s with empty body", operation, resp.Status)
+		}
+		return nil, fmt.Errorf("%s: HTTP %s: %s", operation, resp.Status, string(body))
+	}
+
+	if len(body) == 0 {
+		return nil, fmt.Errorf("%s: empty response body (HTTP %s)", operation, resp.Status)
+	}
+
+	return body, nil
+}
