@@ -242,7 +242,10 @@ func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*
 		CrediterReference:   param.CrediterReference,
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
-		PaymentDetail:       param.PaymentDetail,
+		ServiceCode:         param.ServiceCode,
+		CustomerRole:        param.CustomerRole,
+		ChannelType:         param.ChannelType,
+		BudgetType:          param.BudgetType,
 		ClientReference:     param.ClientReference,
 		SuperappUserCode:    param.SuperappUserCode,
 	}

@@ -17,7 +17,6 @@ func TestIntegrationBillPayment(t *testing.T) {
 	clientReference, _ := uuid.NewV7()
 	creditReference, _ := uuid.NewV7()
 	debitReference, _ := uuid.NewV7()
-	paymentDetail, _ := uuid.NewV7()
 	// Test parameters matching the curl request
 	params := Params{
 		Username:            "SUPERAPP",
@@ -30,7 +29,10 @@ func TestIntegrationBillPayment(t *testing.T) {
 		CrediterReference:   creditReference.String()[1:11],
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
-		PaymentDetail:       paymentDetail.String()[2:12],
+		ServiceCode:         "CBE",
+		CustomerRole:        "CUSTOMER",
+		ChannelType:         "APP",
+		BudgetType:          "BILL_PAYMENT",
 		ClientReference:     clientReference.String(),
 		SuperappUserCode:    "SA1036559081",
 	}

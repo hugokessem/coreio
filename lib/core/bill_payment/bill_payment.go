@@ -16,8 +16,11 @@ type Params struct {
 	CrediterReference   string
 	CreditAccountNumber string
 	CreditCurrency      string
-	PaymentDetail       string
 	ClientReference     string
+	ServiceCode         string
+	CustomerRole        string
+	ChannelType         string
+	BudgetType          string
 	BranchCode          string
 	SuperappUserCode    string
 }
@@ -30,8 +33,11 @@ type BillPaymentParams struct {
 	CrediterReference   string
 	CreditAccountNumber string
 	CreditCurrency      string
-	PaymentDetail       string
 	ClientReference     string
+	ServiceCode         string
+	CustomerRole        string
+	ChannelType         string
+	BudgetType          string
 	BranchCode          string
 	SuperappUserCode    string
 }
@@ -57,22 +63,16 @@ func NewBillPayment(param Params) string {
                 <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
                 <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
                 <fun:CREDITAMOUNT/>
-                <fun:gPAYMENTDETAILS g="1">
-                    <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
-                </fun:gPAYMENTDETAILS>
-                <fun:gCOMMISSIONTYPE g="1">
-                    <fun:COMMISSIONTYPE/>
-                </fun:gCOMMISSIONTYPE>
-                <fun:CHARGECODE/>
-                <fun:gCHARGETYPE g="1">
-                    <fun:CHARGETYPE></fun:CHARGETYPE>
-                </fun:gCHARGETYPE>
-                <fun:ClientReference>%s</fun:ClientReference>
+				<fun:ClientReference>%s</fun:ClientReference>
+				<fun:ServiceCode>%s</fun:ServiceCode>
+				<fun:CustomerRole>%s</fun:CustomerRole>
+				<fun:ChannelType>%s</fun:ChannelType>
+				<fun:BudgetType>%s</fun:BudgetType>
 	            <fun:UserID>%s</fun:UserID>
             </FUNDSTRANSFERBILLPAYSUPERAPPType>
         </cbes:FTBillPayment>
     </soapenv:Body>
-</soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.PaymentDetail, param.ClientReference, param.SuperappUserCode)
+</soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.ClientReference, param.ServiceCode, param.CustomerRole, param.ChannelType, param.BudgetType, param.SuperappUserCode)
 }
 
 type Envelope struct {
