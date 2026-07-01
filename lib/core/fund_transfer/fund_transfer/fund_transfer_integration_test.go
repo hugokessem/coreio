@@ -17,6 +17,7 @@ import (
 func TestIntegrationFundTransfer(t *testing.T) {
 	// Test parameters matching the curl request
 
+	clientReference, _ := uuid.NewV7()
 	params := Params{
 		Username: "SUPERAPP",
 		Password: "123456",
@@ -28,7 +29,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10",
-		TransactionID:       uuid.New().String(),
+		TransactionID:       clientReference.String()[20:],
 		DebitReference:      "DEBIT NARRATIVE",
 		CreditReference:     "CREDIT NARRATIVE",
 		PaymentDetail:       "TEST PAYMENT",
@@ -37,7 +38,7 @@ func TestIntegrationFundTransfer(t *testing.T) {
 		CustomerSegment:     "MASS",
 		// SuperappUserCode:    "user-code",
 		IsFraudCheckEnabled: false,
-		SuperappUserCode:    "SA1040746858c",
+		SuperappUserCode:    "SA1040746858:123456789",
 	}
 
 	t.Logf("param %v", params)

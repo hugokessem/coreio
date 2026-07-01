@@ -50,7 +50,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 		ServiceCode:      "CBE",
 		CustomerSegment:  "MASS",
 		ChannelType:      "APP",
-		SuperappUserCode: "SA1036559081",
+		SuperappUserCode: "SA1036559081:123456789",
 	}
 
 	xmlRequest := NewFundTransferVerify(params)
