@@ -45,6 +45,14 @@ type LockedAmountFTParams struct {
 }
 
 func NewLockedAmountFt(params Params) string {
+	userCodeSplited := strings.Split(params.SuperappUserCode, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = params.SuperappUserCode
+	} else {
+		userCode = userCodeSplited[0]
+	}
+
 	var details []string
 	if params.CreditCurrency == "" || params.DebitCurrency == "" {
 		return "Both CreditCurrency and DebitCurrency are Requried!"
@@ -107,7 +115,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode, params.CustomerRole, params.ChannelType, params.SuperappUserCode)
+	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode, params.CustomerRole, params.ChannelType, userCode)
 }
 
 type Envelope struct {
