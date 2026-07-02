@@ -207,6 +207,7 @@ type CBECoreAPIInterface interface {
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
 	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
 	Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error)
+	CheckIfUserExists(ctx context.Context, param UserExistsParam) (*UserExistsResult, error)
 }
 
 // commented
@@ -465,19 +466,32 @@ type CusteomerAccountCreationResponse struct {
 	Messages               []string
 }
 
-func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
+type UserExistsResult struct {
+	PhoneLookupDetail *PhoneLookupResult
+	FaydaDetail       *FaydaResult
+	Success           bool
+	Messages          []string
+}
+
+type UserExistsParam struct {
+	PhoneNumber string
+	NationalId  string
+}
+
+func (c *CBECoreAPI) CheckIfUserExists(ctx context.Context, param UserExistsParam) (*UserExistsResult, error) {
 	nemonic, err := c.PhoneLookup(ctx, PhoneLookupParam{
 		PhoneNumber: param.PhoneNumber,
 	})
 	if err != nil {
-		return &CusteomerAccountCreationResponse{
+		return &UserExistsResult{
 			Messages: []string{fmt.Sprintf("phone lookup failed: %v", err)},
 		}, nil
 	}
 
 	if nemonic.Success {
-		return &CusteomerAccountCreationResponse{
+		return &UserExistsResult{
 			PhoneLookupDetail: nemonic,
+			Success:           false,
 			Messages:          nemonic.Message,
 		}, nil
 	}
@@ -486,25 +500,37 @@ func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerPara
 		NID: param.NationalId,
 	})
 	if err != nil {
-		return &CusteomerAccountCreationResponse{
+		return &UserExistsResult{
 			Messages: []string{fmt.Sprintf("fayda verification failed: %v", err)},
+			Success:  false,
 		}, nil
 	}
 
 	if !faydaResult.Success {
-		return &CusteomerAccountCreationResponse{
+		return &UserExistsResult{
 			FaydaDetail: faydaResult,
 			Messages:    faydaResult.Message,
+			Success:     false,
 		}, nil
 	}
 
 	if faydaResult.Detail.CustomerFlag == "FOUND" {
-		return &CusteomerAccountCreationResponse{
+		return &UserExistsResult{
 			FaydaDetail: faydaResult,
 			Messages:    faydaResult.Message,
+			Success:     false,
 		}, nil
 	}
 
+	return &UserExistsResult{
+		PhoneLookupDetail: nil,
+		FaydaDetail:       nil,
+		Messages:          []string{"user not found in both phone lookup and fayda, you are good to go!"},
+		Success:           true,
+	}, nil
+}
+
+func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
 	customer, err := c.CreateCustomer(ctx, param)
 	if err != nil {
 		messages := []string{err.Error()}

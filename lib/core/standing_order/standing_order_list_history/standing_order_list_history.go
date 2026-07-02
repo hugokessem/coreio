@@ -18,24 +18,24 @@ type ListStandingOrderHistoryParams struct {
 
 func NewListStandingOrderHistory(param Params) string {
 	return fmt.Sprintf(`
-	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <cbes:StandingOrderHistorylistbyAc>
-         <WebRequestCommon>
-            <company></company>
-            <password>%s</password>
-            <userName>%s</userName>
-         </WebRequestCommon>
-         <ACCTSTOLISTHISSUPERAPPType>
-            <enquiryInputCollection>
-               <columnName>ACCOUNT</columnName>
-               <criteriaValue>%s</criteriaValue>
-               <operand>CT</operand>
-            </enquiryInputCollection>
-         </ACCTSTOLISTHISSUPERAPPType>
-      </cbes:StandingOrderHistorylistbyAc>
-   </soapenv:Body>
+   <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <cbes:StandingOrderHistorylistbyAc>
+            <WebRequestCommon>
+                <company></company>
+                <password>%s</password>
+                <userName>%s</userName>
+            </WebRequestCommon>
+            <ACCTSTOLISTHISSUPERAPPType>
+                <enquiryInputCollection>
+                    <columnName>@ID</columnName>
+                    <criteriaValue>%s</criteriaValue>
+                    <operand>CT</operand>
+                </enquiryInputCollection>
+            </ACCTSTOLISTHISSUPERAPPType>
+        </cbes:StandingOrderHistorylistbyAc>
+    </soapenv:Body>
 </soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber)
 }
 

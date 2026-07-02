@@ -90,39 +90,34 @@ func getAccessToken(ctx context.Context) (string, error) {
 	return tokenResp.AccessToken, nil
 }
 
-func (c *CoreAPI) AccountCreateWithLogs(
+func (c *CoreAPI) checkIfUserExistsWithLogs(
 	ctx context.Context,
-	param core.CreateCustomerParam,
-	accountCreateURL, category string,
-) (*core.CusteomerAccountCreationResponse, error) {
-	stepLog(3, 8, "Account create orchestration")
-	stepDone("flow: PhoneLookup -> Fayda -> CreateCustomer -> AccountCreation")
+	param core.UserExistsParam,
+) (*core.UserExistsResult, error) {
+	stepLog(3, 8, "CheckIfUserExists")
+	stepDone("flow: PhoneLookup -> Fayda")
 	stepDone(fmt.Sprintf("phone=%s nid=%s", param.PhoneNumber, param.NationalId))
 
-	result, err := c.coreInterface.AccountCreate(ctx, param, accountCreateURL, category)
+	result, err := c.coreInterface.CheckIfUserExists(ctx, param)
 	if err != nil {
 		stepFail(fmt.Sprintf("unexpected error: %v", err))
 		return nil, err
 	}
 
-	if len(result.Messages) > 0 && result.PhoneLookupDetail == nil && result.FaydaDetail == nil && result.CustomerCreationDetail == nil {
-		stepFail(fmt.Sprintf("flow failed during initial validation: %v", result.Messages))
-		return result, nil
-	}
+	stepDone(fmt.Sprintf("success=%v messages=%v", result.Success, result.Messages))
 
 	if result.PhoneLookupDetail != nil {
-		stepLog(3, 8, "Stopped at PhoneLookup (customer already exists)")
-		stepDone(fmt.Sprintf("success=%v messages=%v", result.PhoneLookupDetail.Success, result.PhoneLookupDetail.Message))
+		stepLog(3, 8, "User found via PhoneLookup")
 		if result.PhoneLookupDetail.Detail != nil {
 			stepDone(fmt.Sprintf("customer_id=%s phone=%s",
-				result.PhoneLookupDetail.Detail.CustomerID, result.PhoneLookupDetail.Detail.PhoneNumber))
+				result.PhoneLookupDetail.Detail.CustomerID,
+				result.PhoneLookupDetail.Detail.PhoneNumber))
 		}
 		return result, nil
 	}
 
 	if result.FaydaDetail != nil {
-		stepLog(4, 8, "Stopped at Fayda (customer found via NID)")
-		stepDone(fmt.Sprintf("success=%v messages=%v", result.FaydaDetail.Success, result.FaydaDetail.Message))
+		stepLog(4, 8, "User found or blocked via Fayda")
 		if result.FaydaDetail.Detail != nil {
 			stepDone(fmt.Sprintf("flag=%s customer_id=%s name=%s",
 				result.FaydaDetail.Detail.CustomerFlag,
@@ -132,9 +127,37 @@ func (c *CoreAPI) AccountCreateWithLogs(
 		return result, nil
 	}
 
+	if len(result.Messages) > 0 && !result.Success {
+		stepFail(fmt.Sprintf("user existence check failed: %v", result.Messages))
+		return result, nil
+	}
+
+	if result.Success {
+		stepDone("user not found in phone lookup or fayda — proceeding to account creation")
+	}
+
+	return result, nil
+}
+
+func (c *CoreAPI) accountCreateWithLogs(
+	ctx context.Context,
+	param core.CreateCustomerParam,
+	accountCreateURL, category string,
+) (*core.CusteomerAccountCreationResponse, error) {
+	stepLog(5, 8, "AccountCreate")
+	stepDone("flow: CreateCustomer -> AML check -> AccountCreation")
+	stepDone(fmt.Sprintf("POST customer_url=%s", param.Url))
+	stepDone(fmt.Sprintf("POST account_url=%s category=%s", accountCreateURL, category))
+
+	result, err := c.coreInterface.AccountCreate(ctx, param, accountCreateURL, category)
+	if err != nil {
+		stepFail(fmt.Sprintf("unexpected error: %v", err))
+		return nil, err
+	}
+
 	if result.CustomerCreationDetail != nil {
-		stepLog(5, 8, "CreateCustomer completed")
-		stepDone(fmt.Sprintf("success=%v messages=%v", result.CustomerCreationDetail.Success, result.CustomerCreationDetail.Messages))
+		stepDone(fmt.Sprintf("customer creation success=%v messages=%v",
+			result.CustomerCreationDetail.Success, result.CustomerCreationDetail.Messages))
 		if result.CustomerCreationDetail.Detail != nil {
 			stepDone(fmt.Sprintf("customer_number=%s mnemonic=%s",
 				result.CustomerCreationDetail.Detail.CustomerNumber,
@@ -142,16 +165,15 @@ func (c *CoreAPI) AccountCreateWithLogs(
 		}
 	}
 
-	if result.AccountCreationDetail == nil && result.CustomerCreationDetail != nil {
-		if len(result.Messages) > 0 {
-			stepFail(fmt.Sprintf("stopped before account creation: %v", result.Messages))
-		}
+	if result.AccountCreationDetail == nil && result.CustomerCreationDetail != nil && len(result.Messages) > 0 {
+		stepFail(fmt.Sprintf("stopped before account creation: %v", result.Messages))
 		return result, nil
 	}
 
 	if result.AccountCreationDetail != nil {
 		stepLog(7, 8, "AccountCreation completed")
-		stepDone(fmt.Sprintf("success=%v messages=%v", result.AccountCreationDetail.Success, result.AccountCreationDetail.Messages))
+		stepDone(fmt.Sprintf("success=%v messages=%v",
+			result.AccountCreationDetail.Success, result.AccountCreationDetail.Messages))
 		if result.AccountCreationDetail.Detail != nil {
 			stepDone(fmt.Sprintf("account_number=%s title=%s",
 				result.AccountCreationDetail.Detail.AccountNumber,
@@ -166,32 +188,30 @@ func (c *CoreAPI) AccountCreateWithLogs(
 	return result, nil
 }
 
-func logFinalResult(result *core.CusteomerAccountCreationResponse) {
-	log.Println("========== Final Result ==========")
-
+func logUserExistsResult(result *core.UserExistsResult) {
+	log.Println("========== User Exists Check ==========")
+	log.Printf("success (clear to onboard): %v", result.Success)
 	if len(result.Messages) > 0 {
 		log.Printf("messages: %v", result.Messages)
 	}
-
-	if result.PhoneLookupDetail != nil {
-		log.Println("phone lookup detail:")
-		if result.PhoneLookupDetail.Detail != nil {
-			detail := result.PhoneLookupDetail.Detail
-			log.Printf("  customer id: %s", detail.CustomerID)
-			log.Printf("  phone: %s", detail.PhoneNumber)
-			log.Printf("  email: %s", detail.Email)
-			log.Printf("  full name: %s", detail.FullName)
-		}
+	if result.PhoneLookupDetail != nil && result.PhoneLookupDetail.Detail != nil {
+		detail := result.PhoneLookupDetail.Detail
+		log.Printf("phone lookup: customer_id=%s phone=%s email=%s",
+			detail.CustomerID, detail.PhoneNumber, detail.Email)
 	}
+	if result.FaydaDetail != nil && result.FaydaDetail.Detail != nil {
+		detail := result.FaydaDetail.Detail
+		log.Printf("fayda: customer_id=%s name=%s flag=%s",
+			detail.CustomerID, detail.CustomerName, detail.CustomerFlag)
+	}
+	log.Println("=======================================")
+}
 
-	if result.FaydaDetail != nil {
-		log.Println("fayda detail:")
-		if result.FaydaDetail.Detail != nil {
-			detail := result.FaydaDetail.Detail
-			log.Printf("  customer id: %s", detail.CustomerID)
-			log.Printf("  name: %s", detail.CustomerName)
-			log.Printf("  flag: %s", detail.CustomerFlag)
-		}
+func logAccountCreateResult(result *core.CusteomerAccountCreationResponse) {
+	log.Println("========== Account Create Result ==========")
+
+	if len(result.Messages) > 0 {
+		log.Printf("messages: %v", result.Messages)
 	}
 
 	if result.CustomerCreationDetail != nil {
@@ -225,7 +245,7 @@ func logFinalResult(result *core.CusteomerAccountCreationResponse) {
 		log.Println("account creation detail: <nil>")
 	}
 
-	log.Println("==================================")
+	log.Println("===========================================")
 }
 
 func main() {
@@ -252,16 +272,16 @@ func main() {
 	)
 
 	tinNumber := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
-	nationalID := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	nationalID := "357253841014476138538353601641801488"
 	email := fmt.Sprintf("sampletet%d@gmail.com", rand.Intn(10000000000000000))
-	phoneNumber := fmt.Sprintf("+25191%06d", rand.Intn(1000000))
+	phoneNumber := "Y911706608"
 	legalID := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
 
 	customer := core.CreateCustomerParam{
 		FirstName:          "KETEM",
 		MiddleName:         "HAILU",
 		LastName:           "TAYE",
-		PhoneNumber:        "Y911706608",
+		PhoneNumber:        phoneNumber,
 		Address:            "ADDIS ABABA",
 		PostalCode:         "4144",
 		ISOCountryCode:     "ET",
@@ -290,31 +310,42 @@ func main() {
 		TinNumber:          tinNumber,
 		MotherName:         "TIGIST ADAM FEKADU",
 		CustomerGroup:      "RETAIL",
-		NationalId:         "357253841014476138538353601641801888",
+		NationalId:         nationalID,
 		Url:                sandboxCustomerURL,
 		Header: map[string]string{
 			"Authorization": "Bearer " + accessToken,
 		},
 	}
 
-	log.Printf("generated test payload: phone=%s email=%s national_id=%s tin=%s legal_id=%s",
+	log.Printf("test payload: phone=%s email=%s national_id=%s tin=%s legal_id=%s",
 		phoneNumber, email, nationalID, tinNumber, legalID)
 
-	result, err := calls.AccountCreateWithLogs(ctx, customer, sandboxAccountURL, accountCategory)
+	existsResult, err := calls.checkIfUserExistsWithLogs(ctx, core.UserExistsParam{
+		PhoneNumber: phoneNumber,
+		NationalId:  nationalID,
+	})
+	if err != nil {
+		log.Fatalf("check if user exists failed: %v", err)
+	}
+
+	logUserExistsResult(existsResult)
+
+	if !existsResult.Success {
+		log.Println("stopping: user already exists or validation failed")
+		return
+	}
+
+	accountResult, err := calls.accountCreateWithLogs(ctx, customer, sandboxAccountURL, accountCategory)
 	if err != nil {
 		log.Fatalf("account create failed: %v", err)
 	}
 
-	logFinalResult(result)
+	logAccountCreateResult(accountResult)
 
-	if result.AccountCreationDetail != nil && result.AccountCreationDetail.Success {
+	if accountResult.AccountCreationDetail != nil && accountResult.AccountCreationDetail.Success {
 		return
 	}
-	if result.PhoneLookupDetail != nil || result.FaydaDetail != nil {
-		log.Println("flow completed with early exit (customer already exists)")
-		return
-	}
-	if len(result.Messages) > 0 {
+	if len(accountResult.Messages) > 0 || accountResult.CustomerCreationDetail != nil {
 		log.Println("flow completed with partial result or failure")
 		return
 	}
