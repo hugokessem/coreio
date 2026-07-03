@@ -63,11 +63,13 @@ type FundTransferParam struct {
 }
 
 func NewFundTransfer(params Params) string {
-	userCode := params.SuperappUserCode
-	// userCodeSplited := strings.Split(userCode, ":")
-	// if len(userCodeSplited) > 1 {
-	// 	userCode = userCodeSplited[0]
-	// }
+	userCodeSplited := strings.Split(params.SuperappUserCode, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = params.SuperappUserCode
+	} else {
+		userCode = userCodeSplited[0]
+	}
 
 	// fmt.Println("userCode: ", userCode, "userCodeSplited: ", userCodeSplited)
 	var details []string

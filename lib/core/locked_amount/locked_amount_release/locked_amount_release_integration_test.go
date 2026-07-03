@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testReleaseLockedAmount(t *testing.T, lockedID string) {
+func TestReleaseLockedAmount(t *testing.T, lockedID string) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
