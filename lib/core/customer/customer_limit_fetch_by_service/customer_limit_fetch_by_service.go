@@ -77,7 +77,7 @@ type CustomerLimit struct {
 
 type CustomerLimitFetchResult struct {
 	Success bool
-	Detail  SuperappLimitView
+	Detail  *SuperappLimitView
 	Message []string
 }
 
@@ -105,7 +105,7 @@ func ParseCustomerLimitFetchByServiceSOAP(xmlData string) (*CustomerLimitFetchRe
 
 		return &CustomerLimitFetchResult{
 			Success: true,
-			Detail:  resp.SuperappLimitView,
+			Detail:  &resp.SuperappLimitView,
 		}, nil
 	}
 
