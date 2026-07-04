@@ -82,13 +82,13 @@ type CIFAccountListResponse struct {
 	} `xml:"Status"`
 	CIFAccountListType *struct {
 		Group *struct {
-			Details []CustomerFetchDetail `xml:"mCIFAccountListDetailType"`
-		} `xml:"gCIFAccountListDetailType"`
-	} `xml:"CIFAccountListType"`
+			Details []CustomerFetchDetail `xml:"mCIFINFOSUPERAPPDetailType"`
+		} `xml:"gCIFINFOSUPERAPPDetailType"`
+	} `xml:"CIFINFOSUPERAPPType"`
 }
 
 type CustomerFetchDetail struct {
-	AccountNumber      string `xml:"AccountNumber"`
+	AccountNumber      string `xml:"AccountNo"`
 	AccountName        string `xml:"AccountName"`
 	Currency           string `xml:"Currency"`
 	Category           string `xml:"Category"`
@@ -131,7 +131,7 @@ func ParseCustomerFetchSOAP(response string) (*CustomerFetchResult, error) {
 		return nil, err
 	}
 
-	if env.Body.CIFAccountListResponse == nil {
+	if env.Body.CIFAccountListResponse != nil {
 		resp := env.Body.CIFAccountListResponse
 		if resp.Status == nil {
 			return &CustomerFetchResult{
@@ -152,23 +152,20 @@ func ParseCustomerFetchSOAP(response string) (*CustomerFetchResult, error) {
 			len(resp.CIFAccountListType.Group.Details) == 0 {
 			return &CustomerFetchResult{
 				Success:  true,
-				Details:  resp.CIFAccountListType.Group.Details,
 				Messages: []string{resp.Status.SuccessIndicator},
 			}, nil
 		}
 
-		details := resp.CIFAccountListType.Group.Details
-
 		return &CustomerFetchResult{
 			Success:  true,
-			Details:  details,
+			Details:  resp.CIFAccountListType.Group.Details,
 			Messages: []string{resp.Status.SuccessIndicator},
 		}, nil
 	}
 
 	return &CustomerFetchResult{
 		Success:  false,
-		Messages: []string{"Missing status"},
+		Messages: []string{"Missing response"},
 	}, nil
 
 }

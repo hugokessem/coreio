@@ -12,9 +12,10 @@ import (
 
 func TestIntegrationCustomerLimitFetchByCIFReturnService(t *testing.T) {
 	params := Params{
-		Username:       "SUPERAPP",
-		Password:       "123456",
-		CustomerNumber: "100000882",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// CustomerNumber: "100000882",
+		CustomerNumber: "1021587666",
 	}
 	xmlRequest := NewCustomerLimitFetchByCIFReturnService(params)
 	t.Log("XML Request:", xmlRequest)

@@ -56,7 +56,7 @@ type ViewCustomedLimitResponse struct {
 		TransactionId    string   `xml:"transactionId"`
 	} `xml:"Status"`
 	CustomerLimitType *struct {
-		GCustomerLimitDetailType struct {
+		GCustomerLimitDetailType *struct {
 			CustomerLimitDetailType []CustomerLimitDetailType `xml:"mCUSTOMLIMITAMENDENQDetailType"`
 		} `xml:"gCUSTOMLIMITAMENDENQDetailType"`
 	} `xml:"CUSTOMLIMITAMENDENQType"`
