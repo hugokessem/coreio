@@ -16,7 +16,7 @@ func TestIntegrationCustomerFetchByCustomerNumber(t *testing.T) {
 		Username:       "SUPERAPP",
 		Password:       "123456",
 		FetchBy:        valueobject.FetchByCustomerNumber.String(),
-		CustomerNumber: "1021587666",
+		CustomerNumber: "1006544623",
 	}
 
 	xmlRequest := NewCustomerFetch(params)

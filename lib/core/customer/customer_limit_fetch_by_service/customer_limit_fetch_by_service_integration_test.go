@@ -51,5 +51,17 @@ func TestIntegrationCustomerLimitFetchByService(t *testing.T) {
 
 	assert.True(t, result.Success)
 	assert.NotNil(t, result.Detail)
-	t.Logf("resultDetail: %+v", result.Detail)
+	// t.Logf("resultDetail: %+v", result.Detail)
+	deailts := result.Detail
+	for _, detail := range deailts {
+		if strings.ToUpper(detail.ChannelType) == "USSD" {
+			t.Logf("ID: %s", detail.ID)
+			t.Logf("ChannelType: %s", detail.ChannelType)
+			t.Logf("ServiceCode: %s", detail.ServiceCode)
+			t.Logf("ServiceName: %s", detail.ServiceName)
+			t.Logf("ServiceMaxAmount: %s", detail.ServiceMaxAmount)
+			t.Logf("ServiceMinAmount: %s", detail.ServiceMinAmount)
+			t.Logf("ServiceCount: %s", detail.ServiceCount)
+		}
+	}
 }
