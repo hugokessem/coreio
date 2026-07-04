@@ -46,7 +46,7 @@ func TestIntegrationCustomerLimitFetchByService(t *testing.T) {
 	assert.NotNil(t, result, "Expected result to be non-nil")
 
 	t.Logf("Status: %+v", result.Success)
-	t.Logf("Parsed Result: %+v", result.Detail.CustomerLimits[0])
+	t.Logf("Parsed Result: %+v", result.Detail[0])
 	// Check that the fetch succeeded
 
 	assert.True(t, result.Success)

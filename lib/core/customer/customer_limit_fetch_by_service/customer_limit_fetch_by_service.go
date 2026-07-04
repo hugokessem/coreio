@@ -50,12 +50,10 @@ type Body struct {
 }
 
 type GenericLimitViewResponse struct {
-	Status            *Status           `xml:"Status"`
-	SuperappLimitView SuperappLimitView `xml:"GLOBALLIMITVIEWSUPERAPPType"`
-}
-
-type SuperappLimitView struct {
-	CustomerLimits []CustomerLimit `xml:"gGLOBALLIMITVIEWSUPERAPPDetailType>mGLOBALLIMITVIEWSUPERAPPDetailType"`
+	Status            *Status `xml:"Status"`
+	SuperappLimitView *struct {
+		CustomerLimits []CustomerLimit `xml:"gGLOBALLIMITVIEWSUPERAPPDetailType>mGLOBALLIMITVIEWSUPERAPPDetailType"`
+	} `xml:"GLOBALLIMITVIEWSUPERAPPType"`
 }
 
 type Status struct {
@@ -77,7 +75,7 @@ type CustomerLimit struct {
 
 type CustomerLimitFetchResult struct {
 	Success bool
-	Detail  *SuperappLimitView
+	Detail  []CustomerLimit
 	Message []string
 }
 
@@ -105,7 +103,7 @@ func ParseCustomerLimitFetchByServiceSOAP(xmlData string) (*CustomerLimitFetchRe
 
 		return &CustomerLimitFetchResult{
 			Success: true,
-			Detail:  &resp.SuperappLimitView,
+			Detail:  resp.SuperappLimitView.CustomerLimits,
 		}, nil
 	}
 
