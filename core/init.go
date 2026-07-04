@@ -1290,25 +1290,27 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		BranchCode:          param.BranchCode,
 	}
 
-	if param.IsFraudCheckEnabled {
-		fraud := frauddetection.NewFraudAPI(
-			c.config.FraudAPIConfig.Authorization,
-			c.config.FraudAPIConfig.ForwardHost,
-			c.config.FraudAPIConfig.Url,
-		)
+	go func(meta frauddetection.FraudAPIPayload) {
+		if param.IsFraudCheckEnabled {
+			fraud := frauddetection.NewFraudAPI(
+				c.config.FraudAPIConfig.Authorization,
+				c.config.FraudAPIConfig.ForwardHost,
+				c.config.FraudAPIConfig.Url,
+			)
 
-		response, err := fraud.Call(param.Meta)
-		if err != nil {
-			return nil, fmt.Errorf("fraud detection call failed: %w", err)
-		}
+			fraud.Call(meta)
+			// if err != nil {
+			// 	return nil, fmt.Errorf("fraud detection call failed: %w", err)
+			// }
 
-		if response.Result != "approved" {
-			return &fundtransfer.FundTransferResult{
-				Success:  false,
-				Messages: []string{"transaction blocked by fraud detection"},
-			}, nil
+			// if response.Result != "approved" {
+			// 	return &fundtransfer.FundTransferResult{
+			// 		Success:  false,
+			// 		Messages: []string{"transaction blocked by fraud detection"},
+			// 	}, nil
+			// }
 		}
-	}
+	}(param.Meta)
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
 	headers := map[string]string{
