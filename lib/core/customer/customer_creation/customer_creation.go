@@ -101,7 +101,7 @@ func SetMenemoic(param Params) string {
 	if !ok {
 		return ""
 	}
-	return fmt.Sprintf("%s%s", string(param.MiddleName[0]), lastNineDigit)
+	return fmt.Sprintf("%s%s", string(param.LastName[0]), lastNineDigit)
 }
 
 func NewCustomerCreation(param Params) string {
