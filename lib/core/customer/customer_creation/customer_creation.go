@@ -42,6 +42,7 @@ type Params struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	Menmonic           string
 	Url                string
 	Header             map[string]string
 }
@@ -80,6 +81,7 @@ type CreateCustomerParams struct {
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	Menmonic           string
 	Url                string
 	Header             map[string]string
 }
@@ -105,7 +107,8 @@ func SetMenemoic(param Params) string {
 }
 
 func NewCustomerCreation(param Params) string {
-	menemoic := SetMenemoic(param)
+	// menemoic := SetMenemoic(param)
+	menemoic := param.Menmonic
 	fullName := FullName(param)
 	return fmt.Sprintf(`
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iib="http://temenos.com/IIBONBOARDING" xmlns:cus="http://temenos.com/CUSTOMERCREATEINDIVIDUAL">

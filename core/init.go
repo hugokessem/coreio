@@ -359,13 +359,37 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 	return result, nil
 }
 
+func GetMenmonicNumber(phoneNumber string, index int, names ...string) string {
+	lastNineDigit := phoneNumber[len(phoneNumber)-9:]
+	return fmt.Sprintf("%s%s", string(names[index][0]), lastNineDigit)
+}
+
 func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error) {
+
+	var menmonic string
+	for i := 0; i < 3; i++ {
+		menmonicNumber := GetMenmonicNumber(param.PhoneNumber, i, param.FirstName, param.MiddleName, param.LastName)
+		temp, err := c.PhoneLookup(ctx, PhoneLookupParam{
+			PhoneNumber: menmonicNumber,
+		})
+		if i+1 == 3 {
+			menmonicNumber = "X"
+			break
+		}
+		if !temp.Success || err != nil {
+			continue
+		}
+		menmonic = menmonicNumber
+		break
+	}
+
 	params := customercreation.Params{
 		Username:           c.config.Username,
 		Password:           c.config.Password,
 		FirstName:          param.FirstName,
 		MiddleName:         param.MiddleName,
 		LastName:           param.LastName,
+		Menmonic:           menmonic,
 		PhoneNumber:        param.PhoneNumber,
 		Address:            param.Address,
 		PostalCode:         param.PostalCode,
@@ -531,6 +555,7 @@ func (c *CBECoreAPI) CheckIfUserExists(ctx context.Context, param UserExistsPara
 }
 
 func (c *CBECoreAPI) AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error) {
+
 	customer, err := c.CreateCustomer(ctx, param)
 	if err != nil {
 		messages := []string{err.Error()}
