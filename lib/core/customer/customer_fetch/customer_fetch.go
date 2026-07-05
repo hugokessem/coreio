@@ -26,7 +26,7 @@ func NewCustomerFetch(param Params) string {
 	}
 
 	var fetch strings.Builder
-	if param.CustomerNumber == valueobject.FetchByAccountNumber.String() {
+	if param.FetchBy == valueobject.FetchByAccountNumber.String() {
 		fetch.WriteString(`
 			<enquiryInputCollection>
 				<columnName>ACCT.ID</columnName>

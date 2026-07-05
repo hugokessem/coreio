@@ -14,7 +14,7 @@ func TestIntegrationCustomerDetail(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1041019149",
+		CustomerNumber: "1001059175",
 	}
 
 	xmlRequest := NewCustomerDetail(params)

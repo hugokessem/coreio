@@ -63,6 +63,7 @@ type Status struct {
 	Application      string   `xml:"application"`
 	Messages         []string `xml:"messages"`
 }
+
 type CustomerLimit struct {
 	ID               string `xml:"ID"`
 	ChannelType      string `xml:"CHANNELTYPE"`
