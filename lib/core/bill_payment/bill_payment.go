@@ -50,7 +50,7 @@ func NewBillPayment(param Params) string {
                 <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
                 <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
                 <fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
-                <fun:DEBITTHEIRREF>%s DR</fun:DEBITTHEIRREF>
+                <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
                 <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
                 <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
                 <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
