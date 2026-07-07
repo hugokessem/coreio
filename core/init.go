@@ -239,7 +239,6 @@ func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*
 	params := billpayment.Params{
 		Username:            c.config.Username,
 		Password:            c.config.Password,
-		BranchCode:          param.BranchCode,
 		DebitAccountNumber:  param.DebitAccountNumber,
 		DebitCurrency:       param.DebitCurrency,
 		DebitAmount:         param.DebitAmount,
@@ -248,11 +247,8 @@ func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
 		ServiceCode:         param.ServiceCode,
-		CustomerRole:        param.CustomerRole,
-		ChannelType:         param.ChannelType,
-		BudgetType:          param.BudgetType,
-		ClientReference:     param.ClientReference,
 		SuperappUserCode:    param.SuperappUserCode,
+		ClientReference:     param.ClientReference,
 	}
 
 	xmlRequest := billpayment.NewBillPayment(params)

@@ -21,7 +21,6 @@ func TestIntegrationBillPayment(t *testing.T) {
 	params := Params{
 		Username:            "SUPERAPP",
 		Password:            "123456",
-		BranchCode:          "ET0010863",
 		DebitAccountNumber:  "1000263525144",
 		DebitCurrency:       "ETB",
 		DebitAmount:         "150",
@@ -30,11 +29,8 @@ func TestIntegrationBillPayment(t *testing.T) {
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
 		ServiceCode:         "CBE",
-		CustomerRole:        "CUSTOMER",
-		ChannelType:         "APP",
-		BudgetType:          "BILL_PAYMENT",
 		ClientReference:     clientReference.String(),
-		SuperappUserCode:    "SA1036559081",
+		SuperappUserCode:    "SA1000080127",
 	}
 
 	xmlRequest := NewBillPayment(params)
@@ -113,7 +109,6 @@ func TestIntegrationBillPayment(t *testing.T) {
 		t.Logf("Commission Code: %s", detail.CommissionCode)
 		t.Logf("Payment Detail: %s", detail.GlobalPaymentDetail.PaymentDetail)
 		t.Logf("Client Reference: %s", detail.ClientReference)
-		t.Logf("Superapp User Code: %s", params.SuperappUserCode)
 
 	} else {
 		t.Error("Expected Detail to be non-nil")

@@ -17,6 +17,7 @@ func TestIntegrationExchangeRate(t *testing.T) {
 	}
 
 	xmlRequest := NewExchangeRate(params)
+	t.Logf("xmlRequest: %s", xmlRequest)
 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
