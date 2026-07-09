@@ -412,6 +412,8 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		AnnualBonus:        param.AnnualBonus,
 		NetMonthlyIncome:   param.NetMonthlyIncome,
 		NetMonthlyExpence:  param.NetMonthlyExpence,
+		TownCountry:        param.TownCountry,
+		LegalDocumenetName: param.LegalDocumenetName,
 		TinNumber:          param.TinNumber,
 		MotherName:         param.MotherName,
 		CustomerGroup:      param.CustomerGroup,

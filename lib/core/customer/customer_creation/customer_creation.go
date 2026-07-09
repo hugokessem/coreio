@@ -39,9 +39,11 @@ type Params struct {
 	NetMonthlyIncome   string
 	NetMonthlyExpence  string
 	TinNumber          string
+	LegalDocumenetName string
 	MotherName         string
 	CustomerGroup      string
 	NationalId         string
+	TownCountry        string
 	Menmonic           string
 	Url                string
 	Header             map[string]string
@@ -72,11 +74,13 @@ type CreateCustomerParams struct {
 	EmployerName       string
 	EmployerAddress    string
 	EmployerBusiness   string
+	LegalDocumenetName string
 	CustomerCurrency   string
 	Salary             string
 	AnnualBonus        string
 	NetMonthlyIncome   string
 	NetMonthlyExpence  string
+	TownCountry        string
 	TinNumber          string
 	MotherName         string
 	CustomerGroup      string
@@ -176,7 +180,7 @@ func NewCustomerCreation(param Params) string {
                 <cus:gLEGALID g="1">
                     <cus:mLEGALID m="1">
                         <cus:LEGALID>%s</cus:LEGALID>
-                        <cus:LEGALDOCNAME/>
+						<cus:LEGALDOCNAME>%s</cus:LEGALDOCNAME>
                         <cus:LEGALHOLDERNAME>%s</cus:LEGALHOLDERNAME>
                         <cus:LEGALISSAUTH>%s</cus:LEGALISSAUTH>
                         <cus:LEGALISSDATE>%s</cus:LEGALISSDATE>
@@ -275,7 +279,7 @@ func NewCustomerCreation(param Params) string {
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Address, param.Address, param.PostalCode, param.ISOCountryCode, param.AccountOffice, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.FirstName, param.LastName, param.Gender, param.DateOfBirth, param.MaritalStatus, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.EmployerName, param.EmployerAddress, param.EmployerBusiness, param.CustomerCurrency, param.Salary, param.AnnualBonus, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.MotherName, param.CustomerGroup, param.NationalId)
+    `, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.AccountOffice, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.FirstName, param.LastName, param.Gender, param.DateOfBirth, param.MaritalStatus, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.EmployerName, param.EmployerAddress, param.EmployerBusiness, param.CustomerCurrency, param.Salary, param.AnnualBonus, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.MotherName, param.CustomerGroup, param.NationalId)
 }
 
 type Envelope struct {
