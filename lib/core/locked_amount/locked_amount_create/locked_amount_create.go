@@ -27,6 +27,13 @@ type CreateLockedAmountParam struct {
 }
 
 func NewCreateLockedAmount(param Params) string {
+	userCodeSplited := strings.Split(param.UserID, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = param.UserID
+	} else {
+		userCode = userCodeSplited[0]
+	}
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:acl="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP">
     <soapenv:Header/>
@@ -48,7 +55,7 @@ func NewCreateLockedAmount(param Params) string {
             </ACLOCKEDEVENTSCREATELOCKSUPERAPPType>
         </cbes:CreateAccountLock>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, param.UserID)
+</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, userCode)
 }
 
 type Envelope struct {
