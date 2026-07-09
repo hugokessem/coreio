@@ -361,31 +361,13 @@ func GetMenmonicNumber(phoneNumber string, index int, names ...string) string {
 }
 
 func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error) {
-
-	var menmonic string
-	for i := 0; i < 3; i++ {
-		menmonicNumber := GetMenmonicNumber(param.PhoneNumber, i, param.FirstName, param.MiddleName, param.LastName)
-		temp, err := c.PhoneLookup(ctx, PhoneLookupParam{
-			PhoneNumber: menmonicNumber,
-		})
-		if i+1 == 3 {
-			menmonicNumber = "X"
-			break
-		}
-		if !temp.Success || err != nil {
-			continue
-		}
-		menmonic = menmonicNumber
-		break
-	}
-
 	params := customercreation.Params{
 		Username:           c.config.Username,
 		Password:           c.config.Password,
 		FirstName:          param.FirstName,
 		MiddleName:         param.MiddleName,
 		LastName:           param.LastName,
-		Menmonic:           menmonic,
+		Menmonic:           param.Menmonic,
 		PhoneNumber:        param.PhoneNumber,
 		Address:            param.Address,
 		PostalCode:         param.PostalCode,
