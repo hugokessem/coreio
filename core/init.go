@@ -381,6 +381,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		IssuedDate:         param.IssuedDate,
 		ExpiryDate:         param.ExpiryDate,
 		Gender:             param.Gender,
+		Street:             param.Street,
 		DateOfBirth:        param.DateOfBirth,
 		MaritalStatus:      param.MaritalStatus,
 		Email:              param.Email,
