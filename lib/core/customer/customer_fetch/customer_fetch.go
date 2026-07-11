@@ -153,7 +153,7 @@ func ParseCustomerFetchSOAP(response string) (*CustomerFetchResult, error) {
 			resp.CIFAccountListType.Group == nil ||
 			len(resp.CIFAccountListType.Group.Details) == 0 {
 			return &CustomerFetchResult{
-				Success:  true,
+				Success:  false,
 				Messages: []string{resp.Status.SuccessIndicator},
 			}, nil
 		}

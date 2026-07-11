@@ -28,6 +28,7 @@ import (
 	customerlimitfetchbycifreturnservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif_return_service"
 	customerlimitfetchbyservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_service"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
+	eligibility "github.com/hugokessem/coreio/lib/core/eligibility"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
 	fundtransfercheck "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer_check"
@@ -155,6 +156,9 @@ type BillPaymentResult = billpayment.BillPaymentResult
 type FaydaParam = fayda.FaydaParam
 type FaydaResult = fayda.FaydaResult
 
+type EligibilityParam = eligibility.EligibilityParam
+type EligibilityResult = eligibility.CustomerEligibilityResult
+
 type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCustomerNumber(ctx context.Context, param CustomerLimitFetchByCIFParam) (*CustomerLimitFetchByCIFResult, error)
 	CustomerLimitAmendByCustomerNumber(ctx context.Context, param CustomerLimitAmendByCIFParam) (*CustomerLimitAmendByCIFResult, error)
@@ -204,6 +208,7 @@ type CBECoreAPIInterface interface {
 	CustomerLimitFetchByCIFReturnService(ctx context.Context, param CustomerLimitFetchByCIFReturnServiceParam) (*CustomerLimitFetchByCIFReturnServiceResult, error)
 	CreateCustomer(ctx context.Context, param CreateCustomerParam) (*CreateCustomerResult, error)
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
+	Eligibility(ctx context.Context, param EligibilityParam) (*EligibilityResult, error)
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
 	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
 	Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error)
@@ -312,6 +317,41 @@ func (c *CBECoreAPI) CustomerFetch(ctx context.Context, param CustomerFetchParam
 	return result, nil
 }
 
+func (c *CBECoreAPI) Eligibility(ctx context.Context, param EligibilityParam) (*EligibilityResult, error) {
+	params := eligibility.Param{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		FetchBy:       param.FetchBy,
+		CriticalValue: param.CriticalValue,
+	}
+
+	xmlRequest := eligibility.NewEligibility(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := eligibility.ParseCustomerEligibilitySOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationParam) (*AccountCreationResult, error) {
 	params := accountcreation.Params{
 		Username:       c.config.Username,
@@ -348,6 +388,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 	if err != nil {
 		return nil, err
 	}
+
 	result, err := accountcreation.ParseAccountCreationSOAP(string(responseData))
 	if err != nil {
 		return nil, err
