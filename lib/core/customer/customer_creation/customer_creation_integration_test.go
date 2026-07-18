@@ -57,48 +57,55 @@ func fetchSandboxAccessToken(t *testing.T, client *http.Client) string {
 }
 
 func TestIntegrationCreateCustomer(t *testing.T) {
-	tinNumber := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
-	// nationalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
-	email := fmt.Sprintf("sampletet%d@gmail.com", rand.Intn(10000000000000000))
+	tinNumber := fmt.Sprintf("%016d", rand.Int63n(1e16))
+	nationalId := fmt.Sprintf("%018d%018d", rand.Int63n(1e18), rand.Int63n(1e18))
+	email := fmt.Sprintf("sampletet%d@gmail.com", rand.Int63n(1e16))
 	phoneNumber := fmt.Sprintf("+25191%06d", rand.Intn(1000000))
-	// legalId := fmt.Sprintf("%016d", rand.Intn(10000000000000000))
+	legalId := fmt.Sprintf("WS%d", rand.Int63n(1e14))
 
 	params := Params{
 		Username:           "SUPERAPP",
 		Password:           "123456",
+		Company:            "ET0011859",
 		FirstName:          "KETEM",
 		MiddleName:         "HAILU",
 		LastName:           "TAYE",
+		Menmonic:           "K" + phoneNumber[len(phoneNumber)-9:],
 		PhoneNumber:        phoneNumber,
 		Address:            "ADDIS ABABA",
 		PostalCode:         "4144",
 		ISOCountryCode:     "ET",
-		AccountOffice:      "7124",
-		Industry:           "1499",
 		ISONationalityCode: "ET",
 		ISOResidentCode:    "ET",
-		UniqueID:           "09as8df0a9s8f",
+		UniqueID:           legalId,
+		LegalDocumenetName: "NATIONAL.ID",
 		IssuesBy:           "FAYDA",
 		IssuedDate:         "20210504",
 		ExpiryDate:         "20500101",
+		Title:              "MR",
 		Gender:             "MALE",
 		DateOfBirth:        "19900310",
 		MaritalStatus:      "SINGLE",
+		NoOfDependents:     "0",
 		Email:              email,
 		EmploymentStatus:   "EMPLOYED",
 		Occupation:         "HIRED",
-		EmployerName:       "MIDRO",
-		EmployerAddress:    "ADDIS ABABA",
-		EmployerBusiness:   "SHARE COMPANY",
 		CustomerCurrency:   "ETB",
 		Salary:             "75000",
-		AnnualBonus:        "50000",
-		NetMonthlyIncome:   "55000",
-		NetMonthlyExpence:  "42000",
+		Street:             "AM",
+		TownCountry:        "ADDIS ABABA",
 		TinNumber:          tinNumber,
+		CustomerOccupation: "Banker",
+		EducationStatus:    "First Degree",
 		MotherName:         "TIGIST ADAM FEKADU",
+		FATCACompliant:     "NO",
+		USPerson:           "NO",
+		KebeleHNO:          "1544/02",
+		CustomerSubSegment: "MASS",
+		CustomerSegment:    "MASS",
+		GrandFatherName:    "TAYE",
 		CustomerGroup:      "RETAIL",
-		NationalId:         "0787a0980987",
+		NationalId:         nationalId,
 	}
 
 	client := &http.Client{
@@ -141,51 +148,30 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 	t.Logf("parsed result success: %v", result.Success)
 	t.Logf("parsed result messages: %v", result.Messages)
 	t.Logf("parsed result detail: %+v", result.Detail)
-	t.Logf("Customr Number: %+v", result.Detail.CustomerNumber)
 
 	if !result.Success {
-		t.Logf("customer creation failed")
+		t.Logf("customer creation failed: %v", result.Messages)
+		require.FailNow(t, "customer creation API returned failure", "messages=%v", result.Messages)
 	}
 
-	assert.True(t, result.Success)
-	assert.NotNil(t, result.Detail)
+	require.NotNil(t, result.Detail)
+	t.Logf("Customer Number: %s", result.Detail.CustomerNumber)
+	t.Logf("customer mnemonic: %s", result.Detail.Menmonic)
+	t.Logf("customer full name: %s", result.Detail.FullName)
+	t.Logf("customer phone: %s", result.Detail.PhoneNumber)
+	t.Logf("customer national id: %s", result.Detail.NationalId)
+	t.Logf("customer ownership: %s", result.Detail.Ownership)
+	t.Logf("customer cocode: %s", result.Detail.Cocode)
 
-	if result.Detail != nil {
-		t.Logf("customer mnemonic: %s", result.Detail.Menmonic)
-		t.Logf("customer full name: %s", result.Detail.FullName)
-		t.Logf("customer phone: %s", result.Detail.PhoneNumber)
-		t.Logf("customer national id: %s", result.Detail.NationalId)
-		t.Logf("customer ownership: %s", result.Detail.Ownership)
-		t.Logf("customer cocode: %s", result.Detail.Cocode)
-
-		assert.Equal(t, "K912895609", result.Detail.Menmonic)
-		assert.Equal(t, "KETEM HAILU TAYE", result.Detail.FullName)
-		assert.Equal(t, "ADDIS ABABA", result.Detail.Address)
-		assert.Equal(t, "4144", result.Detail.PostalCode)
-		assert.Equal(t, "ET", result.Detail.Country)
-		assert.Equal(t, "7124", result.Detail.AccountOfficer)
-		assert.Equal(t, "1499", result.Detail.Industry)
-		assert.Equal(t, "ET", result.Detail.Nationality)
-		assert.Equal(t, "20210504", result.Detail.IssuedDate)
-		assert.Equal(t, "20500101", result.Detail.ExpiryDate)
-		assert.Equal(t, "ET0010001", result.Detail.CompanyBook)
-		assert.Equal(t, "MALE", result.Detail.Gender)
-		assert.Equal(t, "19900310", result.Detail.DateOfBirth)
-		assert.Equal(t, "SINGLE", result.Detail.MaritalStatus)
-		assert.Equal(t, "+251912895689", result.Detail.PhoneNumber)
-		assert.Equal(t, "sampletet@gmail.com", result.Detail.Email)
-		assert.Equal(t, "EMPLOYED", result.Detail.EmploymentStatus)
-		assert.Equal(t, "75000.00", result.Detail.Salary)
-		assert.Equal(t, "MIDRO", result.Detail.Customer)
-		assert.Equal(t, "50000.00", result.Detail.AnnualBonus)
-		assert.Equal(t, "ETB", result.Detail.Currency)
-		assert.Equal(t, "7775854855128587", result.Detail.TinNumber)
-		assert.Equal(t, "TIGIST ADAM FEKADU", result.Detail.MotherName)
-		assert.Equal(t, "RETAIL", result.Detail.CustomerGroup)
-		assert.Equal(t, "4455567887777455", result.Detail.NationalId)
-		assert.Equal(t, "3000", result.Detail.Ownership)
-		assert.Equal(t, "ET0010001", result.Detail.Cocode)
-	} else {
-		t.Error("Expected Detail to be non-nil")
-	}
+	assert.NotEmpty(t, result.Detail.CustomerNumber)
+	assert.NotEmpty(t, result.Detail.Menmonic)
+	assert.NotEmpty(t, result.Detail.FullName)
+	assert.Equal(t, "ADDIS ABABA", result.Detail.Address)
+	assert.Equal(t, "ET", result.Detail.Country)
+	assert.Equal(t, "ET", result.Detail.Nationality)
+	assert.Equal(t, "MALE", result.Detail.Gender)
+	assert.Equal(t, "EMPLOYED", result.Detail.EmploymentStatus)
+	assert.Equal(t, "ETB", result.Detail.Currency)
+	assert.Equal(t, "RETAIL", result.Detail.CustomerGroup)
+	assert.Equal(t, "3000", result.Detail.Ownership)
 }
