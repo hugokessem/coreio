@@ -20,6 +20,7 @@ func TestIntegrationCreateLockedAmount(t *testing.T) {
 		To:            "20281111",
 		LockedAmount:  "6",
 		UserID:        "SA1771239173",
+		ServiceCode:   "SITOTA",
 	}
 
 	xmlRequest := NewCreateLockedAmount(params)

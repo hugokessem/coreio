@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strings"
+	"time"
 )
 
 type Params struct {
@@ -15,6 +16,7 @@ type Params struct {
 	To            string
 	UserID        string
 	LockedAmount  string
+	ServiceCode   string
 }
 
 type CreateLockedAmountParam struct {
@@ -24,6 +26,7 @@ type CreateLockedAmountParam struct {
 	To            string
 	UserID        string
 	LockedAmount  string
+	ServiceCode   string
 }
 
 func NewCreateLockedAmount(param Params) string {
@@ -34,6 +37,7 @@ func NewCreateLockedAmount(param Params) string {
 	} else {
 		userCode = userCodeSplited[0]
 	}
+	timestamp := time.Now().Format("20060102150405")
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:acl="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP">
     <soapenv:Header/>
@@ -52,10 +56,12 @@ func NewCreateLockedAmount(param Params) string {
                 <acl:TODATE>%s</acl:TODATE>
                 <acl:LOCKEDAMOUNT>%s</acl:LOCKEDAMOUNT>
                 <acl:UserID>%s</acl:UserID>
+                <acl:ServiceCode>%s</acl:ServiceCode>
+                <acl:TIMESTAMP>%s</acl:TIMESTAMP>
             </ACLOCKEDEVENTSCREATELOCKSUPERAPPType>
         </cbes:CreateAccountLock>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, userCode)
+</soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, userCode, param.ServiceCode, timestamp)
 }
 
 type Envelope struct {
