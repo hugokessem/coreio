@@ -21,12 +21,12 @@ func TestIntegrationCustomerLimitAmendByCIF(t *testing.T) {
 				ServiceLimits: []ServiceLimit{
 					{
 						ServiceType:           "AAPARKING",
-						ServiceMaximumAmount:  "100000",
+						ServiceMaximumAmount:  "10000",
 						UserMaximumDebitCount: "5",
 					},
 					{
 						ServiceType:           "TELEBIRR",
-						ServiceMaximumAmount:  "100000",
+						ServiceMaximumAmount:  "10000",
 						UserMaximumDebitCount: "5",
 					},
 					{
