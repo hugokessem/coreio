@@ -20,16 +20,16 @@ func TestIntegrationLockedAmountFt(t *testing.T) {
 		DebitCurrency:       "ETB",
 		DebitAmount:         "6",
 		CreditCurrency:      "ETB",
-		CreditAccountNumber: "1000498200943",
-		CreditReference:     "Credit reference",
-		DebitReference:      "Debit reference",
-		ClientReference:     uuid.String(),
+		CreditAccountNumber: "1000517052152",
+		CreditReference:     uuid.String()[3:15],
+		DebitReference:      uuid.String()[1:13],
+		ClientReference:     uuid.String()[2:14],
 		ServiceCode:         "SITOTA",
 		LockID:              "ACLK21343NQQP0",
 		PaymentDetails:      "Apple",
 		CustomerRole:        "MASS",
 		ChannelType:         "APP",
-		SuperappUserCode:    "SA1771239173",
+		SuperappUserCode:    "ACLK2134361NH7",
 	}
 
 	xmlRequest := NewLockedAmountFt(params)

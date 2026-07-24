@@ -29,6 +29,7 @@ type Params struct {
 	ChannelType         string
 	SuperappUserCode    string
 	IsFraudCheckEnabled bool
+	Key                 string
 	BranchCode          string
 	Meta                frauddetection.FraudAPIPayload
 }
@@ -58,6 +59,7 @@ type FundTransferParam struct {
 	ChannelType         string // ussd, app, internet_banking
 	SuperappUserCode    string
 	BranchCode          string
+	Key                 string
 	IsFraudCheckEnabled bool
 	Meta                frauddetection.FraudAPIPayload
 }

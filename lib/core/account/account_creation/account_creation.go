@@ -70,7 +70,7 @@ type AccountCreationResponse struct {
 		TransactionId string   `xml:"transactionId"`
 		Success       string   `xml:"successIndicator"`
 		Application   string   `xml:"application"`
-		Messages      []string `xml:"messagesId"`
+		Messages      []string `xml:"messages"`
 	} `xml:"Status"`
 	AccountType AccountType `xml:"ACCOUNTType"`
 }
