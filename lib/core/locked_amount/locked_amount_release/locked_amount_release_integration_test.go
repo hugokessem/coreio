@@ -10,51 +10,51 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReleaseLockedAmount(t *testing.T, lockedID string) {
-	params := Params{
-		Username:      "SUPERAPP",
-		Password:      "123456",
-		TransactionID: lockedID,
-	}
+// func TestReleaseLockedAmount(t *testing.T, lockedID string) {
+// 	params := Params{
+// 		Username:      "SUPERAPP",
+// 		Password:      "123456",
+// 		TransactionID: lockedID,
+// 	}
 
-	xmlRequest := NewReleaseLockedAmount(params)
-	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
+// 	xmlRequest := NewReleaseLockedAmount(params)
+// 	endpoint := "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http%3A%2F%2F10.1.15.195%3A8080&wsdl=null"
 
-	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
-	assert.NoError(t, err)
+// 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(xmlRequest))
+// 	assert.NoError(t, err)
 
-	req.Header.Add("Content-Type", "text/xml; charset=utf-8")
+// 	req.Header.Add("Content-Type", "text/xml; charset=utf-8")
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
-		},
-	}
+// 	client := &http.Client{
+// 		Transport: &http.Transport{
+// 			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
+// 		},
+// 	}
 
-	resp, err := client.Do(req)
-	assert.NoError(t, err)
-	assert.NotNil(t, resp)
-	defer resp.Body.Close()
+// 	resp, err := client.Do(req)
+// 	assert.NoError(t, err)
+// 	assert.NotNil(t, resp)
+// 	defer resp.Body.Close()
 
-	responseData, err := io.ReadAll(resp.Body)
-	assert.NoError(t, err)
-	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
+// 	responseData, err := io.ReadAll(resp.Body)
+// 	assert.NoError(t, err)
+// 	assert.NotEmpty(t, responseData, "Expected response body to be non-empty")
 
-	result, err := ParseCancleLockedAmountSOAP(string(responseData))
+// 	result, err := ParseCancleLockedAmountSOAP(string(responseData))
 
-	assert.NoError(t, err)
-	assert.NotNil(t, result, "Expected result to be non-nil")
+// 	assert.NoError(t, err)
+// 	assert.NotNil(t, result, "Expected result to be non-nil")
 
-	// Check that the lookup succeeded
-	assert.True(t, result.Success)
-	assert.NotNil(t, result.Detail)
+// 	// Check that the lookup succeeded
+// 	assert.True(t, result.Success)
+// 	assert.NotNil(t, result.Detail)
 
-	if result.Detail != nil {
-		t.Logf(" TransactionID: %s, LockID: %s", result.Detail.TransactionID, lockedID)
-	} else {
-		t.Error("Expected Detail to be non-nil")
-	}
-}
+// 	if result.Detail != nil {
+// 		t.Logf(" TransactionID: %s, LockID: %s", result.Detail.TransactionID, lockedID)
+// 	} else {
+// 		t.Error("Expected Detail to be non-nil")
+// 	}
+// }
 
 func TestIntegrationReleaseLockedAmount(t *testing.T) {
 
@@ -179,7 +179,7 @@ func TestIntegrationReleaseLockedAmount(t *testing.T) {
 	params := Params{
 		Username:      "SUPERAPP",
 		Password:      "123456",
-		TransactionID: "ACLK213439PN1J",
+		TransactionID: "ACLK21343VJWL3",
 	}
 
 	xmlRequest := NewReleaseLockedAmount(params)

@@ -48,10 +48,10 @@ type Body struct {
 
 type ReleaseLockedAmountResponse struct {
 	Status *struct {
-		SuccessIndicator string `xml:"successIndicator"`
-		TransactionID    string `xml:"transactionId"`
-		Application      string `xml:"application"`
-		MessageId        string `xml:"messageId"`
+		SuccessIndicator string   `xml:"successIndicator"`
+		TransactionID    string   `xml:"transactionId"`
+		Application      string   `xml:"application"`
+		Messages         []string `xml:"messages"`
 	} `xml:"Status"`
 	ReleaseLockedAmountDetail *ReleaseLockedAmountDetail `xml:"ACLOCKEDEVENTSType"`
 }
@@ -91,14 +91,14 @@ func ParseCancleLockedAmountSOAP(xmlData string) (*ReleaseAccountLockedResult, e
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 			return &ReleaseAccountLockedResult{
 				Success:  false,
-				Messages: []string{"API returned failure"},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
 		if resp.ReleaseLockedAmountDetail == nil {
 			return &ReleaseAccountLockedResult{
 				Success:  false,
-				Messages: []string{},
+				Messages: resp.Status.Messages,
 			}, nil
 		}
 
