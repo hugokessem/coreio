@@ -7,111 +7,113 @@ import (
 )
 
 type Params struct {
-	Username            string
-	Password            string
-	Company             string
-	FirstName           string
-	MiddleName          string
-	LastName            string
-	PhoneNumber         string
-	Address             string
-	PostalCode          string
-	ISOCountryCode      string
-	AccountOffice       string
-	Industry            string
-	ISONationalityCode  string
-	ISOResidentCode     string
-	UniqueID            string
-	IssuesBy            string
-	IssuedDate          string
-	ExpiryDate          string
-	Title               string
-	Gender              string
-	DateOfBirth         string
-	MaritalStatus       string
-	NoOfDependents      string
-	Email               string
-	EmploymentStatus    string
-	Occupation          string
-	EmployerName        string
-	EmployerAddress     string
-	EmployerBusiness    string
-	CustomerCurrency    string
-	Salary              string
-	AnnualBonus         string
-	NetMonthlyIncome    string
-	NetMonthlyExpence   string
-	TinNumber           string
-	LegalDocumenetName  string
-	CustomerOccupation  string
-	EducationStatus     string
-	MotherName          string
-	FATCACompliant      string
-	USPerson            string
-	KebeleHNO           string
-	CustomerSubSegment  string
-	CustomerSegment     string
-	GrandFatherName     string
-	CustomerGroup       string
-	Street              string
-	NationalId          string
-	TownCountry         string
-	Menmonic            string
-	Url                 string
-	Header              map[string]string
+	Username                string
+	Password                string
+	Company                 string
+	FirstName               string
+	MiddleName              string
+	LastName                string
+	PhoneNumber             string
+	Address                 string
+	PostalCode              string
+	ISOCountryCode          string
+	AccountOffice           string
+	Industry                string
+	ISONationalityCode      string
+	ISOResidentCode         string
+	UniqueID                string
+	IssuesBy                string
+	IssuedDate              string
+	ExpiryDate              string
+	Title                   string
+	Gender                  string
+	DateOfBirth             string
+	MaritalStatus           string
+	NoOfDependents          string
+	Email                   string
+	EmploymentStatus        string
+	Occupation              string
+	EmployerName            string
+	EmployerAddress         string
+	EmployerBusiness        string
+	CustomerCurrency        string
+	Salary                  string
+	AnnualBonus             string
+	NetMonthlyIncome        string
+	NetMonthlyExpence       string
+	TinNumber               string
+	LegalDocumenetName      string
+	CustomerOccupation      string
+	EducationStatus         string
+	MotherName              string
+	FATCACompliant          string
+	USPerson                string
+	KebeleHNO               string
+	CustomerSubSegment      string
+	CustomerSegment         string
+	GrandFatherName         string
+	CustomerGroup           string
+	Street                  string
+	NationalId              string
+	TownCountry             string
+	Menmonic                string
+	Url                     string
+	CommunicationPreference string
+	Header                  map[string]string
 }
 
 type CreateCustomerParams struct {
-	Company             string
-	FirstName           string
-	MiddleName          string
-	LastName            string
-	PhoneNumber         string
-	Address             string
-	PostalCode          string
-	ISOCountryCode      string
-	AccountOffice       string
-	Industry            string
-	ISONationalityCode  string
-	ISOResidentCode     string
-	UniqueID            string
-	IssuesBy            string
-	IssuedDate          string
-	ExpiryDate          string
-	Title               string
-	Gender              string
-	DateOfBirth         string
-	MaritalStatus       string
-	NoOfDependents      string
-	Email               string
-	EmploymentStatus    string
-	Occupation          string
-	EmployerName        string
-	EmployerAddress     string
-	EmployerBusiness    string
-	LegalDocumenetName  string
-	CustomerCurrency    string
-	Salary              string
-	AnnualBonus         string
-	NetMonthlyIncome    string
-	NetMonthlyExpence   string
-	TownCountry         string
-	TinNumber           string
-	CustomerOccupation  string
-	EducationStatus     string
-	MotherName          string
-	FATCACompliant      string
-	USPerson            string
-	KebeleHNO           string
-	CustomerSubSegment  string
-	CustomerSegment     string
-	GrandFatherName     string
-	CustomerGroup       string
-	Street              string
-	NationalId          string
-	Menmonic            string
-	Url                 string
-	Header              map[string]string
+	Company                 string
+	FirstName               string
+	MiddleName              string
+	LastName                string
+	PhoneNumber             string
+	Address                 string
+	PostalCode              string
+	ISOCountryCode          string
+	AccountOffice           string
+	Industry                string
+	ISONationalityCode      string
+	ISOResidentCode         string
+	UniqueID                string
+	IssuesBy                string
+	IssuedDate              string
+	ExpiryDate              string
+	Title                   string
+	Gender                  string
+	DateOfBirth             string
+	MaritalStatus           string
+	NoOfDependents          string
+	Email                   string
+	EmploymentStatus        string
+	Occupation              string
+	EmployerName            string
+	EmployerAddress         string
+	EmployerBusiness        string
+	LegalDocumenetName      string
+	CustomerCurrency        string
+	Salary                  string
+	AnnualBonus             string
+	NetMonthlyIncome        string
+	NetMonthlyExpence       string
+	TownCountry             string
+	TinNumber               string
+	CustomerOccupation      string
+	EducationStatus         string
+	MotherName              string
+	FATCACompliant          string
+	USPerson                string
+	KebeleHNO               string
+	CustomerSubSegment      string
+	CustomerSegment         string
+	GrandFatherName         string
+	CustomerGroup           string
+	Street                  string
+	NationalId              string
+	Menmonic                string
+	Url                     string
+	CommunicationPreference string
+	Header                  map[string]string
 }
 
 func LastNineDigits(phone string) (string, bool) {
@@ -245,6 +247,7 @@ func NewCustomerCreation(param Params) string {
                 <cus:TinNumber>%s</cus:TinNumber>
                 <cus:CustomerOccupation>%s</cus:CustomerOccupation>
                 <cus:EduactionStatus>%s</cus:EduactionStatus>
+                <cus:CommunicationPreference>%s</cus:CommunicationPreference>
                 <cus:MotherName>%s</cus:MotherName>
                 <cus:FATCACOMPLIANT>%s</cus:FATCACOMPLIANT>
                 <cus:USPerson>%s</cus:USPerson>
@@ -258,7 +261,7 @@ func NewCustomerCreation(param Params) string {
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Company, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId)
+    `, param.Company, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId)
 }
 
 type Envelope struct {
@@ -389,21 +392,21 @@ type CustomerType struct {
 	GCorBanGroup struct {
 		CorBanGroup []string `xml:"CORBANGROUP"`
 	} `xml:"gCORBAN.GROUP"`
-	CustOccupation     string `xml:"CUSTOCCUPATION"`
-	CustEdu            string `xml:"CUSTEDU"`
-	CommPre            string `xml:"COMMPRE"`
-	CustMother         string `xml:"CUSTMOTHER"`
-	DataCleanD         string `xml:"DATACLEAND"`
-	FATCACompliant     string `xml:"FATCACOMPLIANT"`
-	PEPStatus          string `xml:"PEPSTATUS"`
-	USPerson           string `xml:"USPERSON"`
-	HouseNo            string `xml:"HOUSENO"`
-	CutSegment         string `xml:"CUTSEGEMENT"`
-	MCustSegment       string `xml:"MCUSTSEGEMENT"`
-	GrandFatherName    string `xml:"GFNAME"`
-	CustGruop          string `xml:"CUSTGRUOP"`
-	NationalId         string `xml:"NATIONALID"`
-	CompVsInd          string `xml:"COMPVSIND"`
+	CustOccupation  string `xml:"CUSTOCCUPATION"`
+	CustEdu         string `xml:"CUSTEDU"`
+	CommPre         string `xml:"COMMPRE"`
+	CustMother      string `xml:"CUSTMOTHER"`
+	DataCleanD      string `xml:"DATACLEAND"`
+	FATCACompliant  string `xml:"FATCACOMPLIANT"`
+	PEPStatus       string `xml:"PEPSTATUS"`
+	USPerson        string `xml:"USPERSON"`
+	HouseNo         string `xml:"HOUSENO"`
+	CutSegment      string `xml:"CUTSEGEMENT"`
+	MCustSegment    string `xml:"MCUSTSEGEMENT"`
+	GrandFatherName string `xml:"GFNAME"`
+	CustGruop       string `xml:"CUSTGRUOP"`
+	NationalId      string `xml:"NATIONALID"`
+	CompVsInd       string `xml:"COMPVSIND"`
 }
 
 type CustomerTypeDetail struct {
