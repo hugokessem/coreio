@@ -79,6 +79,7 @@ func ParseCancleLockedAmountSOAP(xmlData string) (*ReleaseAccountLockedResult, e
 		return nil, err
 	}
 
+	// d
 	if env.Body.ReleaseLockedAmountResponse != nil {
 		resp := env.Body.ReleaseLockedAmountResponse
 		if resp.Status == nil {
