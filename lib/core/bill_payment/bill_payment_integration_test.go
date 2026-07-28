@@ -25,7 +25,7 @@ func TestIntegrationBillPayment(t *testing.T) {
 		DebitCurrency:       "ETB",
 		DebitAmount:         "150",
 		DebitReference:      debitReference.String()[3:13],
-		CreditReference:     creditReference.String()[1:11],
+		CrediterReference:   creditReference.String()[1:11],
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
 		ServiceCode:         "CBE",

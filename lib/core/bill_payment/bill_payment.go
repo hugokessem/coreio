@@ -13,7 +13,7 @@ type Params struct {
 	DebitCurrency       string
 	DebitAmount         string
 	DebitReference      string
-	CreditReference     string
+	CrediterReference   string
 	CreditAccountNumber string
 	CreditCurrency      string
 	CreditAmount        string
@@ -27,7 +27,7 @@ type BillPaymentParams struct {
 	DebitCurrency       string
 	DebitAmount         string
 	DebitReference      string
-	CreditReference     string
+	CrediterReference   string
 	CreditAccountNumber string
 	CreditCurrency      string
 	CreditAmount        string
@@ -66,7 +66,7 @@ func NewBillPayment(param Params) string {
                 <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
                 <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
                 <fun:CREDITAMOUNT/>
-			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency))
+			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency))
 
 	} else {
 		details = append(details, fmt.Sprintf(`
@@ -78,7 +78,7 @@ func NewBillPayment(param Params) string {
                 <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
                 <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
                 <fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
-			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount))
+			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount))
 	}
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP">
