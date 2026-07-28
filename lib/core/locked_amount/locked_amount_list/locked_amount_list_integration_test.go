@@ -49,6 +49,7 @@ func TestIntegrationListLockedAmount(t *testing.T) {
 	t.Log(len(result.Details))
 	assert.True(t, result.Success)
 	assert.Greater(t, len(result.Details), 0)
+	t.Logf("Result: %+v", result)
 
 	if len(result.Details) > 0 {
 		assert.Equal(t, "1000346468576", result.Details[0].AccountNumber)

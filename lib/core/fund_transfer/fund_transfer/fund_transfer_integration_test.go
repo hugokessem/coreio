@@ -19,13 +19,14 @@ func TestIntegrationFundTransfer(t *testing.T) {
 
 	clientReference, _ := uuid.NewV7()
 	params := Params{
-		Username: "SUPERAPP",
-		Password: "123456",
-		// DebitAccountNumber: "1000446114291",
-		// DebitCurrency:      "USD",
-		BranchCode:          "ET0010863",
-		DebitAccountNumber:  "1000263525144",
-		DebitCurrency:       "ETB",
+		Username:           "SUPERAPP",
+		Password:           "123456",
+		DebitAccountNumber: "1000446114291",
+		DebitCurrency:      "USD",
+		// BranchCode:         "ET0010863",
+		// DebitAccountNumber:  "1000263525144",
+		// DebitCurrency:       "ETB",
+		BranchCode:          "1771239173",
 		CreditAccountNumber: "1000298095649",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "10",

@@ -13,9 +13,10 @@ type Params struct {
 	DebitCurrency       string
 	DebitAmount         string
 	DebitReference      string
-	CrediterReference   string
+	CreditReference     string
 	CreditAccountNumber string
 	CreditCurrency      string
+	CreditAmount        string
 	ServiceCode         string
 	ClientReference     string
 	SuperappUserCode    string
@@ -26,15 +27,59 @@ type BillPaymentParams struct {
 	DebitCurrency       string
 	DebitAmount         string
 	DebitReference      string
-	CrediterReference   string
+	CreditReference     string
 	CreditAccountNumber string
 	CreditCurrency      string
+	CreditAmount        string
 	ServiceCode         string
 	ClientReference     string
 	SuperappUserCode    string
 }
 
 func NewBillPayment(param Params) string {
+	userCodeSplited := strings.Split(param.SuperappUserCode, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = param.SuperappUserCode
+	} else {
+		userCode = userCodeSplited[0]
+	}
+
+	// fmt.Println("userCode: ", userCode, "userCodeSplited: ", userCodeSplited)
+	var details []string
+	if param.CreditCurrency == "" || param.DebitCurrency == "" {
+		return "Both CreditCurrency and DebitCurrency are Requried!"
+	}
+
+	if param.CreditAmount != "" && param.DebitAmount != "" {
+		return "Both CreditAmount and DebitAmount cannot be provided together!"
+	}
+
+	if param.CreditCurrency == param.DebitCurrency || param.DebitAmount != "" {
+		details = append(details, fmt.Sprintf(`
+			
+                <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+                <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
+                <fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+                <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+                <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+                <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+                <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+                <fun:CREDITAMOUNT/>
+			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency))
+
+	} else {
+		details = append(details, fmt.Sprintf(`
+                <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
+                <fun:DEBITCURRENCY/>
+                <fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
+                <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
+                <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
+                <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
+                <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
+                <fun:CREDITAMOUNT>%s</fun:CREDITAMOUNT>
+			`, param.DebitAccountNumber, param.DebitCurrency, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount))
+	}
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP">
     <soapenv:Header/>
@@ -47,14 +92,7 @@ func NewBillPayment(param Params) string {
             </WebRequestCommon>
             <OfsFunction/>
             <FUNDSTRANSFERBILLPAYSUPERAPPType id="">
-                <fun:DEBITACCTNO>%s</fun:DEBITACCTNO>
-                <fun:DEBITCURRENCY>%s</fun:DEBITCURRENCY>
-                <fun:DEBITAMOUNT>%s</fun:DEBITAMOUNT>
-                <fun:DEBITTHEIRREF>%s</fun:DEBITTHEIRREF>
-                <fun:CREDITTHEIRREF>%s</fun:CREDITTHEIRREF>
-                <fun:CREDITACCTNO>%s</fun:CREDITACCTNO>
-                <fun:CREDITCURRENCY>%s</fun:CREDITCURRENCY>
-                <fun:CREDITAMOUNT/>
+				%s
                 <fun:gPAYMENTDETAILS g="1">
                     <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
                 </fun:gPAYMENTDETAILS>
@@ -64,7 +102,7 @@ func NewBillPayment(param Params) string {
         </cbes:FTBillPayment>
     </soapenv:Body>
 </soapenv:Envelope>
-`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CrediterReference, param.CreditAccountNumber, param.CreditCurrency, param.ServiceCode, param.ClientReference, param.SuperappUserCode)
+`, param.Password, param.Username, strings.Join(details, ""), param.ServiceCode, param.ClientReference, userCode)
 }
 
 type Envelope struct {

@@ -19,6 +19,7 @@ import (
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
+	"github.com/redis/go-redis/v9"
 
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
@@ -221,6 +222,8 @@ type CBECoreCredential struct {
 	Password           string
 	Url                string
 	FraudAPICredential FraudAPICredential
+	RedisClient        *redis.Client
+	RedisTTL           time.Duration
 }
 
 type FraudAPICredential struct {
@@ -248,12 +251,13 @@ func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*
 		DebitCurrency:       param.DebitCurrency,
 		DebitAmount:         param.DebitAmount,
 		DebitReference:      param.DebitReference,
-		CrediterReference:   param.CrediterReference,
+		CreditReference:     param.CreditReference,
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
 		ServiceCode:         param.ServiceCode,
 		SuperappUserCode:    param.SuperappUserCode,
 		ClientReference:     param.ClientReference,
+		CreditAmount:        param.CreditAmount,
 	}
 
 	xmlRequest := billpayment.NewBillPayment(params)
@@ -1346,6 +1350,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		SuperappUserCode:    param.SuperappUserCode,
 		Meta:                param.Meta,
 		IsFraudCheckEnabled: param.IsFraudCheckEnabled,
+		Key:                 param.Key,
 		BranchCode:          param.BranchCode,
 	}
 
@@ -1388,12 +1393,28 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 
 	responseData, err := io.ReadAll(resp.Body)
 	if err != nil {
+		if c.config.RedisClient != nil {
+			key := c.redisKey("failed_ft_count", param.Key)
+			c.config.RedisClient.Incr(ctx, key)
+			if ttl, err := c.config.RedisClient.TTL(ctx, key).Result(); err == nil && ttl < 0 {
+				c.config.RedisClient.Expire(ctx, key, c.config.RedisTTL)
+			}
+		}
 		return nil, err
 	}
 
 	result, err := fundtransfer.ParseFundTransferSOAP(string(responseData))
 	if err != nil {
 		return nil, err
+	}
+
+	// increment on every success transaction
+	if c.config.RedisClient != nil {
+		key := c.redisKey("success_ft_count", param.Key)
+		c.config.RedisClient.Incr(ctx, key)
+		if ttl, err := c.config.RedisClient.TTL(ctx, key).Result(); err == nil && ttl < 0 {
+			c.config.RedisClient.Expire(ctx, key, c.config.RedisTTL)
+		}
 	}
 
 	return result, nil
@@ -1945,6 +1966,7 @@ func NewCBECoreAPI(param *CBECoreCredential) CBECoreAPIInterface {
 		param.FraudAPICredential.Authorization,
 		param.FraudAPICredential.Url,
 		param.FraudAPICredential.ForwardHost,
+		param.RedisClient,
 	)
 	return &CBECoreAPI{
 		config: config,

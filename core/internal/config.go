@@ -1,10 +1,20 @@
 package internal
 
+import (
+	"time"
+
+	"github.com/redis/go-redis/v9"
+)
+
+const DefaultRedisTTL = 7 * 24 * time.Hour
+
 type Config struct {
 	Username       string
 	Password       string
 	Url            string
 	FraudAPIConfig FraudAPIConfig
+	RedisClient    *redis.Client
+	RedisTTL       time.Duration
 }
 
 type FraudAPIConfig struct {
@@ -15,7 +25,7 @@ type FraudAPIConfig struct {
 
 var coreAPI *Config
 
-func SetConfig(username, password, url, authorization, fraud_url, forward_host string) *Config {
+func SetConfig(username, password, url, authorization, fraud_url, forward_host string, redisClient *redis.Client) *Config {
 	coreAPI = &Config{
 		Username: username,
 		Password: password,
@@ -25,6 +35,8 @@ func SetConfig(username, password, url, authorization, fraud_url, forward_host s
 			ForwardHost:   forward_host,
 			Url:           fraud_url,
 		},
+		RedisClient: redisClient,
+		RedisTTL:    DefaultRedisTTL,
 	}
 	return coreAPI
 }
