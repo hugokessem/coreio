@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
+	"gitlab.com/bersufekadgetachew/cbe-super-app-shared/shared/survey"
 )
 
 type Params struct {
@@ -28,9 +29,11 @@ type Params struct {
 	CustomerSegment     string
 	ChannelType         string
 	SuperappUserCode    string
-	IsFraudCheckEnabled bool
 	Key                 string
 	BranchCode          string
+	IsSurveyEnabled     bool
+	IsFraudCheckEnabled bool
+	SurveyRules         []survey.SurveyRule
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -61,6 +64,8 @@ type FundTransferParam struct {
 	BranchCode          string
 	Key                 string
 	IsFraudCheckEnabled bool
+	IsSurveyEnabled     bool
+	SurveyRules         []survey.SurveyRule
 	Meta                frauddetection.FraudAPIPayload
 }
 
@@ -252,9 +257,10 @@ type FundTransferResponse struct {
 }
 
 type FundTransferResult struct {
-	Success  bool
-	Detail   *FundTransferDetail
-	Messages []string
+	Success       bool
+	Detail        *FundTransferDetail
+	SurveyResults interface{}
+	Messages      []string
 }
 
 func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
@@ -267,23 +273,26 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 		resp := env.Body.FundTransferResponse
 		if resp.Status == nil {
 			return &FundTransferResult{
-				Success:  false,
-				Messages: []string{"Missing Status"},
+				Success:       false,
+				SurveyResults: nil,
+				Messages:      []string{"Missing Status"},
 			}, nil
 		}
 
 		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
 
 			return &FundTransferResult{
-				Success:  false,
-				Messages: resp.Status.Messages,
+				Success:       false,
+				SurveyResults: nil,
+				Messages:      resp.Status.Messages,
 			}, nil
 		}
 
 		if resp.FundTransferType == nil {
 			return &FundTransferResult{
-				Success:  true,
-				Messages: []string{},
+				Success:       true,
+				SurveyResults: nil,
+				Messages:      []string{},
 			}, nil
 		}
 
@@ -457,12 +466,14 @@ func ParseFundTransferSOAP(xmlData string) (*FundTransferResult, error) {
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
 				CreditPhoneNumber:                  resp.FundTransferType.CreditPhoneNumber,
 			},
-			Messages: resp.Status.Messages,
+			SurveyResults: nil,
+			Messages:      resp.Status.Messages,
 		}, nil
 	}
 
 	return &FundTransferResult{
-		Success:  false,
-		Messages: []string{"Invalid response type"},
+		Success:       false,
+		SurveyResults: nil,
+		Messages:      []string{"Invalid response type"},
 	}, nil
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const eligibilityEndpoint = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195%3A8080&wsdl=null"
+const eligibilityEndpoint = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/CBESUPERAPP/services?target=http://10.1.15.195:8080&wsdl=null"
 
 func postEligibilityRequest(t *testing.T, xmlRequest string) string {
 	t.Helper()

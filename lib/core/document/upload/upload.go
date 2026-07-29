@@ -67,7 +67,7 @@ func NewUpload(param Params) string {
 					<ns1:value>%s</ns1:value>
 				</ns1:propertyString>
 				<ns1:propertyString propertyDefinitionId="UniqueIdentifier">
-					<ns1:value>%s/ns1:value>
+					<ns1:value>%s</ns1:value>
 				</ns1:propertyString>
 				<ns1:propertyString propertyDefinitionId="Field1">
 					<ns1:value>%s</ns1:value>

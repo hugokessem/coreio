@@ -20,6 +20,8 @@ type FraudAPI struct {
 
 type FraudAPIPayload struct {
 	TranasctionID              string `json:"transaction_id"`
+	BankID                     string `json:"bank_id"`
+	CounterPartyAccountID      string `json:"counter_party_account_id"`
 	AccountID                  string `json:"account_id"`
 	CustomerName               string `json:"customer_name"`
 	CustomerPhoneMobileSMS     string `json:"customer_phone_mobile_sms"`
@@ -66,6 +68,8 @@ func NewFraudAPIPayload(param FraudAPIPayload) string {
 	"transaction":{
 		"transaction_id": "%s",
 		"account_id": "%s",
+		"bank_id": "%s",
+		"counter_party_account_id": "%s",
 		"customer_name": "%s",
 		"customer_phone_mobile_sms": "%s",
 		"beneficiary_account_id": "%s",
@@ -81,7 +85,7 @@ func NewFraudAPIPayload(param FraudAPIPayload) string {
 		"change_in_password": "%s",
 		"change_in_device": "%s"
 		}
-	}`, param.TranasctionID, param.AccountID, param.CustomerName, param.CustomerPhoneMobileSMS,
+	}`, param.TranasctionID, param.AccountID, param.BankID, param.CounterPartyAccountID, param.CustomerName, param.CustomerPhoneMobileSMS,
 		param.BeneficiaryAccountID, param.BeneficiaryName, param.AccountCategory, param.AccountCurrency,
 		param.TransactionConvertedAmount, param.TransactionType, param.SourceUser, param.ChangeInPhoneEmail,
 		param.TransactionTimestamp, param.ChangeInPIN, param.ChangeInPassword, param.ChangeInDevice)

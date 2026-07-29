@@ -1417,6 +1417,18 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		}
 	}
 
+	var surveyResults []SurveyResult
+	if param.IsSurveyEnabled || len(param.SurveyRules) > 0 {
+		surveyResults = c.initSurvey(
+			ctx,
+			c.redisKey("success_ft_count", param.Key),
+			param.BranchCode,
+			param.CustomerSegment,
+			c.mapSurveyResult(param.SurveyRules),
+		)
+		result.SurveyResults = surveyResults
+	}
+
 	return result, nil
 }
 
