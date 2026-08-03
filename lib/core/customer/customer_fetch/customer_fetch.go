@@ -118,6 +118,7 @@ type CustomerFetchDetail struct {
 	Target                   string `xml:"Target"`
 	FaydaReservationFieldOne string `xml:"ReservedFld1"`
 	FaydaReservationFieldTwo string `xml:"ReservedFld2"`
+	HasLockedAmount          string `xml:"ReservedFld3"`
 }
 
 type CustomerFetchResult struct {

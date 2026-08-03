@@ -16,7 +16,7 @@ func TestIntegrationCustomerFetchByCustomerNumber(t *testing.T) {
 		Username:       "SUPERAPP",
 		Password:       "123456",
 		FetchBy:        valueobject.FetchByAccountNumber.String(),
-		CustomerNumber: "1000301764441",
+		CustomerNumber: "1000517052152",
 	}
 
 	xmlRequest := NewCustomerFetch(params)
@@ -53,6 +53,9 @@ func TestIntegrationCustomerFetchByCustomerNumber(t *testing.T) {
 	lastIndex := len(result.Details) - 1
 	t.Log("Last index:", lastIndex)
 	t.Log("PhoneNumber: ", result.Details[lastIndex].Phone)
+	for _, detail := range result.Details {
+		t.Logf("HasLockedAmount: %s", detail.HasLockedAmount)
+	}
 }
 
 func TestIntegrationCustomerFetchByAccountNumber(t *testing.T) {
@@ -94,4 +97,7 @@ func TestIntegrationCustomerFetchByAccountNumber(t *testing.T) {
 
 	assert.True(t, result.Success)
 	t.Log("Details:", result.Details)
+	for _, detail := range result.Details {
+		t.Logf("HasLockedAmount: %s", detail.HasLockedAmount)
+	}
 }
