@@ -154,6 +154,7 @@ type FundTransferDetail struct {
 	CreditCurrency       string   `xml:"CREDITCURRENCY"`
 	CreditValidationDare string   `xml:"CREDITVALUEDATE"`
 	ProcessingDate       string   `xml:"PROCESSINGDATE"`
+	AccountCategory      string   `xml:"SEPACATEG"`
 	PaymentDetails       struct {
 		PaymentDetail string `xml:"PAYMENTDETAILS"`
 	} `xml:"gPAYMENTDETAILS"`
@@ -458,6 +459,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
 				Segment:                            resp.FundTransferType.Segment,
+				AccountCategory:                    resp.FundTransferType.AccountCategory,
 			},
 			Messages: resp.Status.Messages,
 		}, nil

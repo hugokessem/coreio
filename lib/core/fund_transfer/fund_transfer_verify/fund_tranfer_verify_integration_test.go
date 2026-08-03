@@ -24,7 +24,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 		DebitCurrency:       "ETB",
 		CreditAccountNumber: "1000517052152",
 		CreditCurrency:      "ETB",
-		DebitAmount:         "10",
+		DebitAmount:         "11",
 		BranchCode:          "ET0010863",
 		// DebitAccountNumber: "1000446113608",
 		// DebitCurrency:      "USD",
@@ -117,6 +117,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	t.Logf("Debit Account Holder: %s", detail.DebitAccountHolderName)
 	t.Logf("Receiver Name: %s", detail.ReceiverName)
 	t.Logf("Service Code: %s", detail.ServiceCode)
+	t.Logf("Account Category: %s", detail.AccountCategory)
 	if result.Detail != nil {
 		assert.Equal(t, "USSD", result.Detail.TransactionChannel)
 		assert.Equal(t, "50.00", result.Detail.DebitAmount)
