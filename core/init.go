@@ -21,6 +21,7 @@ import (
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 	"github.com/redis/go-redis/v9"
 
+	billpaymentverify "github.com/hugokessem/coreio/lib/core/bill_payment/bill_payment_verify"
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerfetch "github.com/hugokessem/coreio/lib/core/customer/customer_fetch"
@@ -56,6 +57,9 @@ import (
 	superappunsubscribe "github.com/hugokessem/coreio/lib/core/super_app/unsbscribe"
 	"github.com/hugokessem/coreio/utils"
 )
+
+type BillPaymentVerifyParam = billpaymentverify.BillPaymentVerifyParam
+type BillPaymentVerifyResult = billpaymentverify.BillPaymentVerifyResult
 
 type ExchangeRatesResult = exchangerate.ExchangeRateResult
 type AccountLookupParam = accountlookup.AccountLookupParam
@@ -214,6 +218,7 @@ type CBECoreAPIInterface interface {
 	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
 	Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error)
 	CheckIfUserExists(ctx context.Context, param UserExistsParam) (*UserExistsResult, error)
+	BillPaymentVerify(ctx context.Context, param BillPaymentVerifyParam) (*BillPaymentVerifyResult, error)
 }
 
 // commented
@@ -242,6 +247,44 @@ const (
 	timeout    = 120 * time.Second
 	maxRetries = 1
 )
+
+func (c *CBECoreAPI) BillPaymentVerify(ctx context.Context, param BillPaymentVerifyParam) (*BillPaymentVerifyResult, error) {
+	params := billpaymentverify.Param{
+		Username:            c.config.Username,
+		Password:            c.config.Password,
+		DebitAccountNumber:  param.DebitAccountNumber,
+		DebitCurrency:       param.DebitCurrency,
+		DebitAmount:         param.DebitAmount,
+		DebitReference:      param.DebitReference,
+		CreditReference:     param.CreditReference,
+		CreditAccountNumber: param.CreditAccountNumber,
+		CreditCurrency:      param.CreditCurrency,
+		PaymentDetails:      param.PaymentDetails,
+		ClientReference:     param.ClientReference,
+		ServiceDescription:  param.ServiceDescription,
+	}
+	xmlRequest := billpaymentverify.NewBillPaymentVerify(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	result, err := billpaymentverify.ParseBillPaymentVerifySOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
 
 func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error) {
 	params := billpayment.Params{
