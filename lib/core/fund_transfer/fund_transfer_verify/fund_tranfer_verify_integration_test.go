@@ -25,7 +25,6 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 		CreditAccountNumber: "1000517052152",
 		CreditCurrency:      "ETB",
 		DebitAmount:         "11",
-		BranchCode:          "ET0010863",
 		// DebitAccountNumber: "1000446113608",
 		// DebitCurrency:      "USD",
 		// DebitAmount:        "1000",
