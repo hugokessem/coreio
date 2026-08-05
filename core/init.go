@@ -13,6 +13,7 @@ import (
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
 	billpayment "github.com/hugokessem/coreio/lib/core/bill_payment"
+	billpaymentverify "github.com/hugokessem/coreio/lib/core/bill_payment/bill_payment_verify"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
 	"github.com/hugokessem/coreio/lib/core/fayda"
@@ -21,7 +22,6 @@ import (
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 	"github.com/redis/go-redis/v9"
 
-	billpaymentverify "github.com/hugokessem/coreio/lib/core/bill_payment/bill_payment_verify"
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerfetch "github.com/hugokessem/coreio/lib/core/customer/customer_fetch"
@@ -263,10 +263,12 @@ func (c *CBECoreAPI) BillPaymentVerify(ctx context.Context, param BillPaymentVer
 		ClientReference:     param.ClientReference,
 		ServiceDescription:  param.ServiceDescription,
 	}
+	fmt.Println("params", params)
 	xmlRequest := billpaymentverify.NewBillPaymentVerify(params)
 	headers := map[string]string{
 		Key: Value,
 	}
+	fmt.Println("xmlRequest", xmlRequest)
 	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
@@ -279,10 +281,12 @@ func (c *CBECoreAPI) BillPaymentVerify(ctx context.Context, param BillPaymentVer
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("responseData", string(responseData))
 	result, err := billpaymentverify.ParseBillPaymentVerifySOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("result", result)
 	return result, nil
 }
 
