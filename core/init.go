@@ -21,6 +21,7 @@ import (
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
 	splitpayment "github.com/hugokessem/coreio/lib/core/split_payment"
 	"github.com/redis/go-redis/v9"
+	"gitlab.com/bersufekadgetachew/cbe-super-app-shared/shared/survey"
 
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
@@ -1465,7 +1466,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		}
 	}
 
-	var surveyResults []SurveyResult
+	var surveyResults survey.SurveyResult
 	if param.IsSurveyEnabled || len(param.SurveyRules) > 0 {
 		surveyResults = c.initSurvey(
 			ctx,
@@ -1474,7 +1475,8 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 			param.CustomerSegment,
 			c.mapSurveyResult(param.SurveyRules),
 		)
-		result.SurveyResults = surveyResults
+
+		result.SurveyResults = &surveyResults
 	}
 
 	return result, nil

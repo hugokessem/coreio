@@ -259,7 +259,7 @@ type FundTransferResponse struct {
 type FundTransferResult struct {
 	Success       bool
 	Detail        *FundTransferDetail
-	SurveyResults interface{}
+	SurveyResults *survey.SurveyResult
 	Messages      []string
 }
 
