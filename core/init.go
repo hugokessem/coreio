@@ -991,7 +991,6 @@ func (c *CBECoreAPI) FundTransferVerify(ctx context.Context, param FundTransferV
 		CreditCurrency:      param.CreditCurrency,
 		CreditAmount:        param.CreditAmount,
 		SuperappUserCode:    param.SuperappUserCode,
-		BranchCode:          param.BranchCode,
 	}
 
 	xmlRequest := fundtransferverify.NewFundTransferVerify(params)
