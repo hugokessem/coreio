@@ -191,7 +191,7 @@ func (c *CBECoreAPI) triggerFirstTransactionSurvey(param SurveyParam[survey.Firs
 	rule, ok := findRule(param, survey.SamplingFirstTransaction)
 	if !ok {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -208,7 +208,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 	rule, ok := findRule(param, survey.SamplingTimeBased)
 	if !ok {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -219,7 +219,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 
 	if startTimestamp == "" || endTimestamp == "" {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -228,7 +228,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 	startTimestampTime, err := time.Parse(time.RFC3339, startTimestamp)
 	if err != nil {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -237,7 +237,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 	endTimestampTime, err := time.Parse(time.RFC3339, endTimestamp)
 	if err != nil {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -245,7 +245,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 
 	if time.Now().Before(startTimestampTime) || time.Now().After(endTimestampTime) {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -262,7 +262,7 @@ func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.Superapp
 	rule, ok := findRule(param, survey.SamplingCustomerSegment)
 	if !ok || len(rule.Rule.Roles) == 0 {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -280,7 +280,7 @@ func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.Superapp
 	}
 
 	return survey.SurveyResult{
-		SurveyType: &rule.SurveyType,
+		SurveyType: nil,
 		Result:     false,
 		Url:        nil,
 	}
@@ -290,7 +290,7 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 	rule, ok := findRule(param, survey.SamplingHighValue)
 	if !ok || rule.Rule.SuccessThreshold.Value <= 0 {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -300,7 +300,7 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 	successCount, err := c.config.RedisClient.Get(ctx, redisKey).Int()
 	if err != nil {
 		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
+			SurveyType: nil,
 			Result:     false,
 			Url:        nil,
 		}
@@ -328,7 +328,7 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 	}
 
 	return survey.SurveyResult{
-		SurveyType: &rule.SurveyType,
+		SurveyType: nil,
 		Result:     false,
 		Url:        nil,
 	}
