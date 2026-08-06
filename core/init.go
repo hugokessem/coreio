@@ -31,6 +31,7 @@ import (
 	customerlimitfetchbycifreturnservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_cif_return_service"
 	customerlimitfetchbyservice "github.com/hugokessem/coreio/lib/core/customer/customer_limit_fetch_by_service"
 	customerlookup "github.com/hugokessem/coreio/lib/core/customer/customer_lookup"
+	verifyaml "github.com/hugokessem/coreio/lib/core/customer/verify_aml"
 	eligibility "github.com/hugokessem/coreio/lib/core/eligibility"
 	exchangerate "github.com/hugokessem/coreio/lib/core/exchange_rate"
 	fundtransfer "github.com/hugokessem/coreio/lib/core/fund_transfer/fund_transfer"
@@ -119,6 +120,9 @@ type MiniStatementByDateRangeResult = ministatementbydaterange.MiniStatementByDa
 type CustomerLookupParam = customerlookup.CustomerLookupParam
 type CustomerLookupResult = customerlookup.CustomerLookupResult
 
+type VerifyAMLParam = verifyaml.VerifyAMLParam
+type VerifyAMLResult = verifyaml.VerifyAMLResult
+
 type PhoneLookupParam = phonelookup.PhoneLookupParam
 type PhoneLookupResult = phonelookup.PhoneLookupResult
 
@@ -195,6 +199,7 @@ type CBECoreAPIInterface interface {
 	PhoneLookup(ctx context.Context, param PhoneLookupParam) (*PhoneLookupResult, error)
 
 	CustomerLookup(ctx context.Context, param CustomerLookupParam) (*CustomerLookupResult, error)
+	VerifyAML(ctx context.Context, param VerifyAMLParam) (*VerifyAMLResult, error)
 	AccountList(ctx context.Context, param AccountListParam) (*AccountListResult, error)
 	CardReplace(ctx context.Context, param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(ctx context.Context, param CardRequestParam) (*CardRequestResult, error)
@@ -1948,6 +1953,38 @@ func (c *CBECoreAPI) CustomerLookup(ctx context.Context, param CustomerLookupPar
 	}
 
 	result, err := customerlookup.ParseCustomerLookupSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) VerifyAML(ctx context.Context, param VerifyAMLParam) (*VerifyAMLResult, error) {
+	params := verifyaml.Param{
+		Password:       c.config.Password,
+		UserName:       c.config.Username,
+		CustomerNumber: param.CustomerNumber,
+	}
+	xmlRequest := verifyaml.NewVerifyAML(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := verifyaml.ParseVerifyAMLSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
