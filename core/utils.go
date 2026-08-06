@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gitlab.com/bersufekadgetachew/cbe-super-app-shared/shared/survey"
+	valueobject "gitlab.com/bersufekadgetachew/cbe-super-app-shared/shared/survey/value_object"
 )
 
 type surveyRuleConstraint interface {
@@ -217,7 +218,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 	startTimestamp := rule.Rule.StartTimestamp
 	endTimestamp := rule.Rule.EndTimestamp
 
-	if startTimestamp == "" || endTimestamp == "" {
+	if startTimestamp.IsValid() || endTimestamp.IsValid() {
 		return survey.SurveyResult{
 			SurveyType: nil,
 			Result:     false,
@@ -225,36 +226,18 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 		}
 	}
 
-	startTimestampTime, err := time.Parse(time.RFC3339, startTimestamp)
-	if err != nil {
+	if valueobject.IsNowBetween(startTimestamp, endTimestamp) {
 		return survey.SurveyResult{
-			SurveyType: nil,
-			Result:     false,
-			Url:        nil,
-		}
-	}
-
-	endTimestampTime, err := time.Parse(time.RFC3339, endTimestamp)
-	if err != nil {
-		return survey.SurveyResult{
-			SurveyType: nil,
-			Result:     false,
-			Url:        nil,
-		}
-	}
-
-	if time.Now().Before(startTimestampTime) || time.Now().After(endTimestampTime) {
-		return survey.SurveyResult{
-			SurveyType: nil,
-			Result:     false,
-			Url:        nil,
+			SurveyType: &rule.SurveyType,
+			Result:     true,
+			Url:        rule.Rule.Url,
 		}
 	}
 
 	return survey.SurveyResult{
-		SurveyType: &rule.SurveyType,
-		Result:     true,
-		Url:        rule.Rule.Url,
+		SurveyType: nil,
+		Result:     false,
+		Url:        nil,
 	}
 }
 

@@ -265,7 +265,6 @@ func (c *CBECoreAPI) BillPaymentVerify(ctx context.Context, param BillPaymentVer
 		CreditReference:     param.CreditReference,
 		CreditAccountNumber: param.CreditAccountNumber,
 		CreditCurrency:      param.CreditCurrency,
-		PaymentDetails:      param.PaymentDetails,
 		ClientReference:     param.ClientReference,
 		ServiceCode:         param.ServiceCode,
 	}
