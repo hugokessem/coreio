@@ -26,9 +26,8 @@ func TestNewBillPaymentVerify(t *testing.T) {
 				CreditAccountNumber: "1000083962554",
 				CreditCurrency:      "ETB",
 				CreditAmount:        "",
-				PaymentDetails:      "TELEBIRR",
 				ClientReference:     "client-ref-1",
-				ServiceCode:         "123456",
+				ServiceCode:         "TELEBIRR",
 			},
 			expect: []string{
 				"<soapenv:Envelope",

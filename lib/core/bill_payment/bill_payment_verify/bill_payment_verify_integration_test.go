@@ -30,9 +30,8 @@ func TestIntegrationBillPaymentVerify(t *testing.T) {
 		CreditAccountNumber: "1000357597823",
 		CreditCurrency:      "ETB",
 		CreditAmount:        "",
-		PaymentDetails:      "TELEBIRR",
 		ClientReference:     clientReference.String(),
-		ServiceCode:         "123456",
+		ServiceCode:         "TELEBIRR",
 	}
 
 	xmlRequest := NewBillPaymentVerify(params)
