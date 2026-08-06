@@ -28,7 +28,7 @@ func TestNewBillPaymentVerify(t *testing.T) {
 				CreditAmount:        "",
 				PaymentDetails:      "TELEBIRR",
 				ClientReference:     "client-ref-1",
-				ServiceDescription:  "test Service Description",
+				ServiceCode:         "123456",
 			},
 			expect: []string{
 				"<soapenv:Envelope",
@@ -44,7 +44,7 @@ func TestNewBillPaymentVerify(t *testing.T) {
 				"<fun:CREDITCURRENCY>ETB</fun:CREDITCURRENCY>",
 				"<fun:PAYMENTDETAILS>TELEBIRR</fun:PAYMENTDETAILS>",
 				"<fun:ClientReference>client-ref-1</fun:ClientReference>",
-				"<fun:ServiceDescription>test Service Description</fun:ServiceDescription>",
+				"<fun:ServiceCode>123456</fun:ServiceCode>",
 			},
 		},
 	}
