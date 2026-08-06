@@ -21,6 +21,7 @@ type Param struct {
 	ServiceCode         string
 	PaymentDetails      string
 	ClientReference     string
+	ServiceDescription  string
 }
 
 type BillPaymentVerifyParam struct {
@@ -35,6 +36,7 @@ type BillPaymentVerifyParam struct {
 	ServiceCode         string
 	PaymentDetails      string
 	ClientReference     string
+	ServiceDescription  string
 }
 
 func NewBillPaymentVerify(param Param) string {
@@ -62,10 +64,11 @@ func NewBillPaymentVerify(param Param) string {
                     <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
                 </fun:gPAYMENTDETAILS>
                 <fun:ClientReference>%s</fun:ClientReference>
+                <fun:ServiceDescription>%s</fun:ServiceDescription>
             </FUNDSTRANSFERBILLPAYSUPERAPPType>
         </cbes:FTBillPayment_Validate>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.ServiceCode, param.PaymentDetails, param.ClientReference)
+</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.ServiceCode, param.PaymentDetails, param.ClientReference, param.ServiceDescription)
 }
 
 type Envelope struct {
