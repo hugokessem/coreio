@@ -218,7 +218,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 	startTimestamp := rule.Rule.StartTimestamp
 	endTimestamp := rule.Rule.EndTimestamp
 
-	if startTimestamp.IsValid() || endTimestamp.IsValid() {
+	if !startTimestamp.IsValid() || !endTimestamp.IsValid() {
 		return survey.SurveyResult{
 			SurveyType: nil,
 			Result:     false,
