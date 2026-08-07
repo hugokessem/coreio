@@ -1414,7 +1414,9 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 			)
 
 			meta.TransactionType = "ACSA"
-			meta.TransactionTimestamp = time.Now().Add(3 * time.Hour).UTC().Format(time.RFC3339)
+
+			layout := "2006-01-02 15:04:05"
+			meta.TransactionTimestamp = time.Now().Add(3 * time.Hour).UTC().Format(layout)
 			fraud.Call(meta)
 			// if err != nil {
 			// 	return nil, fmt.Errorf("fraud detection call failed: %w", err)
