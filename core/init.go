@@ -1477,6 +1477,8 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 			c.redisKey("success_ft_count", param.Key),
 			param.BranchCode,
 			param.CustomerSegment,
+			param.DebitAmount,
+			param.DebitCurrency,
 			c.mapSurveyResult(param.SurveyRules),
 		)
 

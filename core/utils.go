@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"time"
 
@@ -14,12 +15,13 @@ type surveyRuleConstraint interface {
 		survey.FirstTransactionRule |
 		survey.TimebaseSurveyRule |
 		survey.SuperappRoleRule |
-		survey.SuccessThresholdRule
+		survey.SuccessThresholdRule |
+		survey.SingleTransactionAmountRule
 }
 
 // Rule holds exactly one typed survey rule.
 type Rule[T surveyRuleConstraint] struct {
-	SurveyType survey.SamplingMethod
+	SurveyType valueobject.SamplingMethod
 	Rule       T
 }
 
@@ -28,6 +30,8 @@ type SurveyParam[T surveyRuleConstraint] struct {
 	RedisKey     string
 	BranchCode   string
 	SuperappRole string
+	Amount       uint64
+	Currency     string
 	Rule         Rule[T]
 }
 
@@ -46,14 +50,22 @@ func (c *CBECoreAPI) redisKey(prefix, key string) string {
 	return key
 }
 
-func findRule[T surveyRuleConstraint](param SurveyParam[T], method survey.SamplingMethod) (Rule[T], bool) {
-	if param.Rule.SurveyType == method {
-		return param.Rule, true
+func findRule[T surveyRuleConstraint](param SurveyParam[T], method valueobject.SamplingMethod) (Rule[T], bool) {
+	if !method.IsValid() {
+		return Rule[T]{}, false
 	}
-	return Rule[T]{SurveyType: method}, false
+
+	if param.Rule.SurveyType == method {
+		return Rule[T]{
+			SurveyType: method,
+			Rule:       param.Rule.Rule,
+		}, true
+	}
+
+	return Rule[T]{}, false
 }
 
-func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, superappRole string, surveyRules []survey.SurveyRule) survey.SurveyResult {
+func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, superappRole, amount, currency string, surveyRules []survey.SurveyRule) survey.SurveyResult {
 	if c.config.RedisClient == nil {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -61,6 +73,8 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 			Url:        nil,
 		}
 	}
+
+	parsedAmount := parseSurveyAmount(amount)
 
 	type SurveyResult struct {
 		result survey.SurveyResult
@@ -76,8 +90,10 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 					RedisKey:     redisKey,
 					BranchCode:   branchCode,
 					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
 					Rule: Rule[survey.SuccessThresholdRule]{
-						SurveyType: survey.SamplingHighValue,
+						SurveyType: valueobject.SamplingHighValue,
 						Rule:       *rule.SuccessThreshold,
 					},
 				}), order: rule.SuccessThreshold.Order,
@@ -90,8 +106,10 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 					RedisKey:     redisKey,
 					BranchCode:   branchCode,
 					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
 					Rule: Rule[survey.EnabledBranchRule]{
-						SurveyType: survey.SamplingBranchBased,
+						SurveyType: valueobject.SamplingBranchBased,
 						Rule:       *rule.EnabledBranch,
 					},
 				}), order: rule.EnabledBranch.Order,
@@ -103,8 +121,10 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 					RedisKey:     redisKey,
 					BranchCode:   branchCode,
 					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
 					Rule: Rule[survey.FirstTransactionRule]{
-						SurveyType: survey.SamplingFirstTransaction,
+						SurveyType: valueobject.SamplingFirstTransaction,
 						Rule:       *rule.FirstTransaction,
 					},
 				}), order: rule.FirstTransaction.Order,
@@ -116,8 +136,10 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 					RedisKey:     redisKey,
 					BranchCode:   branchCode,
 					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
 					Rule: Rule[survey.TimebaseSurveyRule]{
-						SurveyType: survey.SamplingTimeBased,
+						SurveyType: valueobject.SamplingTimeBased,
 						Rule:       *rule.TimebaseSurvey,
 					},
 				}), order: rule.TimebaseSurvey.Order,
@@ -129,11 +151,29 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 					RedisKey:     redisKey,
 					BranchCode:   branchCode,
 					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
 					Rule: Rule[survey.SuperappRoleRule]{
-						SurveyType: survey.SamplingCustomerSegment,
+						SurveyType: valueobject.SamplingCustomerSegment,
 						Rule:       *rule.SuperappRole,
 					},
 				}), order: rule.SuperappRole.Order,
+			})
+		}
+
+		if rule.SingleTransactionAmount != nil {
+			results = append(results, SurveyResult{
+				result: c.triggerSingleTransactionAmountRule(SurveyParam[survey.SingleTransactionAmountRule]{
+					RedisKey:     redisKey,
+					BranchCode:   branchCode,
+					SuperappRole: superappRole,
+					Amount:       parsedAmount,
+					Currency:     currency,
+					Rule: Rule[survey.SingleTransactionAmountRule]{
+						SurveyType: valueobject.SamplingSingleTransaction,
+						Rule:       *rule.SingleTransactionAmount,
+					},
+				}), order: rule.SingleTransactionAmount.Order,
 			})
 		}
 	}
@@ -161,7 +201,7 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 }
 
 func (c *CBECoreAPI) triggerBranchSurvey(param SurveyParam[survey.EnabledBranchRule]) survey.SurveyResult {
-	rule, ok := findRule(param, survey.SamplingBranchBased)
+	rule, ok := findRule(param, valueobject.SamplingBranchBased)
 	if !ok {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -189,7 +229,7 @@ func (c *CBECoreAPI) triggerBranchSurvey(param SurveyParam[survey.EnabledBranchR
 }
 
 func (c *CBECoreAPI) triggerFirstTransactionSurvey(param SurveyParam[survey.FirstTransactionRule]) survey.SurveyResult {
-	rule, ok := findRule(param, survey.SamplingFirstTransaction)
+	rule, ok := findRule(param, valueobject.SamplingFirstTransaction)
 	if !ok {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -206,7 +246,7 @@ func (c *CBECoreAPI) triggerFirstTransactionSurvey(param SurveyParam[survey.Firs
 }
 
 func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurveyRule]) survey.SurveyResult {
-	rule, ok := findRule(param, survey.SamplingTimeBased)
+	rule, ok := findRule(param, valueobject.SamplingTimeBased)
 	if !ok {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -242,7 +282,7 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 }
 
 func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.SuperappRoleRule]) survey.SurveyResult {
-	rule, ok := findRule(param, survey.SamplingCustomerSegment)
+	rule, ok := findRule(param, valueobject.SamplingCustomerSegment)
 	if !ok || len(rule.Rule.Roles) == 0 {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -270,7 +310,7 @@ func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.Superapp
 }
 
 func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyParam[survey.SuccessThresholdRule]) survey.SurveyResult {
-	rule, ok := findRule(param, survey.SamplingHighValue)
+	rule, ok := findRule(param, valueobject.SamplingHighValue)
 	if !ok || len(rule.Rule.SuccessThreshold) == 0 {
 		return survey.SurveyResult{
 			SurveyType: nil,
@@ -303,7 +343,7 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 		}
 
 		switch threshold.ThresholdType {
-		case survey.Percentage:
+		case valueobject.Percentage:
 			total := successCount + failedCount
 			if total > 0 {
 				rate := (successCount * 100) / total
@@ -311,7 +351,7 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 					met = true
 				}
 			}
-		case survey.Frequency:
+		case valueobject.Frequency:
 			if successCount >= int(threshold.Value) {
 				met = true
 			}
@@ -335,4 +375,55 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 		Result:     false,
 		Url:        nil,
 	}
+}
+
+func (c *CBECoreAPI) triggerSingleTransactionAmountRule(param SurveyParam[survey.SingleTransactionAmountRule]) survey.SurveyResult {
+	rule, ok := findRule(param, valueobject.SamplingSingleTransaction)
+	if !ok || len(rule.Rule.Amount) == 0 {
+		return survey.SurveyResult{
+			SurveyType: nil,
+			Result:     false,
+			Url:        nil,
+		}
+	}
+
+	for i := 0; i < len(rule.Rule.Amount); i++ {
+		condition := rule.Rule.Amount[i]
+		if condition.Currency != "" && param.Currency != "" &&
+			!strings.EqualFold(strings.TrimSpace(condition.Currency), strings.TrimSpace(param.Currency)) {
+			continue
+		}
+		if !condition.Operand.IsValid() {
+			continue
+		}
+
+		if condition.Operand.Match(int(param.Amount), int(condition.Amount)) {
+			return survey.SurveyResult{
+				SurveyType: &rule.SurveyType,
+				Result:     true,
+				Url:        rule.Rule.Url,
+			}
+		}
+	}
+
+	return survey.SurveyResult{
+		SurveyType: nil,
+		Result:     false,
+		Url:        nil,
+	}
+}
+
+func parseSurveyAmount(amount string) uint64 {
+	amount = strings.TrimSpace(amount)
+	if amount == "" {
+		return 0
+	}
+	if v, err := strconv.ParseUint(amount, 10, 64); err == nil {
+		return v
+	}
+	f, err := strconv.ParseFloat(amount, 64)
+	if err != nil || f < 0 {
+		return 0
+	}
+	return uint64(f)
 }

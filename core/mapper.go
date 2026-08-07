@@ -6,7 +6,12 @@ func (c *CBECoreAPI) mapSurveyResult(surveyRules []survey.SurveyRule) []survey.S
 	rules := make([]survey.SurveyRule, 0, len(surveyRules))
 	for i := 0; i < len(surveyRules); i++ {
 		rule := surveyRules[i]
-		if rule.SuccessThreshold == nil && rule.EnabledBranch == nil && rule.FirstTransaction == nil && rule.TimebaseSurvey == nil && rule.SuperappRole == nil {
+		if rule.SuccessThreshold == nil &&
+			rule.EnabledBranch == nil &&
+			rule.FirstTransaction == nil &&
+			rule.TimebaseSurvey == nil &&
+			rule.SuperappRole == nil &&
+			rule.SingleTransactionAmount == nil {
 			continue
 		}
 
