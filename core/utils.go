@@ -64,7 +64,7 @@ func (c *CBECoreAPI) initSurvey(ctx context.Context, redisKey, branchCode, super
 
 	type SurveyResult struct {
 		result survey.SurveyResult
-		order  int
+		order  uint8
 	}
 	results := make([]SurveyResult, 0, len(surveyRules))
 	for i := 0; i < len(surveyRules); i++ {
@@ -271,7 +271,7 @@ func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.Superapp
 
 func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyParam[survey.SuccessThresholdRule]) survey.SurveyResult {
 	rule, ok := findRule(param, survey.SamplingHighValue)
-	if !ok || rule.Rule.SuccessThreshold.Value <= 0 {
+	if !ok || len(rule.Rule.SuccessThreshold) == 0 {
 		return survey.SurveyResult{
 			SurveyType: nil,
 			Result:     false,
@@ -279,34 +279,54 @@ func (c *CBECoreAPI) triggerTresholdSurvey(ctx context.Context, param SurveyPara
 		}
 	}
 
-	redisKey := c.redisKey("success_ft_count", param.RedisKey)
-	successCount, err := c.config.RedisClient.Get(ctx, redisKey).Int()
+	successKey := param.RedisKey
+	if successKey == "" || !strings.HasPrefix(successKey, "success_ft_count") {
+		successKey = c.redisKey("success_ft_count", param.RedisKey)
+	}
+
+	successCount, err := c.config.RedisClient.Get(ctx, successKey).Int()
 	if err != nil {
-		return survey.SurveyResult{
-			SurveyType: nil,
-			Result:     false,
-			Url:        nil,
+		successCount = 0
+	}
+
+	failedKey := strings.Replace(successKey, "success_ft_count", "failed_ft_count", 1)
+	failedCount, err := c.config.RedisClient.Get(ctx, failedKey).Int()
+	if err != nil {
+		failedCount = 0
+	}
+
+	met := false
+	for i := 0; i < len(rule.Rule.SuccessThreshold); i++ {
+		threshold := rule.Rule.SuccessThreshold[i]
+		if threshold.Value == 0 {
+			continue
+		}
+
+		switch threshold.ThresholdType {
+		case survey.Percentage:
+			total := successCount + failedCount
+			if total > 0 {
+				rate := (successCount * 100) / total
+				if rate >= int(threshold.Value) {
+					met = true
+				}
+			}
+		case survey.Frequency:
+			if successCount >= int(threshold.Value) {
+				met = true
+			}
+		}
+
+		if met {
+			break
 		}
 	}
 
-	threshold := rule.Rule.SuccessThreshold
-	switch threshold.ThresholdType {
-	case survey.Percentage:
-		successCount = (successCount * 100) / threshold.Value
-		if successCount >= threshold.Value {
-			return survey.SurveyResult{
-				SurveyType: &rule.SurveyType,
-				Result:     true,
-				Url:        rule.Rule.Url,
-			}
-		}
-	case survey.Absolute:
-		if successCount > threshold.Value {
-			return survey.SurveyResult{
-				SurveyType: &rule.SurveyType,
-				Result:     true,
-				Url:        rule.Rule.Url,
-			}
+	if met {
+		return survey.SurveyResult{
+			SurveyType: &rule.SurveyType,
+			Result:     true,
+			Url:        rule.Rule.Url,
 		}
 	}
 
