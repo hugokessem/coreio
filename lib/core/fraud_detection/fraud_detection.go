@@ -21,7 +21,7 @@ type FraudAPI struct {
 type FraudAPIPayload struct {
 	TranasctionID              string `json:"transaction_id"`
 	BankID                     string `json:"bank_id"`
-	CounterPartyAccountID      string `json:"counter_party_account_id"`
+	CounterPartyAccountID      string `json:"counterparty_account_id"`
 	AccountID                  string `json:"account_id"`
 	CustomerName               string `json:"customer_name"`
 	CustomerPhoneMobileSMS     string `json:"customer_phone_mobile_sms"`
@@ -69,7 +69,7 @@ func NewFraudAPIPayload(param FraudAPIPayload) string {
 		"transaction_id": "%s",
 		"account_id": "%s",
 		"bank_id": "%s",
-		"counter_party_account_id": "%s",
+		"counterparty_account_id": "%s",
 		"customer_name": "%s",
 		"customer_phone_mobile_sms": "%s",
 		"beneficiary_account_id": "%s",
