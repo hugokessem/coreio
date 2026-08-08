@@ -247,7 +247,7 @@ func (c *CBECoreAPI) triggerFirstTransactionSurvey(param SurveyParam[survey.Firs
 
 func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurveyRule]) survey.SurveyResult {
 	rule, ok := findRule(param, valueobject.SamplingTimeBased)
-	if !ok {
+	if !ok || len(rule.Rule.TimeBasedConfig) == 0 {
 		return survey.SurveyResult{
 			SurveyType: nil,
 			Result:     false,
@@ -255,22 +255,20 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 		}
 	}
 
-	startTimestamp := rule.Rule.StartTimestamp
-	endTimestamp := rule.Rule.EndTimestamp
-
-	if !startTimestamp.IsValid() || !endTimestamp.IsValid() {
-		return survey.SurveyResult{
-			SurveyType: nil,
-			Result:     false,
-			Url:        nil,
+	for i := 0; i < len(rule.Rule.TimeBasedConfig); i++ {
+		cfg := rule.Rule.TimeBasedConfig[i]
+		if !cfg.StartDate.IsValid() || !cfg.EndDate.IsValid() {
+			continue
 		}
-	}
-
-	if valueobject.IsNowBetween(startTimestamp, endTimestamp) {
-		return survey.SurveyResult{
-			SurveyType: &rule.SurveyType,
-			Result:     true,
-			Url:        rule.Rule.Url,
+		if cfg.Weekdays.IsValid() && !cfg.Weekdays.IsToday() {
+			continue
+		}
+		if valueobject.IsNowBetween(cfg.StartDate, cfg.EndDate) {
+			return survey.SurveyResult{
+				SurveyType: &rule.SurveyType,
+				Result:     true,
+				Url:        rule.Rule.Url,
+			}
 		}
 	}
 
