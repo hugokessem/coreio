@@ -20,6 +20,7 @@ type Param struct {
 	CreditAmount        string
 	ServiceCode         string
 	ClientReference     string
+	SuperappUserCode    string
 }
 
 type BillPaymentVerifyParam struct {
@@ -33,9 +34,18 @@ type BillPaymentVerifyParam struct {
 	CreditAmount        string
 	ServiceCode         string
 	ClientReference     string
+	SuperappUserCode    string
 }
 
 func NewBillPaymentVerify(param Param) string {
+	userCodeSplited := strings.Split(param.SuperappUserCode, ":")
+	var userCode string
+	if len(userCodeSplited) == 1 {
+		userCode = param.SuperappUserCode
+	} else {
+		userCode = userCodeSplited[0]
+	}
+
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:fun="http://temenos.com/FUNDSTRANSFERBILLPAYSUPERAPP">
     <soapenv:Header/>
@@ -60,10 +70,11 @@ func NewBillPaymentVerify(param Param) string {
                     <fun:PAYMENTDETAILS>%s</fun:PAYMENTDETAILS>
                 </fun:gPAYMENTDETAILS>
                 <fun:ClientReference>%s</fun:ClientReference>
+                <fun:UserID>%s</fun:UserID>
             </FUNDSTRANSFERBILLPAYSUPERAPPType>
         </cbes:FTBillPayment_Validate>
     </soapenv:Body>
-</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.ServiceCode, param.ClientReference)
+</soapenv:Envelope>`, param.Password, param.Username, param.DebitAccountNumber, param.DebitCurrency, param.DebitAmount, param.DebitReference, param.CreditReference, param.CreditAccountNumber, param.CreditCurrency, param.CreditAmount, param.ServiceCode, param.ClientReference, userCode)
 }
 
 type Envelope struct {

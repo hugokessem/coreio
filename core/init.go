@@ -267,6 +267,7 @@ func (c *CBECoreAPI) BillPaymentVerify(ctx context.Context, param BillPaymentVer
 		CreditCurrency:      param.CreditCurrency,
 		ClientReference:     param.ClientReference,
 		ServiceCode:         param.ServiceCode,
+		SuperappUserCode:    param.SuperappUserCode,
 	}
 	fmt.Println("params", params)
 	xmlRequest := billpaymentverify.NewBillPaymentVerify(params)
