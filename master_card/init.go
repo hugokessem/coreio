@@ -55,7 +55,6 @@ func NewMasterCardAPI(param *MasterCardCredential) MasterCardAPIInterface {
 		param.AuthURL,
 		param.BaseURL,
 		param.CustomerKey,
-		param.AccessToken,
 	)
 
 	return &MasterCardAPI{
@@ -64,13 +63,11 @@ func NewMasterCardAPI(param *MasterCardCredential) MasterCardAPIInterface {
 			AuthURL:     config.AuthURL,
 			BaseURL:     config.BaseURL,
 			CustomerKey: config.CustomerKey,
-			AccessToken: config.AccessToken,
 		}),
 	}
 }
 
 func (m *MasterCardAPI) SetAccessToken(token string) {
-	m.config.AccessToken = token
 	m.support.SetAccessToken(token)
 }
 
@@ -78,9 +75,6 @@ func (m *MasterCardAPI) WorkerLogin(ctx context.Context, param WorkerLoginParam)
 	result, err := m.support.WorkerLogin(ctx, param)
 	if err != nil {
 		return nil, err
-	}
-	if result != nil && result.AccessToken != "" {
-		m.config.AccessToken = result.AccessToken
 	}
 	return result, nil
 }
