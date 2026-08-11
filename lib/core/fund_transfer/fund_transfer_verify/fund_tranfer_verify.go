@@ -171,6 +171,7 @@ type FundTransferDetail struct {
 	ReturnToDept         string `xml:"RETURNTODEPT"`
 	FedFunds             string `xml:"FEDFUNDS"`
 	PositionType         string `xml:"POSITIONTYPE"`
+	CustomerName         string `xml:"CUSTOMERNAME"`
 	GlobalTaxType        struct {
 		MultipleTaxType []struct {
 			TaxType   string `xml:"TAXTYPE"`
@@ -461,6 +462,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
 				Segment:                            resp.FundTransferType.Segment,
 				AccountCategory:                    resp.FundTransferType.AccountCategory,
+				CustomerName:                       resp.FundTransferType.CustomerName,
 			},
 			Messages: resp.Status.Messages,
 		}, nil

@@ -117,6 +117,7 @@ func TestIntegrationFundTransferVerify(t *testing.T) {
 	t.Logf("Receiver Name: %s", detail.ReceiverName)
 	t.Logf("Service Code: %s", detail.ServiceCode)
 	t.Logf("Account Category: %s", detail.AccountCategory)
+	t.Logf("Customer Name: %s", detail.CustomerName)
 	if result.Detail != nil {
 		assert.Equal(t, "USSD", result.Detail.TransactionChannel)
 		assert.Equal(t, "50.00", result.Detail.DebitAmount)
