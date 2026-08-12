@@ -257,17 +257,21 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 
 	for i := 0; i < len(rule.Rule.TimeBasedConfig); i++ {
 		cfg := rule.Rule.TimeBasedConfig[i]
-		if !cfg.StartDate.IsValid() || !cfg.EndDate.IsValid() {
+		if !matchesSurveyWeekday(cfg.Weekdays) {
 			continue
 		}
-		if cfg.Weekdays.IsValid() && !cfg.Weekdays.IsToday() {
-			continue
-		}
-		if valueobject.IsNowBetween(cfg.StartDate, cfg.EndDate) {
-			return survey.SurveyResult{
-				SurveyType: &rule.SurveyType,
-				Result:     true,
-				Url:        rule.Rule.Url,
+
+		for j := 0; j < len(cfg.TimeRange); j++ {
+			tr := cfg.TimeRange[j]
+			if !tr.StartTime.IsValid() || !tr.EndTime.IsValid() {
+				continue
+			}
+			if valueobject.IsNowBetween(tr.StartTime, tr.EndTime) {
+				return survey.SurveyResult{
+					SurveyType: &rule.SurveyType,
+					Result:     true,
+					Url:        rule.Rule.Url,
+				}
 			}
 		}
 	}
@@ -277,6 +281,19 @@ func (c *CBECoreAPI) triggerTimebaseSurvey(param SurveyParam[survey.TimebaseSurv
 		Result:     false,
 		Url:        nil,
 	}
+}
+
+func matchesSurveyWeekday(weekdays []valueobject.WeekDay) bool {
+	if len(weekdays) == 0 {
+		return true
+	}
+	for i := 0; i < len(weekdays); i++ {
+		day := weekdays[i]
+		if day.IsValid() && day.IsToday() {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *CBECoreAPI) triggerSuperappRoleSurvey(param SurveyParam[survey.SuperappRoleRule]) survey.SurveyResult {

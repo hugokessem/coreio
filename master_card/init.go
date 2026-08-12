@@ -68,6 +68,7 @@ func NewMasterCardAPI(param *MasterCardCredential) MasterCardAPIInterface {
 }
 
 func (m *MasterCardAPI) SetAccessToken(token string) {
+
 	m.support.SetAccessToken(token)
 }
 

@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/redis/go-redis/v9 v9.21.0
 	github.com/stretchr/testify v1.11.1
-	gitlab.com/bersufekadgetachew/cbe-super-app-shared v0.5.25
+	gitlab.com/bersufekadgetachew/cbe-super-app-shared v0.5.27
 )
 
 require (
