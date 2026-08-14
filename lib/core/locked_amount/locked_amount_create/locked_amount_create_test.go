@@ -59,6 +59,27 @@ func TestParseCreateLockedAmountSOAP_InvalidResponseType(t *testing.T) {
 	assert.Equal(t, []string{"Invalid response type"}, result.Messages)
 }
 
+func TestParseCreateLockedAmountSOAP_SOAPFault(t *testing.T) {
+	xmlData := `<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+            <faultcode>S:Client</faultcode>
+            <faultstring>Couldn't create SOAP message due to exception: XML reader error: com.sun.istack.XMLStreamException2: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1214]
+Message: The reference to entity "PASSWORD" must end with the ';' delimiter.</faultstring>
+        </S:Fault>
+    </S:Body>
+</S:Envelope>`
+
+	result, err := ParseCreateLockedAmountSOAP(xmlData)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	assert.False(t, result.Success)
+	require.Len(t, result.Messages, 1)
+	assert.Contains(t, result.Messages[0], "Couldn't create SOAP message due to exception")
+	assert.Contains(t, result.Messages[0], `entity "PASSWORD"`)
+}
+
 func TestParseCreateLockedAmountSOAP_MissingStatus(t *testing.T) {
 	xmlData := `<?xml version="1.0" encoding="UTF-8"?>
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">

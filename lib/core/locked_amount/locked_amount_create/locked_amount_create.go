@@ -38,6 +38,7 @@ func NewCreateLockedAmount(param Params) string {
 		userCode = userCodeSplited[0]
 	}
 	timestamp := time.Now().Format("20060102150405")
+
 	return fmt.Sprintf(`
 	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cbes="http://temenos.com/CBESUPERAPP" xmlns:acl="http://temenos.com/ACLOCKEDEVENTSCREATELOCKSUPERAPP">
     <soapenv:Header/>
@@ -71,6 +72,12 @@ type Envelope struct {
 
 type Body struct {
 	CreateLockedAmountResponse *CreateLockedAmountResponse `xml:"CreateAccountLockResponse"`
+	Fault                      *SOAPFault                  `xml:"Fault"`
+}
+
+type SOAPFault struct {
+	FaultCode   string `xml:"faultcode"`
+	FaultString string `xml:"faultstring"`
 }
 
 type CreateLockedAmountResponse struct {
@@ -103,6 +110,20 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 	var env Envelope
 	if err := xml.Unmarshal([]byte(xmlData), &env); err != nil {
 		return nil, err
+	}
+
+	if env.Body.Fault != nil {
+		message := strings.TrimSpace(env.Body.Fault.FaultString)
+		if message == "" {
+			message = strings.TrimSpace(env.Body.Fault.FaultCode)
+		}
+		if message == "" {
+			message = "SOAP Fault"
+		}
+		return &CreateLockedAmountResult{
+			Success:  false,
+			Messages: []string{message},
+		}, nil
 	}
 
 	if env.Body.CreateLockedAmountResponse == nil {
