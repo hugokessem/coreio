@@ -54,19 +54,27 @@ func (c *CustomerSupportAPI) SetAccessToken(token string) {
 func (c *CustomerSupportAPI) WorkerLogin(ctx context.Context, param WorkerLoginParam) (*WorkerLoginResult, error) {
 	url := c.AuthURL + "/workerlogin_Prod"
 	var result WorkerLoginResult
-	if err := c.doJSON(ctx, http.MethodPost, url, param, c.CustomerKey, false, http.StatusOK, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodPost, url, param, c.CustomerKey, false, []int{http.StatusOK}, &result); err != nil {
 		return nil, err
 	}
-	if result.AccessToken != "" {
-		c.AccessToken = result.AccessToken
+	if !result.Success {
+		message := result.Message
+		if message == "" {
+			message = "worker login failed"
+		}
+		return &result, fmt.Errorf("%s", message)
 	}
+	if result.AccessToken == "" {
+		return &result, fmt.Errorf("access token is missing")
+	}
+	c.AccessToken = result.AccessToken
 	return &result, nil
 }
 
 func (c *CustomerSupportAPI) IssueProducts(ctx context.Context) (*IssueProductsResult, error) {
 	url := c.BaseURL + "/issueProducts"
 	var result IssueProductsResult
-	if err := c.doJSON(ctx, http.MethodGet, url, nil, "", true, http.StatusOK, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodGet, url, nil, "", true, []int{http.StatusOK, http.StatusCreated}, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
@@ -75,7 +83,7 @@ func (c *CustomerSupportAPI) IssueProducts(ctx context.Context) (*IssueProductsR
 func (c *CustomerSupportAPI) IssuesList(ctx context.Context, param IssuesListParam) (*IssuesListResult, error) {
 	url := c.BaseURL + "/cbeAdminIssuesList"
 	var result IssuesListResult
-	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, http.StatusOK, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, []int{http.StatusOK}, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
@@ -84,7 +92,7 @@ func (c *CustomerSupportAPI) IssuesList(ctx context.Context, param IssuesListPar
 func (c *CustomerSupportAPI) ViewMessage(ctx context.Context, param ViewMessageParam) (*ViewMessageResult, error) {
 	url := c.BaseURL + "/cbeCustomerviewMessage"
 	var result ViewMessageResult
-	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, http.StatusOK, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, []int{http.StatusOK}, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil
@@ -93,8 +101,15 @@ func (c *CustomerSupportAPI) ViewMessage(ctx context.Context, param ViewMessageP
 func (c *CustomerSupportAPI) SendMessage(ctx context.Context, param SendMessageParam) (*SendMessageResult, error) {
 	url := c.BaseURL + "/cbeAdminSendMessage"
 	var result SendMessageResult
-	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, http.StatusCreated, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, []int{http.StatusCreated}, &result); err != nil {
 		return nil, err
+	}
+	if !result.Success {
+		message := result.Message
+		if message == "" {
+			message = "failed to send message"
+		}
+		return &result, fmt.Errorf("%s", message)
 	}
 	return &result, nil
 }
@@ -102,8 +117,15 @@ func (c *CustomerSupportAPI) SendMessage(ctx context.Context, param SendMessageP
 func (c *CustomerSupportAPI) ExportActivityLog(ctx context.Context) (*ExportActivityLogResult, error) {
 	url := c.BaseURL + "/activity/exportlog"
 	var result ExportActivityLogResult
-	if err := c.doJSON(ctx, http.MethodGet, url, nil, "", true, http.StatusOK, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodGet, url, nil, "", true, []int{http.StatusOK}, &result); err != nil {
 		return nil, err
+	}
+	if !result.Success {
+		message := result.Message
+		if message == "" {
+			message = "failed to export activity logs"
+		}
+		return &result, fmt.Errorf("%s", message)
 	}
 	return &result, nil
 }
@@ -111,11 +133,18 @@ func (c *CustomerSupportAPI) ExportActivityLog(ctx context.Context) (*ExportActi
 func (c *CustomerSupportAPI) CreateIssueForCustomer(ctx context.Context, param CreateIssueParam) (*CreateIssueResult, error) {
 	url := c.BaseURL + "/issuesCreateForCustomer"
 	var result CreateIssueResult
-	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, http.StatusCreated, &result); err != nil {
+	if err := c.doJSON(ctx, http.MethodPost, url, param, "", true, []int{http.StatusCreated}, &result); err != nil {
 		return nil, err
 	}
 	if result.Status == "success" {
 		result.Success = true
+	}
+	if !result.Success || result.Ticket == "" {
+		message := result.Message
+		if message == "" {
+			message = "failed to create issue"
+		}
+		return &result, fmt.Errorf("%s", message)
 	}
 	return &result, nil
 }
@@ -126,7 +155,7 @@ func (c *CustomerSupportAPI) doJSON(
 	payload any,
 	rawAuthorization string,
 	useBearer bool,
-	expectedStatus int,
+	expectedStatus []int,
 	out any,
 ) error {
 	var bodyReader io.Reader
@@ -144,6 +173,7 @@ func (c *CustomerSupportAPI) doJSON(
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 	switch {
 	case rawAuthorization != "":
 		req.Header.Set("Authorization", rawAuthorization)
@@ -165,7 +195,7 @@ func (c *CustomerSupportAPI) doJSON(
 		return fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	if resp.StatusCode != expectedStatus {
+	if !statusAllowed(resp.StatusCode, expectedStatus) {
 		return fmt.Errorf("customer support api failed (%d): %s", resp.StatusCode, body)
 	}
 
@@ -177,4 +207,13 @@ func (c *CustomerSupportAPI) doJSON(
 		return fmt.Errorf("failed to decode response body: %w", err)
 	}
 	return nil
+}
+
+func statusAllowed(status int, expected []int) bool {
+	for i := 0; i < len(expected); i++ {
+		if status == expected[i] {
+			return true
+		}
+	}
+	return false
 }

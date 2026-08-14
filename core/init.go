@@ -1572,27 +1572,34 @@ func (c *CBECoreAPI) CreateLockedAmount(ctx context.Context, param CreateLockedA
 		ServiceCode:   param.ServiceCode,
 	}
 
+	fmt.Println("** [1]create locked amount params **", params)
+
 	xmlRequest := lockedamountcreate.NewCreateLockedAmount(params)
 	headers := map[string]string{
 		Key: Value,
 	}
+	fmt.Println("** [2]create locked amount request **", xmlRequest)
 	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)
 
 	if err != nil {
+		fmt.Println("** [3]create locked amount error **", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	responseData, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("** [4]create locked amount error **", err)
 		return nil, err
 	}
 
 	result, err := lockedamountcreate.ParseCreateLockedAmountSOAP(string(responseData))
+	fmt.Println("** [5]create locked amount response **", result)
 	if err != nil {
+		fmt.Println("** [6]create locked amount error **", err)
 		return nil, err
 	}
 
