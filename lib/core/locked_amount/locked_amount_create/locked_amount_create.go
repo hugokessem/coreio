@@ -106,9 +106,10 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 	}
 
 	if env.Body.CreateLockedAmountResponse == nil {
+		resp := env.Body.CreateLockedAmountResponse
 		return &CreateLockedAmountResult{
 			Success:  false,
-			Messages: []string{"Invalid response type"},
+			Messages: resp.Status.Messages,
 		}, nil
 	}
 
@@ -116,7 +117,7 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 	if resp.Status == nil {
 		return &CreateLockedAmountResult{
 			Success:  false,
-			Messages: []string{"Missing Status"},
+			Messages: resp.Status.Messages,
 		}, nil
 	}
 
