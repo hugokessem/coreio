@@ -105,48 +105,45 @@ func ParseCreateLockedAmountSOAP(xmlData string) (*CreateLockedAmountResult, err
 		return nil, err
 	}
 
-	fmt.Println("response: ", env)
-	fmt.Println("body: ", env.Body)
-	fmt.Println("locedAmount: ", env.Body.CreateLockedAmountResponse)
-	fmt.Println("createdLockedAmountPaylod: ", env.Body.CreateLockedAmountResponse.CreateLockedAmount)
-	if env.Body.CreateLockedAmountResponse != nil {
-		resp := env.Body.CreateLockedAmountResponse
-		if resp.Status == nil {
-			return &CreateLockedAmountResult{
-				Success:  false,
-				Messages: []string{"Missing Status"},
-			}, nil
-		}
-
-		if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
-			return &CreateLockedAmountResult{
-				Success:  false,
-				Messages: resp.Status.Messages,
-			}, nil
-		}
-
-		if resp.CreateLockedAmount == nil {
-			return &CreateLockedAmountResult{
-				Success:  false,
-				Messages: []string{},
-			}, nil
-		}
-
+	if env.Body.CreateLockedAmountResponse == nil {
 		return &CreateLockedAmountResult{
-			Success: true,
-			Detail: &CreateLockedAmountDetail{
-				To:            resp.CreateLockedAmount.To,
-				From:          resp.CreateLockedAmount.From,
-				Description:   resp.CreateLockedAmount.Description,
-				LockedAmount:  resp.CreateLockedAmount.LockedAmount,
-				AccountNumber: resp.CreateLockedAmount.AccountNumber,
-				TransactionID: resp.CreateLockedAmount.TransactionID,
-			},
+			Success:  false,
+			Messages: []string{"Invalid response type"},
+		}, nil
+	}
+
+	resp := env.Body.CreateLockedAmountResponse
+	if resp.Status == nil {
+		return &CreateLockedAmountResult{
+			Success:  false,
+			Messages: []string{"Missing Status"},
+		}, nil
+	}
+
+	if strings.ToLower(resp.Status.SuccessIndicator) != "success" {
+		return &CreateLockedAmountResult{
+			Success:  false,
+			Messages: resp.Status.Messages,
+		}, nil
+	}
+
+	if resp.CreateLockedAmount == nil {
+		return &CreateLockedAmountResult{
+			Success:  false,
+			Messages: resp.Status.Messages,
+			Detail:   nil,
 		}, nil
 	}
 
 	return &CreateLockedAmountResult{
-		Success:  false,
-		Messages: []string{"Invalid response type"},
+		Success: true,
+		Detail: &CreateLockedAmountDetail{
+			To:            resp.CreateLockedAmount.To,
+			From:          resp.CreateLockedAmount.From,
+			Description:   resp.CreateLockedAmount.Description,
+			LockedAmount:  resp.CreateLockedAmount.LockedAmount,
+			AccountNumber: resp.CreateLockedAmount.AccountNumber,
+			TransactionID: resp.CreateLockedAmount.TransactionID,
+		},
 	}, nil
 }
