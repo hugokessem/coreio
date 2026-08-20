@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"strconv"
 	"strings"
 	"time"
@@ -441,4 +443,9 @@ func parseSurveyAmount(amount string) uint64 {
 		return 0
 	}
 	return uint64(f)
+}
+
+func GenerateSHA256(input string) string {
+	hashBytes := sha256.Sum256([]byte(input))
+	return hex.EncodeToString(hashBytes[:])
 }
