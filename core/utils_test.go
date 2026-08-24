@@ -26,7 +26,7 @@ func TestGenerateSurveyHashURL(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got := GenerateSurveyHashURL(tt.customerName)
+			got := GenerateSurveyHashURL("https://www.google.com", tt.customerName)
 			t.Logf("survey hash url: customer=%q input=%q url=%s", tt.customerName, "?hash_id=MB"+tt.customerName, got)
 
 			wantInput := "?hash_id=MB" + tt.customerName
@@ -44,8 +44,8 @@ func TestGenerateSurveyHashURL_Deterministic(t *testing.T) {
 	t.Parallel()
 
 	name := "Jane Smith"
-	first := GenerateSurveyHashURL(name)
-	second := GenerateSurveyHashURL(name)
+	first := GenerateSurveyHashURL("https://www.google.com", name)
+	second := GenerateSurveyHashURL("https://www.google.com", name)
 	t.Logf("survey hash url: customer=%q url=%s", name, first)
 
 	assert.Equal(t, first, second)
@@ -54,8 +54,8 @@ func TestGenerateSurveyHashURL_Deterministic(t *testing.T) {
 func TestGenerateSurveyHashURL_DifferentCustomersDiffer(t *testing.T) {
 	t.Parallel()
 
-	a := GenerateSurveyHashURL("Alice")
-	b := GenerateSurveyHashURL("Bob")
+	a := GenerateSurveyHashURL("https://www.google.com", "Alice")
+	b := GenerateSurveyHashURL("https://www.google.com", "Bob")
 	t.Logf("survey hash url: Alice=%s Bob=%s", a, b)
 
 	assert.NotEqual(t, a, b)

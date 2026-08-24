@@ -1486,8 +1486,8 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		)
 
 		result.SurveyResults = &surveyResults
-		if result.SurveyResults.Result {
-			temp := GenerateSurveyHashURL(param.Meta.CustomerName)
+		if result.SurveyResults.Result || result.SurveyResults.Url != nil {
+			temp := GenerateSurveyHashURL(*result.SurveyResults.Url, param.Meta.CustomerName)
 			result.SurveyResults.Url = &temp
 		}
 	}
