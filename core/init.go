@@ -1487,10 +1487,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 
 		result.SurveyResults = &surveyResults
 		if result.SurveyResults.Result {
-			var prefix strings.Builder
-			prefix.WriteString("?hash_id=MB")
-			prefix.WriteString(param.Meta.CustomerName)
-			temp := GenerateSHA256(prefix.String())
+			temp := GenerateSurveyHashURL(param.Meta.CustomerName)
 			result.SurveyResults.Url = &temp
 		}
 	}

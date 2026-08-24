@@ -449,3 +449,16 @@ func GenerateSHA256(input string) string {
 	hashBytes := sha256.Sum256([]byte(input))
 	return hex.EncodeToString(hashBytes[:])
 }
+
+// GenerateSurveyHashURL builds the survey hash URL from a customer name.
+// Input format: "?hash_id=MB" + customerName, hashed with SHA-256 (hex).
+func GenerateSurveyHashURL(customerNumber string) string {
+	var prefix strings.Builder
+	prefix.WriteString("MB")
+	prefix.WriteString(customerNumber)
+	hash := GenerateSHA256(prefix.String())
+	prefix.Reset()
+	prefix.WriteString("?hash_id=")
+	prefix.WriteString(hash)
+	return prefix.String()
+}
