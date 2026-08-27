@@ -16,17 +16,15 @@ func TestGenerateSurveyHashURL(t *testing.T) {
 		name         string
 		customerName string
 	}{
-		{name: "typical name", customerName: "1004035530"},
-		{name: "empty name", customerName: "1004035530"},
-		{name: "special characters", customerName: "1004035530"},
-		{name: "unicode", customerName: "1004035530"},
+		{name: "transaction one", customerName: "FT262137QPZ281154281"},
+		{name: "transaction two", customerName: "FT26237HY8GJ95578843"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got := GenerateSurveyHashURL("https://www.google.com", tt.customerName)
+			got := GenerateSurveyHashURL("https://feedback.cbe.com.et/M/81c8db50", tt.customerName)
 			t.Logf("survey hash url: customer=%q input=%q url=%s", tt.customerName, "?hash_id=MB"+tt.customerName, got)
 
 			wantInput := "?hash_id=MB" + tt.customerName
@@ -44,8 +42,8 @@ func TestGenerateSurveyHashURL_Deterministic(t *testing.T) {
 	t.Parallel()
 
 	name := "Jane Smith"
-	first := GenerateSurveyHashURL("https://www.google.com", name)
-	second := GenerateSurveyHashURL("https://www.google.com", name)
+	first := GenerateSurveyHashURL("https://feedback.cbe.com.et/M/81c8db50", name)
+	second := GenerateSurveyHashURL("https://feedback.cbe.com.et/M/81c8db50", name)
 	t.Logf("survey hash url: customer=%q url=%s", name, first)
 
 	assert.Equal(t, first, second)
@@ -54,8 +52,8 @@ func TestGenerateSurveyHashURL_Deterministic(t *testing.T) {
 func TestGenerateSurveyHashURL_DifferentCustomersDiffer(t *testing.T) {
 	t.Parallel()
 
-	a := GenerateSurveyHashURL("https://www.google.com", "Alice")
-	b := GenerateSurveyHashURL("https://www.google.com", "Bob")
+	a := GenerateSurveyHashURL("https://feedback.cbe.com.et/M/81c8db50", "Alice")
+	b := GenerateSurveyHashURL("https://feedback.cbe.com.et/M/81c8db50", "Bob")
 	t.Logf("survey hash url: Alice=%s Bob=%s", a, b)
 
 	assert.NotEqual(t, a, b)
