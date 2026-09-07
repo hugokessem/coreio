@@ -14,6 +14,7 @@ type Params struct {
 	Currency       string
 	AccountOfficer string
 	Url            string
+	ProductCode    string
 	Header         map[string]string
 }
 
@@ -23,6 +24,7 @@ type AccountCreationParams struct {
 	Currency       string
 	AccountOfficer string
 	Url            string
+	ProductCode    string
 	Header         map[string]string
 }
 
@@ -44,6 +46,7 @@ xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
                 <acc:CATEGORY>%s</acc:CATEGORY>
                 <acc:CURRENCY>%s</acc:CURRENCY>
                 <acc:ACCOUNTOFFICER>%s</acc:ACCOUNTOFFICER>
+                <acc:CBEPROCODE>%s</acc:CBEPROCODE>
             </ACCOUNTCREATEINDIVIDUALType>
         </iib:AccountOpeningSuperApp>
     </soapenv:Body>
@@ -54,6 +57,7 @@ xmlns:acc="http://temenos.com/ACCOUNTCREATEINDIVIDUAL">
 		param.Category,
 		param.Currency,
 		param.AccountOfficer,
+		param.ProductCode,
 	)
 }
 

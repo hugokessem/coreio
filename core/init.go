@@ -417,6 +417,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		CustomerNumber: param.CustomerNumber,
 		Category:       param.Category,
 		Currency:       param.Currency,
+		ProductCode:    param.ProductCode,
 		Url:            param.Url,
 		Header:         param.Header,
 	}
