@@ -23,7 +23,9 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gitlab.com/bersufekadgetachew/cbe-super-app-shared/shared/survey"
 
+	actionautorization "github.com/hugokessem/coreio/lib/core/customer/action_autorization"
 	customercreation "github.com/hugokessem/coreio/lib/core/customer/customer_creation"
+	customerdelete "github.com/hugokessem/coreio/lib/core/customer/customer_delete"
 	customerdetail "github.com/hugokessem/coreio/lib/core/customer/customer_detail"
 	customerfetch "github.com/hugokessem/coreio/lib/core/customer/customer_fetch"
 	customerlimitamendbycif "github.com/hugokessem/coreio/lib/core/customer/customer_limit_amend_by_cif"
@@ -123,6 +125,12 @@ type CustomerLookupResult = customerlookup.CustomerLookupResult
 type VerifyAMLParam = verifyaml.VerifyAMLParam
 type VerifyAMLResult = verifyaml.VerifyAMLResult
 
+type CustomerDeleteParam = customerdelete.CustomerDeleteParam
+type CustomerDeleteResult = customerdelete.CustomerDeleteResult
+
+type ActionAutorizationParam = actionautorization.ActionAutorizationParam
+type ActionAutorizationResult = actionautorization.ActionAutorizationResult
+
 type PhoneLookupParam = phonelookup.PhoneLookupParam
 type PhoneLookupResult = phonelookup.PhoneLookupResult
 
@@ -200,6 +208,8 @@ type CBECoreAPIInterface interface {
 
 	CustomerLookup(ctx context.Context, param CustomerLookupParam) (*CustomerLookupResult, error)
 	VerifyAML(ctx context.Context, param VerifyAMLParam) (*VerifyAMLResult, error)
+	CustomerDelete(ctx context.Context, param CustomerDeleteParam) (*CustomerDeleteResult, error)
+	ActionAutorization(ctx context.Context, param ActionAutorizationParam) (*ActionAutorizationResult, error)
 	AccountList(ctx context.Context, param AccountListParam) (*AccountListResult, error)
 	CardReplace(ctx context.Context, param CardReplaceParam) (*CardReplaceResult, error)
 	CardRequest(ctx context.Context, param CardRequestParam) (*CardRequestResult, error)
@@ -512,6 +522,8 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 		CustomerGroup:           param.CustomerGroup,
 		NationalId:              param.NationalId,
 		CommunicationPreference: param.CommunicationPreference,
+		OnbordingType:           param.OnbordingType,
+		USTinNumber:             param.USTinNumber,
 		Url:                     param.Url,
 		Header:                  param.Header,
 	}
@@ -2001,6 +2013,70 @@ func (c *CBECoreAPI) VerifyAML(ctx context.Context, param VerifyAMLParam) (*Veri
 	}
 
 	result, err := verifyaml.ParseVerifyAMLSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) CustomerDelete(ctx context.Context, param CustomerDeleteParam) (*CustomerDeleteResult, error) {
+	params := customerdelete.Param{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+	xmlRequest := customerdelete.NewCustomerDelete(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := customerdelete.ParseCustomerDeleteSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) ActionAutorization(ctx context.Context, param ActionAutorizationParam) (*ActionAutorizationResult, error) {
+	params := actionautorization.Param{
+		Username:       c.config.Username,
+		Password:       c.config.Password,
+		CustomerNumber: param.CustomerNumber,
+	}
+	xmlRequest := actionautorization.NewActionAutorization(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := actionautorization.ParseActionAutorizationSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}

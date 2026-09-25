@@ -58,6 +58,8 @@ type Params struct {
 	TownCountry             string
 	Menmonic                string
 	Url                     string
+	USTinNumber             string
+	OnbordingType           OnbordingType
 	CommunicationPreference string
 	Header                  map[string]string
 }
@@ -113,6 +115,8 @@ type CreateCustomerParams struct {
 	Menmonic                string
 	Url                     string
 	CommunicationPreference string
+	USTinNumber             string
+	OnbordingType           OnbordingType
 	Header                  map[string]string
 }
 
@@ -136,6 +140,13 @@ func SetMenemoic(param Params) string {
 	return fmt.Sprintf("%s%s", string(param.LastName[0]), lastNineDigit)
 }
 
+type OnbordingType string
+
+const (
+	OnbordingTypeLocal   OnbordingType = "LOCAL"
+	OnbordingTypeForeign OnbordingType = "FOREIGN"
+)
+
 func NewCustomerCreation(param Params) string {
 	menemoic := param.Menmonic
 	fullName := FullName(param)
@@ -146,6 +157,13 @@ func NewCustomerCreation(param Params) string {
 	noOfDependents := param.NoOfDependents
 	if noOfDependents == "" {
 		noOfDependents = "0"
+	}
+
+	noOfAuth := "0"
+	isFaydaVerified := "YES"
+	if param.OnbordingType == OnbordingTypeForeign {
+		noOfAuth = "1"
+		isFaydaVerified = "NO"
 	}
 
 	return fmt.Sprintf(`
@@ -159,7 +177,7 @@ func NewCustomerCreation(param Params) string {
                 <userName>%s</userName>
             </WebRequestCommon>
             <OfsFunction>
-                <noOfAuth>0</noOfAuth>
+                <noOfAuth>%s</noOfAuth>
             </OfsFunction>
             <CUSTOMERCREATEINDIVIDUALType id="">
                 <cus:MNEMONIC>%s</cus:MNEMONIC>
@@ -193,6 +211,7 @@ func NewCustomerCreation(param Params) string {
                 <cus:gCOUNTRY g="1">
                     <cus:COUNTRY>%s</cus:COUNTRY>
                 </cus:gCOUNTRY>
+                <cus:INDUSTRY>%s</cus:INDUSTRY>
                 <cus:NATIONALITY>%s</cus:NATIONALITY>
                 <cus:RESIDENCE>%s</cus:RESIDENCE>
                 <cus:gLEGALID g="1">
@@ -257,11 +276,13 @@ func NewCustomerCreation(param Params) string {
                 <cus:GrandFatherName>%s</cus:GrandFatherName>
                 <cus:CustomerGroup>%s</cus:CustomerGroup>
                 <cus:NationalId>%s</cus:NationalId>
+                <cus:FAYDAVERIFIED>%s</cus:FAYDAVERIFIED>
+                <cus:USTINNO>%s</cus:USTINNO>
             </CUSTOMERCREATEINDIVIDUALType>
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Company, param.Password, param.Username, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId)
+    `, param.Company, param.Password, noOfAuth, param.Username, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId, isFaydaVerified, param.USTinNumber)
 }
 
 type Envelope struct {
