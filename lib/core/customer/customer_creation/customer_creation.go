@@ -282,7 +282,7 @@ func NewCustomerCreation(param Params) string {
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Company, param.Password, noOfAuth, param.Username, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId, isFaydaVerified, param.USTinNumber)
+    `, param.Company, param.Password, param.Username, noOfAuth, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId, isFaydaVerified, param.USTinNumber)
 }
 
 type Envelope struct {
@@ -296,6 +296,7 @@ type Body struct {
 type CustomerCreationResponse struct {
 	Status *struct {
 		TransactionId string   `xml:"transactionId"`
+		MessageID     string   `xml:"messageId"`
 		Success       string   `xml:"successIndicator"`
 		Application   string   `xml:"application"`
 		Messages      []string `xml:"messages"`
@@ -313,6 +314,9 @@ type CustomerType struct {
 	GNameOne struct {
 		NameOne string `xml:"NAME1"`
 	} `xml:"gNAME1"`
+	GNameTwo struct {
+		NameTwo string `xml:"NAME2"`
+	} `xml:"gNAME2"`
 	GStreet struct {
 		Street string `xml:"STREET"`
 	} `xml:"gSTREET"`
@@ -381,7 +385,10 @@ type CustomerType struct {
 			Salary           string `xml:"SALARY"`
 		} `xml:"mEMPLOYMENTSTATUS"`
 	} `xml:"gEMPLOYMENTSTATUS"`
-	CustomerStatusType     string `xml:"CUSTOMERTYPE"`
+	CustomerStatusType string `xml:"CUSTOMERTYPE"`
+	GFurtherDetails    struct {
+		FurtherDetails string `xml:"FURTHERDETAILS"`
+	} `xml:"gFURTHERDETAILS"`
 	AMLCheck               string `xml:"AMLCHECK"`
 	AMLResult              string `xml:"AMLRESULT"`
 	KYCComplete            string `xml:"KYCCOMPLETE"`
@@ -428,58 +435,96 @@ type CustomerType struct {
 	CustGruop       string `xml:"CUSTGRUOP"`
 	NationalId      string `xml:"NATIONALID"`
 	CompVsInd       string `xml:"COMPVSIND"`
+	SalesPerson     string `xml:"SALESPERSON"`
+	FaydaVerified   string `xml:"FAYDAVERIFIED"`
+	USTinNo         string `xml:"USTINNO"`
 }
 
 type CustomerTypeDetail struct {
-	CustomerNumber     string
-	Menmonic           string
-	FullName           string
-	Title              string
-	GivenNames         string
-	FamilyName         string
-	Street             string
-	Address            string
-	TownCountry        string
-	PostalCode         string
-	Country            string
-	AccountOfficer     string
-	Industry           string
-	Nationality        string
-	LegalID            string
-	LegalDocName       string
-	IssuedDate         string
-	ExpiryDate         string
-	CompanyBook        string
-	Gender             string
-	DateOfBirth        string
-	MaritalStatus      string
-	NoOfDependents     string
-	PhoneNumber        string
-	Email              string
-	EmploymentStatus   string
-	Occupation         string
-	Salary             string
-	Currency           string
-	CustomerType       string
-	AMLCheck           string
-	AMLResult          string
-	KYCComplete        string
-	CustomerOccupation string
-	EducationStatus    string
-	MotherName         string
-	FATCACompliant     string
-	PEPStatus          string
-	USPerson           string
-	KebeleHNO          string
-	CustomerSegment    string
-	CustomerSubSegment string
-	GrandFatherName    string
-	CustomerGroup      string
-	Ownership          string
-	NationalId         string
-	Cocode             string
-	AccountNumber      string
-	Override           []string
+	CustomerNumber         string
+	TransactionID          string
+	MessageID              string
+	Application            string
+	Menmonic               string
+	FullName               string
+	Name1                  string
+	Name2                  string
+	Title                  string
+	GivenNames             string
+	FamilyName             string
+	Street                 string
+	Address                string
+	TownCountry            string
+	PostalCode             string
+	Country                string
+	Sector                 string
+	AccountOfficer         string
+	Industry               string
+	Target                 string
+	Nationality            string
+	CustomerStatus         string
+	Residence              string
+	LegalID                string
+	LegalDocName           string
+	LegalHolderName        string
+	LegalIssAuth           string
+	IssuedDate             string
+	ExpiryDate             string
+	Language               string
+	CompanyBook            string
+	CLSCParty              string
+	CRProfileType          string
+	CRProfile              string
+	Gender                 string
+	DateOfBirth            string
+	MaritalStatus          string
+	NoOfDependents         string
+	PhoneNumber            string
+	Email                  string
+	EmploymentStatus       string
+	Occupation             string
+	Salary                 string
+	Currency               string
+	CustomerType           string
+	FurtherDetails         string
+	AMLCheck               string
+	AMLResult              string
+	KYCComplete            string
+	InternetBankingService string
+	MobileBankingService   string
+	CRUserProfileType      string
+	CRCalcProfile          string
+	CRUserProfile          string
+	Reserved01             string
+	Override               []string
+	RecordStatus           string
+	CurrNo                 string
+	Inputter               string
+	DateTime               string
+	Authoriser             string
+	Cocode                 string
+	DeptCode               string
+	Ownership              string
+	CorBanGroup            []string
+	CustomerOccupation     string
+	EducationStatus        string
+	CommunicationPref      string
+	MotherName             string
+	DataCleaned            string
+	FATCACompliant         string
+	PEPStatus              string
+	USPerson               string
+	KebeleHNO              string
+	CustomerSegment        string
+	CustomerSubSegment     string
+	GrandFatherName        string
+	CustomerGroup          string
+	NationalId             string
+	CompVsInd              string
+	SalesPerson            string
+	FaydaVerified          string
+	USTinNo                string
+	AccountNumber          string
 }
 
 type CustomerCreationResult struct {
@@ -517,55 +562,95 @@ func ParseCustomerCreationSOAP(xmlData string) (*CustomerCreationResult, error) 
 			}, nil
 		}
 
+		ct := resp.CustomerType
 		detail := &CustomerTypeDetail{
-			CustomerNumber:     resp.CustomerType.CustomerNumber,
-			Menmonic:           resp.CustomerType.Menmonic,
-			FullName:           resp.CustomerType.GShortName.ShortName,
-			Title:              resp.CustomerType.Title,
-			GivenNames:         resp.CustomerType.GivenNames,
-			FamilyName:         resp.CustomerType.FamilyName,
-			Street:             resp.CustomerType.GStreet.Street,
-			Address:            resp.CustomerType.GLLAddress.MLLAddress.SGLLAddress.Address.Address,
-			TownCountry:        resp.CustomerType.GTownCountry.TownCountry,
-			PostalCode:         resp.CustomerType.GPostCode.PostCode,
-			Country:            resp.CustomerType.GCountry.Country,
-			AccountOfficer:     resp.CustomerType.AccountOfficer,
-			Industry:           resp.CustomerType.Industry,
-			Nationality:        resp.CustomerType.Nationality,
-			LegalID:            resp.CustomerType.GLegalID.MLegalID.LegalID,
-			LegalDocName:       resp.CustomerType.GLegalID.MLegalID.LegalDocName,
-			IssuedDate:         resp.CustomerType.GLegalID.MLegalID.LegalIssDate,
-			ExpiryDate:         resp.CustomerType.GLegalID.MLegalID.LegalExpDate,
-			CompanyBook:        resp.CustomerType.CompanyBook,
-			Gender:             resp.CustomerType.Gender,
-			DateOfBirth:        resp.CustomerType.DateOfBirth,
-			MaritalStatus:      resp.CustomerType.MaritalStatus,
-			NoOfDependents:     resp.CustomerType.NoOfDependents,
-			PhoneNumber:        resp.CustomerType.GPhoneOne.MPhoneOne.SMSOne,
-			Email:              resp.CustomerType.GPhoneOne.MPhoneOne.EmailOne,
-			EmploymentStatus:   resp.CustomerType.GEmploymentStatus.MEmploymentStatus.EmploymentStatus,
-			Occupation:         resp.CustomerType.GEmploymentStatus.MEmploymentStatus.Occupation,
-			Salary:             resp.CustomerType.GEmploymentStatus.MEmploymentStatus.Salary,
-			Currency:           resp.CustomerType.GEmploymentStatus.MEmploymentStatus.CustomerCurrency,
-			CustomerType:       resp.CustomerType.CustomerStatusType,
-			AMLCheck:           resp.CustomerType.AMLCheck,
-			AMLResult:          resp.CustomerType.AMLResult,
-			KYCComplete:        resp.CustomerType.KYCComplete,
-			CustomerOccupation: resp.CustomerType.CustOccupation,
-			EducationStatus:    resp.CustomerType.CustEdu,
-			MotherName:         resp.CustomerType.CustMother,
-			FATCACompliant:     resp.CustomerType.FATCACompliant,
-			PEPStatus:          resp.CustomerType.PEPStatus,
-			USPerson:           resp.CustomerType.USPerson,
-			KebeleHNO:          resp.CustomerType.HouseNo,
-			CustomerSegment:    resp.CustomerType.MCustSegment,
-			CustomerSubSegment: resp.CustomerType.CutSegment,
-			GrandFatherName:    resp.CustomerType.GrandFatherName,
-			CustomerGroup:      resp.CustomerType.CustGruop,
-			Ownership:          resp.CustomerType.Ownership,
-			NationalId:         resp.CustomerType.NationalId,
-			Cocode:             resp.CustomerType.CoCode,
-			Override:           resp.CustomerType.GOverride.Override,
+			CustomerNumber:         ct.CustomerNumber,
+			TransactionID:          resp.Status.TransactionId,
+			MessageID:              resp.Status.MessageID,
+			Application:            resp.Status.Application,
+			Menmonic:               ct.Menmonic,
+			FullName:               ct.GShortName.ShortName,
+			Name1:                  ct.GNameOne.NameOne,
+			Name2:                  ct.GNameTwo.NameTwo,
+			Title:                  ct.Title,
+			GivenNames:             ct.GivenNames,
+			FamilyName:             ct.FamilyName,
+			Street:                 ct.GStreet.Street,
+			Address:                ct.GLLAddress.MLLAddress.SGLLAddress.Address.Address,
+			TownCountry:            ct.GTownCountry.TownCountry,
+			PostalCode:             ct.GPostCode.PostCode,
+			Country:                ct.GCountry.Country,
+			Sector:                 ct.Sector,
+			AccountOfficer:         ct.AccountOfficer,
+			Industry:               ct.Industry,
+			Target:                 ct.Target,
+			Nationality:            ct.Nationality,
+			CustomerStatus:         ct.CustomerStatus,
+			Residence:              ct.Residence,
+			LegalID:                ct.GLegalID.MLegalID.LegalID,
+			LegalDocName:           ct.GLegalID.MLegalID.LegalDocName,
+			LegalHolderName:        ct.GLegalID.MLegalID.LegalHolderName,
+			LegalIssAuth:           ct.GLegalID.MLegalID.LegalIssAuth,
+			IssuedDate:             ct.GLegalID.MLegalID.LegalIssDate,
+			ExpiryDate:             ct.GLegalID.MLegalID.LegalExpDate,
+			Language:               ct.Language,
+			CompanyBook:            ct.CompanyBook,
+			CLSCParty:              ct.CLSCParty,
+			CRProfileType:          ct.GCRProfileType.MCRProfileType.CRProfileType,
+			CRProfile:              ct.GCRProfileType.MCRProfileType.CRProfile,
+			Gender:                 ct.Gender,
+			DateOfBirth:            ct.DateOfBirth,
+			MaritalStatus:          ct.MaritalStatus,
+			NoOfDependents:         ct.NoOfDependents,
+			PhoneNumber:            ct.GPhoneOne.MPhoneOne.SMSOne,
+			Email:                  ct.GPhoneOne.MPhoneOne.EmailOne,
+			EmploymentStatus:       ct.GEmploymentStatus.MEmploymentStatus.EmploymentStatus,
+			Occupation:             ct.GEmploymentStatus.MEmploymentStatus.Occupation,
+			Salary:                 ct.GEmploymentStatus.MEmploymentStatus.Salary,
+			Currency:               ct.GEmploymentStatus.MEmploymentStatus.CustomerCurrency,
+			CustomerType:           ct.CustomerStatusType,
+			FurtherDetails:         ct.GFurtherDetails.FurtherDetails,
+			AMLCheck:               ct.AMLCheck,
+			AMLResult:              ct.AMLResult,
+			KYCComplete:            ct.KYCComplete,
+			InternetBankingService: ct.InternetBankingService,
+			MobileBankingService:   ct.MobileBankingService,
+			CRUserProfileType:      ct.GCRUserProfileTy.MCRUserProfileTy.CRUserProfileType,
+			CRCalcProfile:          ct.GCRUserProfileTy.MCRUserProfileTy.CRCalcProfile,
+			CRUserProfile:          ct.GCRUserProfileTy.MCRUserProfileTy.CRUserProfile,
+			Reserved01:             ct.Reserved01,
+			Override:               ct.GOverride.Override,
+			RecordStatus:           ct.RecordStatus,
+			CurrNo:                 ct.CurrNo,
+			Inputter:               ct.GInputter.Inputter,
+			DateTime:               ct.GDateTime.DateTime,
+			Authoriser:             ct.Authoriser,
+			Cocode:                 ct.CoCode,
+			DeptCode:               ct.DeptCode,
+			Ownership:              ct.Ownership,
+			CorBanGroup:            ct.GCorBanGroup.CorBanGroup,
+			CustomerOccupation:     ct.CustOccupation,
+			EducationStatus:        ct.CustEdu,
+			CommunicationPref:      ct.CommPre,
+			MotherName:             ct.CustMother,
+			DataCleaned:            ct.DataCleanD,
+			FATCACompliant:         ct.FATCACompliant,
+			PEPStatus:              ct.PEPStatus,
+			USPerson:               ct.USPerson,
+			KebeleHNO:              ct.HouseNo,
+			CustomerSegment:        ct.MCustSegment,
+			CustomerSubSegment:     ct.CutSegment,
+			GrandFatherName:        ct.GrandFatherName,
+			CustomerGroup:          ct.CustGruop,
+			NationalId:             ct.NationalId,
+			CompVsInd:              ct.CompVsInd,
+			SalesPerson:            ct.SalesPerson,
+			FaydaVerified:          ct.FaydaVerified,
+			USTinNo:                ct.USTinNo,
+		}
+
+		if detail.CustomerNumber == "" {
+			detail.CustomerNumber = resp.Status.TransactionId
 		}
 
 		return &CustomerCreationResult{

@@ -105,6 +105,9 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 		CustomerSegment:    "MASS",
 		GrandFatherName:    "TAYE",
 		CustomerGroup:      "RETAIL",
+		USTinNumber:        "10002520520",
+		Industry:           "1499",
+		OnbordingType:      OnbordingTypeForeign,
 		NationalId:         nationalId,
 	}
 
