@@ -17,7 +17,7 @@ import (
 
 const (
 	sandboxOAuthTokenURL = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/oauth-mb-cbebirr/oauth2/token?target=https%3A%2F%2Fapi-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
-	sandboxCustomerURL   = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/cbe-dev/sandbox/cust_creation?target=https%3A%2F%2Fapi-gw-uat-gateway-apic-nonprod.apps.cp4itest.cbe.local"
+	sandboxCustomerURL   = "https://devapisuperapp.cbe.com.et/superapp/parser/proxy/IIBONBOARDING/services?target=http%3A%2F%2F172.31.6.115%3A9095&wsdl=null"
 	sandboxOAuthBody     = "grant_type=client_credentials&client_id=f1ceebd8d6d5b802dc7fd8332ab33603&client_secret=05ac01f2f134bfff2549669bc11bd6cc&scope=mb-cbebirr-scope"
 )
 
@@ -127,7 +127,7 @@ func TestIntegrationCreateCustomer(t *testing.T) {
 	req, err := http.NewRequest(http.MethodPost, sandboxCustomerURL, strings.NewReader(xmlRequest))
 	require.NoError(t, err)
 
-	req.Header.Set("Content-Type", "application/xml")
+	req.Header.Set("Content-Type", "text/xml; charset=utf-8")
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	t.Logf("customer creation endpoint: %s\n", sandboxCustomerURL)
 	t.Logf("request headers: Content-Type=%s, Authorization=Bearer <token>\n", req.Header.Get("Content-Type"))
