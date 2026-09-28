@@ -660,6 +660,6 @@ func ParseCustomerCreationSOAP(xmlData string) (*CustomerCreationResult, error) 
 	}
 	return &CustomerCreationResult{
 		Success:  false,
-		Messages: []string{"Invalid response type"},
+		Messages: env.Body.CustomerCreationResponse.Status.Messages,
 	}, nil
 }
