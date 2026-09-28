@@ -63,7 +63,6 @@ type Params struct {
 	CommunicationPreference string
 	Header                  map[string]string
 }
-
 type CreateCustomerParams struct {
 	Company                 string
 	FirstName               string
@@ -248,8 +247,8 @@ func NewCustomerCreation(param Params) string {
                     </cus:mEMPLOYMENTSTATUS>
                 </cus:gEMPLOYMENTSTATUS>
                 <cus:CUSTOMERTYPE>%s</cus:CUSTOMERTYPE>
-                <cus:NETMONTHLYIN>%s</cus:NETMONTHLYIN>
-                <cus:NETMONTHLYOUT>%s</cus:NETMONTHLYOUT>
+                <cus:NETMONTHLYIN/>
+                <cus:NETMONTHLYOUT/>
                 <cus:gTAXID g="1">
                     <cus:TAXID></cus:TAXID>
                 </cus:gTAXID>
@@ -285,7 +284,7 @@ func NewCustomerCreation(param Params) string {
         </iib:CustomerOpening>
     </soapenv:Body>
 </soapenv:Envelope>
-    `, param.Company, param.Password, param.Username, noOfAuth, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, customerType, param.NetMonthlyIncome, param.NetMonthlyExpence, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId, isFaydaVerified, param.USTinNumber)
+    `, param.Company, param.Password, param.Username, noOfAuth, menemoic, fullName, fullName, fullName, param.Street, param.Address, param.TownCountry, param.PostalCode, param.ISOCountryCode, param.Industry, param.ISONationalityCode, param.ISOResidentCode, param.UniqueID, param.LegalDocumenetName, fullName, param.IssuesBy, param.IssuedDate, param.ExpiryDate, param.Title, param.FirstName, param.MiddleName, param.Gender, param.DateOfBirth, param.MaritalStatus, noOfDependents, param.PhoneNumber, param.Email, param.EmploymentStatus, param.Occupation, param.CustomerCurrency, param.Salary, customerType, param.TinNumber, param.CustomerOccupation, param.EducationStatus, param.CommunicationPreference, param.MotherName, param.FATCACompliant, param.USPerson, param.KebeleHNO, param.CustomerSubSegment, param.CustomerSegment, grandFatherName, param.CustomerGroup, param.NationalId, isFaydaVerified, param.USTinNumber)
 }
 
 type Envelope struct {
