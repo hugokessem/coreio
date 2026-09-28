@@ -247,8 +247,6 @@ func NewCustomerCreation(param Params) string {
                     </cus:mEMPLOYMENTSTATUS>
                 </cus:gEMPLOYMENTSTATUS>
                 <cus:CUSTOMERTYPE>%s</cus:CUSTOMERTYPE>
-                <cus:NETMONTHLYIN/>
-                <cus:NETMONTHLYOUT/>
                 <cus:gTAXID g="1">
                     <cus:TAXID></cus:TAXID>
                 </cus:gTAXID>
