@@ -433,7 +433,7 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
 	headers := map[string]string{
-		"Content-Type": "application/xml",
+		Key: Value,
 	}
 
 	if param.Header != nil {
@@ -530,7 +530,7 @@ func (c *CBECoreAPI) CreateCustomer(ctx context.Context, param CreateCustomerPar
 
 	xmlRequest := customercreation.NewCustomerCreation(params)
 	headers := map[string]string{
-		"Content-Type": "application/xml",
+		Key: Value,
 	}
 
 	if param.Header != nil {
@@ -2024,13 +2024,18 @@ func (c *CBECoreAPI) CustomerDelete(ctx context.Context, param CustomerDeletePar
 		Username:       c.config.Username,
 		Password:       c.config.Password,
 		CustomerNumber: param.CustomerNumber,
+		Url:            param.Url,
+		Header:         param.Header,
 	}
 	xmlRequest := customerdelete.NewCustomerDelete(params)
 	headers := map[string]string{
 		Key: Value,
 	}
+	for key, value := range param.Header {
+		headers[key] = value
+	}
 
-	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+	resp, err := utils.DoPost(ctx, param.Url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)
@@ -2056,13 +2061,19 @@ func (c *CBECoreAPI) ActionAutorization(ctx context.Context, param ActionAutoriz
 		Username:       c.config.Username,
 		Password:       c.config.Password,
 		CustomerNumber: param.CustomerNumber,
+		Url:            param.Url,
+		Header:         param.Header,
 	}
 	xmlRequest := actionautorization.NewActionAutorization(params)
 	headers := map[string]string{
 		Key: Value,
 	}
 
-	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+	for key, value := range param.Header {
+		headers[key] = value
+	}
+
+	resp, err := utils.DoPost(ctx, param.Url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)

@@ -10,10 +10,14 @@ type Param struct {
 	Username       string
 	Password       string
 	CustomerNumber string
+	Url            string
+	Header         map[string]string
 }
 
 type ActionAutorizationParam struct {
 	CustomerNumber string
+	Url            string
+	Header         map[string]string
 }
 
 func NewActionAutorization(param Param) string {

@@ -10,10 +10,14 @@ type Param struct {
 	Username       string
 	Password       string
 	CustomerNumber string
+	Url            string
+	Header         map[string]string
 }
 
 type CustomerDeleteParam struct {
 	CustomerNumber string
+	Url            string
+	Header         map[string]string
 }
 
 func NewCustomerDelete(param Param) string {
