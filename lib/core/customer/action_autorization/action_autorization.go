@@ -22,19 +22,19 @@ type ActionAutorizationParam struct {
 
 func NewActionAutorization(param Param) string {
 	return fmt.Sprintf(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:iib="http://temenos.com/IIBONBOARDING">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <iib:DeleteCustomerIDSuperApp>
-         <WebRequestCommon>
-            <company/>
-            <password>%s</password>
-            <userName>%s</userName>
-         </WebRequestCommon>
-         <CUSTOMERCREATEINDIVIDUALType>
-            <transactionId>%s</transactionId>
-         </CUSTOMERCREATEINDIVIDUALType>
-      </iib:DeleteCustomerIDSuperApp>
-   </soapenv:Body>
+    <soapenv:Header/>
+    <soapenv:Body>
+        <iib:AuthorizeCustomerIDSuperApp>
+            <WebRequestCommon>
+                <company></company>
+                <password>%s</password>
+                <userName>.%s</userName>
+            </WebRequestCommon>
+            <CUSTOMERCREATEINDIVIDUALType>
+                <transactionId>%s</transactionId>
+            </CUSTOMERCREATEINDIVIDUALType>
+        </iib:AuthorizeCustomerIDSuperApp>
+    </soapenv:Body>
 </soapenv:Envelope>`, param.Password, param.Username, param.CustomerNumber)
 }
 
