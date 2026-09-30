@@ -164,7 +164,7 @@ func NewCustomerCreation(param Params) string {
 	if param.OnbordingType == OnbordingTypeForeign {
 		noOfAuth = "1"
 		isFaydaVerified = "NO"
-		customerType = "PROSPECT"
+		// customerType = "PROSPECT"
 	}
 
 	return fmt.Sprintf(`
