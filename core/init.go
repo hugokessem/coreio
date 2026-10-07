@@ -16,6 +16,7 @@ import (
 	billpaymentverify "github.com/hugokessem/coreio/lib/core/bill_payment/bill_payment_verify"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
+	"github.com/hugokessem/coreio/lib/core/aml"
 	"github.com/hugokessem/coreio/lib/core/fayda"
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
@@ -125,6 +126,9 @@ type CustomerLookupResult = customerlookup.CustomerLookupResult
 type VerifyAMLParam = verifyaml.VerifyAMLParam
 type VerifyAMLResult = verifyaml.VerifyAMLResult
 
+type AMLParam = aml.AMLParam
+type AMLLookupResult = aml.AMLLookupResult
+
 type CustomerDeleteParam = customerdelete.CustomerDeleteParam
 type CustomerDeleteResult = customerdelete.CustomerDeleteResult
 
@@ -208,6 +212,7 @@ type CBECoreAPIInterface interface {
 
 	CustomerLookup(ctx context.Context, param CustomerLookupParam) (*CustomerLookupResult, error)
 	VerifyAML(ctx context.Context, param VerifyAMLParam) (*VerifyAMLResult, error)
+	AMLLookup(ctx context.Context, param AMLParam) (*AMLLookupResult, error)
 	CustomerDelete(ctx context.Context, param CustomerDeleteParam) (*CustomerDeleteResult, error)
 	ActionAutorization(ctx context.Context, param ActionAutorizationParam) (*ActionAutorizationResult, error)
 	AccountList(ctx context.Context, param AccountListParam) (*AccountListResult, error)
@@ -2013,6 +2018,39 @@ func (c *CBECoreAPI) VerifyAML(ctx context.Context, param VerifyAMLParam) (*Veri
 	}
 
 	result, err := verifyaml.ParseVerifyAMLSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (c *CBECoreAPI) AMLLookup(ctx context.Context, param AMLParam) (*AMLLookupResult, error) {
+	params := aml.Params{
+		Username:      c.config.Username,
+		Password:      c.config.Password,
+		AccountNumber: param.AccountNumber,
+	}
+	xmlRequest := aml.NewAMLLookup(params)
+	headers := map[string]string{
+		Key:          Value,
+		"SOAPAction": `"http://temenos.com/CBESUPERAPP/AccountLookup"`,
+	}
+
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := aml.ParseAMLLookupSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
