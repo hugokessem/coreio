@@ -49,6 +49,7 @@ import (
 	ministatementbylimit "github.com/hugokessem/coreio/lib/core/mini_statement/mini_statement_by_limit"
 	phonelookup "github.com/hugokessem/coreio/lib/core/phone_lookup"
 	revertfundtransfer "github.com/hugokessem/coreio/lib/core/revert_fund_transfer"
+	"github.com/hugokessem/coreio/lib/core/rtgs"
 	servicedetail "github.com/hugokessem/coreio/lib/core/service/service_detail"
 	servicelimit "github.com/hugokessem/coreio/lib/core/service/service_limit"
 	standingordercancel "github.com/hugokessem/coreio/lib/core/standing_order/standing_order_cancel"
@@ -175,6 +176,9 @@ type CustomerLimitFetchByCIFReturnServiceResult = customerlimitfetchbycifreturns
 type BillPaymentParam = billpayment.BillPaymentParams
 type BillPaymentResult = billpayment.BillPaymentResult
 
+type RTGSParam = rtgs.RTGSParam
+type RTGSResult = rtgs.RTGSResult
+
 type FaydaParam = fayda.FaydaParam
 type FaydaResult = fayda.FaydaResult
 
@@ -236,6 +240,7 @@ type CBECoreAPIInterface interface {
 	CustomerFetch(ctx context.Context, param CustomerFetchParam) (*CustomerFetchResult, error)
 	Eligibility(ctx context.Context, param EligibilityParam) (*EligibilityResult, error)
 	BillPayment(ctx context.Context, param BillPaymentParam) (*BillPaymentResult, error)
+	RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, error)
 	AccountCreate(ctx context.Context, param CreateCustomerParam, accountCreateURL, category string) (*CusteomerAccountCreationResponse, error)
 	Fayda(ctx context.Context, param FaydaParam) (*FaydaResult, error)
 	CheckIfUserExists(ctx context.Context, param UserExistsParam) (*UserExistsResult, error)
@@ -348,6 +353,47 @@ func (c *CBECoreAPI) BillPayment(ctx context.Context, param BillPaymentParam) (*
 	}
 
 	result, err := billpayment.ParseBillPaymentSOAP(string(responseData))
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *CBECoreAPI) RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, error) {
+	params := rtgs.Params{
+		Username:           c.config.Username,
+		Password:           c.config.Password,
+		Company:            param.Company,
+		DebitAccountNumber: param.DebitAccountNumber,
+		DebitCurrency:      param.DebitCurrency,
+		CreditAmount:       param.CreditAmount,
+		OrderingCust:       param.OrderingCust,
+		BenAccountNumber:   param.BenAccountNumber,
+		PaymentDetails:     param.PaymentDetails,
+		BkToBkInfo:         param.BkToBkInfo,
+		BillID:             param.BillID,
+	}
+
+	xmlRequest := rtgs.NewRTGS(params)
+	headers := map[string]string{
+		Key: Value,
+	}
+	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+		Timeout:    timeout,
+		MaxRetries: maxRetries,
+	}, headers)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := rtgs.ParseRTGSSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
