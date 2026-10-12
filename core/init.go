@@ -12,11 +12,11 @@ import (
 	accountcreation "github.com/hugokessem/coreio/lib/core/account/account_creation"
 	accountlist "github.com/hugokessem/coreio/lib/core/account/account_list"
 	accountlookup "github.com/hugokessem/coreio/lib/core/account/account_lookup"
+	"github.com/hugokessem/coreio/lib/core/aml"
 	billpayment "github.com/hugokessem/coreio/lib/core/bill_payment"
 	billpaymentverify "github.com/hugokessem/coreio/lib/core/bill_payment/bill_payment_verify"
 	cardreplace "github.com/hugokessem/coreio/lib/core/card/card_replace"
 	cardrequest "github.com/hugokessem/coreio/lib/core/card/card_request"
-	"github.com/hugokessem/coreio/lib/core/aml"
 	"github.com/hugokessem/coreio/lib/core/fayda"
 	frauddetection "github.com/hugokessem/coreio/lib/core/fraud_detection"
 	namelookup "github.com/hugokessem/coreio/lib/core/name_lookup"
@@ -480,6 +480,8 @@ func (c *CBECoreAPI) AccountCreation(ctx context.Context, param AccountCreationP
 		Currency:       param.Currency,
 		ProductCode:    param.ProductCode,
 		Url:            param.Url,
+		Intliqutype:    param.Intliqutype,
+		Intliquacct:    param.Intliquacct,
 		Header:         param.Header,
 	}
 	xmlRequest := accountcreation.NewAccountCreation(params)
