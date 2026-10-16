@@ -44,7 +44,7 @@ func NewCreateLockedAmount(param Params) string {
     <soapenv:Body>
         <cbes:CreateAccountLock>
             <WebRequestCommon>
-                <company/>
+                <company></company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
