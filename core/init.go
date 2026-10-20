@@ -375,7 +375,9 @@ func (c *CBECoreAPI) RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, er
 		BillID:             param.BillID,
 	}
 
+	fmt.Printf("xmlRequest +%v\n", params)
 	xmlRequest := rtgs.NewRTGS(params)
+	fmt.Printf("xmlRequest +%v\n", xmlRequest)
 	headers := map[string]string{
 		Key: Value,
 	}
@@ -392,12 +394,13 @@ func (c *CBECoreAPI) RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, er
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("responseData +%v\n", string(responseData))
 
 	result, err := rtgs.ParseRTGSSOAP(string(responseData))
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("result +%v\n", result)
 	return result, nil
 }
 
