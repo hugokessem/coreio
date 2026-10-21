@@ -454,7 +454,7 @@ func GenerateSHA256(input string) string {
 // Input format: "?hash_id=MB" + customerName, hashed with SHA-256 (hex).
 func GenerateSurveyHashURL(url, customerNumber string) string {
 	var prefix strings.Builder
-	prefix.WriteString("MB")
+	prefix.WriteString("SA")
 	prefix.WriteString(customerNumber)
 	hash := GenerateSHA256(prefix.String())
 	prefix.Reset()

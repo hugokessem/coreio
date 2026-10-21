@@ -19,7 +19,7 @@ func TestIntegrationRTGS(t *testing.T) {
 		Company:            "ET0010222",
 		DebitAccountNumber: "1000251861149",
 		DebitCurrency:      "ETB",
-		CreditAmount:       "50",
+		CreditAmount:       "186",
 		OrderingCust: []string{
 			"MOR-BAHR0049695769",
 			"1437145650002",
