@@ -373,6 +373,8 @@ func (c *CBECoreAPI) RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, er
 		PaymentDetails:     param.PaymentDetails,
 		BkToBkInfo:         param.BkToBkInfo,
 		BillID:             param.BillID,
+		Url:                param.Url,
+		Header:             param.Header,
 	}
 
 	fmt.Printf("xmlRequest +%v\n", params)
@@ -381,7 +383,17 @@ func (c *CBECoreAPI) RTGS(ctx context.Context, param RTGSParam) (*RTGSResult, er
 	headers := map[string]string{
 		Key: Value,
 	}
-	resp, err := utils.DoPost(ctx, c.config.Url, xmlRequest, utils.Config{
+
+	if param.Header != nil {
+		maps.Copy(headers, param.Header)
+	}
+
+	url := c.config.Url
+	if param.Url != "" {
+		url = param.Url
+	}
+
+	resp, err := utils.DoPost(ctx, url, xmlRequest, utils.Config{
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)

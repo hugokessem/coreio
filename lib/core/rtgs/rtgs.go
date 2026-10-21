@@ -18,6 +18,8 @@ type Params struct {
 	PaymentDetails     string
 	BkToBkInfo         []string
 	BillID             string
+	Url                string
+	Header             map[string]string
 }
 
 type RTGSParam struct {
@@ -30,6 +32,8 @@ type RTGSParam struct {
 	PaymentDetails     string
 	BkToBkInfo         []string
 	BillID             string
+	Url                string
+	Header             map[string]string
 }
 
 func buildRepeatingElements(tag string, values []string) string {
