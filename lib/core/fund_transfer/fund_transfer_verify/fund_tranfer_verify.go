@@ -221,6 +221,7 @@ type FundTransferDetail struct {
 	GlobalDateTime struct {
 		DateTime string `xml:"DATETIME"`
 	} `xml:"gDATETIME"`
+	DailyTransaction                   string `xml:"CURRBALANCE"`
 	Authoriser                         string `xml:"AUTHORISER"`
 	CompanyCode                        string `xml:"COCODE"`
 	DepartmentCode                     string `xml:"DEPTCODE"`
@@ -461,6 +462,7 @@ func ParseFundTransferVerifySOAP(xmlData string) (*FundTransferVerifyResult, err
 				OriginalPaidAmount:                 originalPaidAmountWithCurrency,
 				TotalCommisionWithComission:        totalServiceChargeWithCurrency,
 				Segment:                            resp.FundTransferType.Segment,
+				DailyTransaction:                   resp.FundTransferType.DailyTransaction,
 				AccountCategory:                    resp.FundTransferType.AccountCategory,
 				CustomerName:                       resp.FundTransferType.CustomerName,
 			},
