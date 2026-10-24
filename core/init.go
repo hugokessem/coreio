@@ -1514,6 +1514,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 	}(param.Meta)
 
 	xmlRequest := fundtransfer.NewFundTransfer(params)
+	fmt.Println("** [1]fund transfer request **", xmlRequest)
 	headers := map[string]string{
 		Key: Value,
 	}
@@ -1522,13 +1523,14 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		Timeout:    timeout,
 		MaxRetries: maxRetries,
 	}, headers)
-
+	fmt.Println("** [2]fund transfer error **", err)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	responseData, err := io.ReadAll(resp.Body)
+	fmt.Println("** [3]fund transfer response **", string(responseData))
 	if err != nil {
 		if c.config.RedisClient != nil {
 			key := c.redisKey("failed_ft_count", param.Key)
