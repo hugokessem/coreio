@@ -58,9 +58,9 @@ func TestIntegrationCreateAccount(t *testing.T) {
 	params := Params{
 		Username:       "SUPERAPP",
 		Password:       "123456",
-		CustomerNumber: "1027958756",
+		CustomerNumber: "1020464359",
 		Category:       "6501",
-		Currency:       "ETB",
+		Currency:       "USD",
 		AccountOfficer: "7016",
 		Url:            sandboxAccountURL,
 	}
@@ -125,7 +125,7 @@ func TestIntegrationCreateAccount(t *testing.T) {
 		assert.NotEmpty(t, result.Detail.Customer)
 		assert.Equal(t, "6501", result.Detail.Category)
 		assert.NotEmpty(t, result.Detail.AccountTitle)
-		assert.Equal(t, "ETB", result.Detail.Currency)
+		assert.Equal(t, "USD", result.Detail.Currency)
 		assert.Equal(t, "7016", result.Detail.AccountOfficer)
 		assert.NotEmpty(t, result.Detail.OpeningDate)
 		assert.NotEmpty(t, result.Detail.CoCode)

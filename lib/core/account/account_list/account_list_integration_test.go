@@ -12,12 +12,12 @@ import (
 
 func TestIntegrationAccountList(t *testing.T) {
 	params := Params{
-		Username:      "SUPERAPP",
-		Password:      "123456",
-		ColumnName:    "CUS.ID",
-		CriteriaValue: "1037236948",
-		// ColumnName:    "ACCT.ID",
-		// CriteriaValue: "1000517052152",
+		Username: "SUPERAPP",
+		Password: "123456",
+		// ColumnName:    "CUS.ID",
+		// CriteriaValue: "1037236948",
+		ColumnName:    "ACCT.ID",
+		CriteriaValue: "1000092174267",
 	}
 
 	xmlRequest := NewAccountList(params)
@@ -53,7 +53,9 @@ func TestIntegrationAccountList(t *testing.T) {
 	assert.NotNil(t, result.Details)
 	t.Logf("result: %v", result.Details)
 	for _, detail := range result.Details {
+		t.Logf("========/n")
 		t.Logf("Account Name: %s", detail.AccountName)
+		t.Logf("Customer Number: %s", detail.CustomerID)
 		// assert.NotEmpty(t, detail.CustomerName)
 		// assert.NotEmpty(t, detail.Currency)
 		// assert.NotEmpty(t, detail.CustomerID)
