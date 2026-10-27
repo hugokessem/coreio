@@ -33,6 +33,7 @@ type Params struct {
 	BranchCode          string
 	IsSurveyEnabled     bool
 	IsFraudCheckEnabled bool
+	OmitBranchCode      bool
 	SurveyRules         []survey.SurveyRule
 	Meta                frauddetection.FraudAPIPayload
 }
@@ -65,6 +66,7 @@ type FundTransferParam struct {
 	Key                 string
 	IsFraudCheckEnabled bool
 	IsSurveyEnabled     bool
+	OmitBranchCode      bool
 	SurveyRules         []survey.SurveyRule
 	Meta                frauddetection.FraudAPIPayload
 }
@@ -76,6 +78,11 @@ func NewFundTransfer(params Params) string {
 		userCode = params.SuperappUserCode
 	} else {
 		userCode = userCodeSplited[0]
+	}
+
+	companyCode := fmt.Sprintf(`<company>%s</company>`, params.BranchCode)
+	if params.OmitBranchCode {
+		companyCode = `<company/>`
 	}
 
 	// fmt.Println("userCode: ", userCode, "userCodeSplited: ", userCodeSplited)
@@ -117,7 +124,7 @@ func NewFundTransfer(params Params) string {
 		<soapenv:Body>
 			<cbes:AccountTransfer>
 				<WebRequestCommon>
-					<company>%s</company>
+					%s
 					<password>%s</password>
 					<userName>%s</userName>
 				</WebRequestCommon>
@@ -136,7 +143,7 @@ func NewFundTransfer(params Params) string {
 			</cbes:AccountTransfer>
 		</soapenv:Body>
 		</soapenv:Envelope>
-`, params.BranchCode, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType, userCode)
+`, companyCode, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetail, params.TransactionID, params.ServiceCode, params.CustomerSegment, params.ChannelType, userCode)
 }
 
 type Envelope struct {

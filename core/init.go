@@ -1484,6 +1484,7 @@ func (c *CBECoreAPI) FundTransfer(ctx context.Context, param FundTransferParam) 
 		Meta:                param.Meta,
 		IsFraudCheckEnabled: param.IsFraudCheckEnabled,
 		Key:                 param.Key,
+		OmitBranchCode:      param.OmitBranchCode,
 		BranchCode:          param.BranchCode,
 	}
 
