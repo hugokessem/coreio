@@ -15,6 +15,7 @@ type Params struct {
 	To            string
 	UserID        string
 	LockedAmount  string
+	BranchCode    string
 	ServiceCode   string
 }
 
@@ -25,6 +26,7 @@ type CreateLockedAmountParam struct {
 	To            string
 	UserID        string
 	LockedAmount  string
+	BranchCode    string
 	ServiceCode   string
 }
 
@@ -44,7 +46,7 @@ func NewCreateLockedAmount(param Params) string {
     <soapenv:Body>
         <cbes:CreateAccountLock>
             <WebRequestCommon>
-                <company></company>
+                <company>%s</company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
@@ -59,7 +61,7 @@ func NewCreateLockedAmount(param Params) string {
             </ACLOCKEDEVENTSCREATELOCKSUPERAPPType>
         </cbes:CreateAccountLock>
     </soapenv:Body>
-// </soapenv:Envelope>`, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, userCode)
+// </soapenv:Envelope>`, param.BranchCode, param.Password, param.Username, param.AccountNumber, param.Description, param.From, param.To, param.LockedAmount, userCode)
 }
 
 type Envelope struct {
