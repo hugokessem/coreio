@@ -23,6 +23,7 @@ type Params struct {
 	PaymentDetails      string
 	CustomerRole        string
 	ChannelType         string
+	BranchCode          string
 	SuperappUserCode    string
 }
 
@@ -41,6 +42,7 @@ type LockedAmountFTParams struct {
 	PaymentDetails      string
 	CustomerRole        string
 	ChannelType         string
+	BranchCode          string
 	SuperappUserCode    string
 }
 
@@ -93,7 +95,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
     <soapenv:Body>
         <cbes:AccountTransfer>
             <WebRequestCommon>
-                <company/>
+                <company>%s</company>
                 <password>%s</password>
                 <userName>%s</userName>
             </WebRequestCommon>
@@ -115,7 +117,7 @@ xmlns:fun="http://temenos.com/FUNDSTRANSFERFTTXNSUPERAPP">
         </cbes:AccountTransfer>
     </soapenv:Body>
 </soapenv:Envelope>
-	`, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode, params.CustomerRole, params.ChannelType, userCode)
+	`, params.BranchCode, params.Password, params.Username, strings.Join(details, "\n"), params.PaymentDetails, params.ClientReference, params.LockID, params.ServiceCode, params.CustomerRole, params.ChannelType, userCode)
 }
 
 type Envelope struct {

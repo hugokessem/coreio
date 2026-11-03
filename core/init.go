@@ -1657,7 +1657,6 @@ func (c *CBECoreAPI) CreateLockedAmount(ctx context.Context, param CreateLockedA
 		To:            param.To,
 		LockedAmount:  param.LockedAmount,
 		UserID:        param.UserID,
-		BranchCode:    param.BranchCode,
 		ServiceCode:   param.ServiceCode,
 	}
 
@@ -1712,6 +1711,7 @@ func (c *CBECoreAPI) LockedAmountFT(ctx context.Context, param LockedAmountFTPar
 		LockID:              param.LockID,
 		PaymentDetails:      param.PaymentDetails,
 		CustomerRole:        param.CustomerRole,
+		BranchCode:          param.BranchCode,
 		ChannelType:         param.ChannelType,
 		SuperappUserCode:    param.SuperappUserCode,
 	}
